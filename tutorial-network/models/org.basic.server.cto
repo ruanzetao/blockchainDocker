@@ -66,13 +66,9 @@ participant Patient extends Person{
 Asset of Doctor
  */
 
-
-concept AuthorizedDoctor {
-  o Doctor doctor
-}
-
 asset DoctorInfo identified by doctorInfoId {
   o String doctorInfoId
+  o String doctorId
   o String name
   o String address
   o String email
@@ -82,6 +78,8 @@ asset DoctorInfo identified by doctorInfoId {
   o DateTime createAt
   o DateTime updateAt optional
   o AuthorizedDoctor[] authorizedDoctors
+  o String specialist
+  --> Doctor owner
 }
 
 asset Request identified by requestId {
@@ -89,4 +87,21 @@ asset Request identified by requestId {
   o String requesterId
 }
 
+/**
+Concepts
+ */
+
+concept AuthorizedDoctor {
+  o Doctor doctor
+}
+
+concept AuthorizedPatient {
+  o Patient patient
+}
+
+concept PhysicalStatistics {
+  o String weight default="NA"
+  o String height default="NA"
+  o String bloodPressure default="NA"
+  o String cardiacRate default="NA"
 }

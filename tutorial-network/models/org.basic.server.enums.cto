@@ -1,0 +1,33 @@
+namespace org.basic.server.enums
+enum Gender {
+o Male
+o Female
+o Other
+}
+enum Race{
+o White
+o Black
+o Asian
+o Other
+}
+
+enum RequestType{
+  o Read
+}
+
+enum ResourceType{
+  o HealthRecord
+  o PatientInfo
+  o DoctorInfo
+  o Doctor
+  o Patient
+}
+
+enum Role{
+  o Patient
+  o Doctor
+}
+
+enum Specialist{
+  o Cardiology
+}
