@@ -17,6 +17,7 @@
  */
 
 namespace org.basic.server
+import org.basic.server.enums.*
 
 /**
 Asset for chaincode
@@ -62,6 +63,21 @@ participant Doctor extends Person {
 participant Patient extends Person{
 
 }
+
+asset Request identified by requestId {
+  o String requestId
+  o Role requesterRole
+  o Role resourceOwnerRole
+  o ResourceType resourceType
+  o String resourceId
+
+  // o String idRequester
+  // o String idResourceOwner
+
+  --> Person owner
+  --> Person resourceOwner
+}
+
 /**
 Asset of Doctor
  */
@@ -77,14 +93,43 @@ asset DoctorInfo identified by doctorInfoId {
   o String sex
   o DateTime createAt
   o DateTime updateAt optional
-  o AuthorizedDoctor[] authorizedDoctors
   o String specialist
+  --> Patient[] authorizedPatients
   --> Doctor owner
 }
 
-asset Request identified by requestId {
-  o String requestId
-  o String requesterId
+asset DoctorProfile identified by doctorProfileId{
+  o String doctorProfileId
+  o String participantId
+  o Role role
+
+}
+
+
+/**
+Asset of patient
+ */
+ asset PatientInfo identified by patientInfoId {
+  o String patientInfoId
+  o String patientId
+  o String name
+  o String address
+  o String email
+  o String phone
+  o String type
+  o String sex
+  o DateTime createAt
+  o DateTime updateAt optional
+  o String specialist
+  --> Doctor[] authorizedDoctors
+  --> Patient owner
+}
+
+asset PatientProfile identified by patientProfileId{
+  o String patientProfileId
+  o String participantId
+  o Role role
+
 }
 
 /**

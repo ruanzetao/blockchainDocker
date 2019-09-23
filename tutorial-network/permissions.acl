@@ -15,31 +15,41 @@
 /**
  * Sample access control list.
  */
-// rule DoctorSeeProfile {
-//   description:"Doctor see profile of themself"
-//   participant(p):"org.basic.server.Doctor"
-//   operation: READ
-//   resource(r):"org.basic.server.DoctorInfo"
-//   condition: (r.getIdentifier() == p.getIdentifier())
-//   action: ALLOW
-// }
 
-rule AuthorizedDoctorReadDoctorInfo {
-  description:"Doctor can read doctor info"
-  participant(p):"org.basic.server.Doctor"
+
+rule AuthorizedPatientReadDoctorInfo {
+  description:"Patient can request read doctor info"
+  participant(p):"org.basic.server.Patient"
   operation: READ
   resource(r):"org.basic.server.DoctorInfo"
-  condition: (r.authorizedDoctors.some(function(doctor){
-    return doctor.doctorId.getIdentifier()===p.getIdentifier();
+  condition: (r.authorizedPatients.some(function(patient){
+    return patient.getIdentifier()===p.getIdentifier();
       }))
   action: ALLOW
 }
 
-rule Default {
-    description: "Allow all participants access to all resources"
-    participant: "ANY"
+rule PatientReadPatientInfo{
+  description:"Patient can read doctor info"
+  participant(p):"org.basic.server.Patient"
+  operation: READ,UPDATE
+  resource(r):"org.basic.server.PatientInfo"
+  condition: (p.getIdentifier()===r.owner.getIdentifier())
+  action: ALLOW
+}
+
+rule NetworkAdminUser {
+    description: "Grant business network administrators full access to user resources"
+    participant: "org.hyperledger.composer.system.NetworkAdmin"
     operation: ALL
-    resource: "org.basic.server.DoctorInfo"
+    resource: "**"
+    action: ALLOW
+}
+
+rule NetworkAdminSystem {
+    description: "Grant business network administrators full access to system resources"
+    participant: "org.hyperledger.composer.system.NetworkAdmin"
+    operation: ALL
+    resource: "org.hyperledger.composer.system.**"
     action: ALLOW
 }
 
