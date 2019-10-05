@@ -1,8 +1,5 @@
 namespace org.basic.server.transaction 
 import org.basic.server.enums.*
-/**
-Transaction 
- */
 
 transaction CreateNewParticipant {
   o String personId
@@ -16,6 +13,30 @@ transaction CreateNewParticipant {
   o DateTime updateAt optional
 }
 
+transaction CreateDoctor {
+  o String personId
+  o String name
+  o String address
+  o String email
+  o String phone
+  o String type
+  o String sex
+  o DateTime createAt
+  o DateTime updateAt optional
+}
+
+transaction CreatePatient {
+  o String personId
+  o String name
+  o String address
+  o String email
+  o String phone
+  o String type
+  o String sex
+  o DateTime createAt
+  o DateTime updateAt optional
+}
+//------------------------
 transaction CreateNewPatientInfo {
   o String patientInfoId
   o String patientId
@@ -30,6 +51,15 @@ transaction CreateNewPatientInfo {
   o String specialist
 }
 
+transaction CreatePatientProfile {
+  o String patientProfileId
+  o String patientId
+  o Role role
+  o String avatar
+  o DateTime createAt
+  o DateTime updateAt
+}
+//--------------------------
 transaction CreateNewDoctorInfo {
   o String doctorInfoId
   o String doctorId
@@ -44,6 +74,15 @@ transaction CreateNewDoctorInfo {
   o String specialist
 }
 
+transaction CreateDoctorProfile {
+  o String doctorProfileId
+  o String doctorId
+  o Role role
+  o String avatar
+  o DateTime createAt
+  o DateTime updateAt
+}
+//---------------------------
 transaction CreateRequest {
 
   o String requestId
@@ -60,5 +99,9 @@ transaction CreateRequest {
 }
 
 transaction DoctorAcceptRequestOfPatient {
+  o String requestId
+}
+
+transaction PatientAcceptRequestOfDoctor {
   o String requestId
 }

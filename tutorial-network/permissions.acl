@@ -28,6 +28,17 @@ rule AuthorizedPatientReadDoctorInfo {
   action: ALLOW
 }
 
+rule AuthorizedDoctorReadPatientInfo{
+  description:"Doctor can request read Patient info"
+  participant(p):"org.basic.server.Doctor"
+  operation: READ
+  resource(r):"org.basic.server.PatientInfo"
+  condition: (r.authorizedDoctors.some(function(doctor){
+    return doctor.getIdentifier()===p.getIdentifier();
+      }))
+  action: ALLOW
+}
+
 rule PatientReadPatientInfo{
   description:"Patient can read doctor info"
   participant(p):"org.basic.server.Patient"

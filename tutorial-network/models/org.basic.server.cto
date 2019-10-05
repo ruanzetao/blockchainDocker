@@ -102,7 +102,10 @@ asset DoctorProfile identified by doctorProfileId{
   o String doctorProfileId
   o String participantId
   o Role role
-
+  o String avatar default="default"
+  o DateTime createAt
+  o DateTime updateAt
+  --> Doctor owner
 }
 
 
@@ -129,20 +132,16 @@ asset PatientProfile identified by patientProfileId{
   o String patientProfileId
   o String participantId
   o Role role
-
+  o String avatar default="default"
+  o DateTime createAt
+  o DateTime updateAt
+  --> Patient owner
 }
 
 /**
 Concepts
  */
 
-concept AuthorizedDoctor {
-  o Doctor doctor
-}
-
-concept AuthorizedPatient {
-  o Patient patient
-}
 
 concept PhysicalStatistics {
   o String weight default="NA"
