@@ -1,17 +1,6 @@
 namespace org.basic.server.transaction 
 import org.basic.server.enums.*
 
-transaction CreateNewParticipant {
-  o String personId
-  o String name
-  o String address
-  o String email
-  o String phone
-  o String type
-  o String sex
-  o DateTime createAt
-  o DateTime updateAt optional
-}
 
 transaction CreateDoctor {
   o String personId
@@ -98,6 +87,13 @@ transaction CreateRequest {
   // --> Person resourceOwner
 }
 
+transaction DeleteRequest {
+  o String requestId
+}
+
+transaction PatientRevokeRequestOfDoctor {
+  o String requestId
+}
 transaction DoctorAcceptRequestOfPatient {
   o String requestId
 }

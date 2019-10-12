@@ -38,8 +38,9 @@ asset HealthRecord identified by healthRecordId {
   o String thal 
   o String target
   o String status
-  --> Person [] approval
-}
+  o Doctor [] authorizedDoctors
+  -->Patient owner
+  }
 /**
  * An abstract participant type in this business network
  */
@@ -69,6 +70,7 @@ asset Request identified by requestId {
   o Role requesterRole
   o Role resourceOwnerRole
   o ResourceType resourceType
+  o RequestStatus status
   o String resourceId
 
   // o String idRequester

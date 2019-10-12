@@ -17,40 +17,19 @@
  * Write your transction processor functions here
  */
 
-/**
- * Sample transaction
- * @param {org.basic.server.transaction.CreateNewParticipant} participantInfo 
- * @transaction
- */
-async function participantInfo(listing) {
-    var factory = getFactory();
-
-    return getParticipantRegistry('org.basic.server.Patient').then(async function (patientRegistry) {
-        patientNew = await factory.newResource("org.basic.server", "Patient", listing.personId)
-        patientNew.name = listing.name;
-        patientNew = address = listing.address;
-        patientNew.email = listing.email;
-        patientNew.phone = listing.phone;
-        patientNew.type = listing.type;
-        patientNew.sex = listing.sex;
-        patientNew.createAt = listing.createAt;
-
-        return await patientRegistry.add(patientNew);
-    });
-}
 
 /**
  * Sample transaction
- * @param {org.basic.server.transaction.CreateDoctor} participantDoctor
+ * @param {org.basic.server.transaction.CreateDoctor} listing
  * @transaction
  */
-async function participantDoctor(listing) {
+async function createDoctor(listing) {
     var factory = getFactory();
 
     return getParticipantRegistry('org.basic.server.Doctor').then(async function (doctorRegistry) {
         doctorNew = await factory.newResource("org.basic.server", "Doctor", listing.personId)
         doctorNew.name = listing.name;
-        doctorNew = address = listing.address;
+        doctorNew.address = listing.address;
         doctorNew.email = listing.email;
         doctorNew.phone = listing.phone;
         doctorNew.type = listing.type;
@@ -63,17 +42,17 @@ async function participantDoctor(listing) {
 
 /**
  * Sample transaction
- * @param {org.basic.server.transaction.CreatePatient} participantPatient
+ * @param {org.basic.server.transaction.CreatePatient} listing
  * @transaction
  */
 
-async function participantPatient(listing) {
+async function createPatient(listing) {
     var factory = getFactory();
 
     return getParticipantRegistry('org.basic.server.Patient').then(async function (patientRegistry) {
         patientNew = await factory.newResource("org.basic.server", "Patient", listing.personId)
         patientNew.name = listing.name;
-        patientNew = address = listing.address;
+        patientNew.address = listing.address;
         patientNew.email = listing.email;
         patientNew.phone = listing.phone;
         patientNew.type = listing.type;
@@ -86,10 +65,10 @@ async function participantPatient(listing) {
 
 /**
  * Sample transaction
- * @param {org.basic.server.transaction.CreateNewPatientInfo} patientInfo 
+ * @param {org.basic.server.transaction.CreateNewPatientInfo} listing 
  * @transaction
  */
-async function patientInfo(listing) {
+async function createNewPatientInfo(listing) {
     var factory = getFactory();
 
     return getAssetRegistry('org.basic.server.PatientInfo').then(async function (patientInfoRegistry) {
@@ -116,10 +95,10 @@ async function patientInfo(listing) {
 
 /**
  * Sample transaction
- * @param {org.basic.server.transaction.CreateNewDoctorInfo} doctorInfo 
+ * @param {org.basic.server.transaction.CreateNewDoctorInfo} listing 
  * @transaction
  */
-async function doctorInfo(listing) {
+async function createNewDoctorInfo(listing) {
     var factory = getFactory();
 
     return getAssetRegistry('org.basic.server.DoctorInfo').then(async function (doctorInfoRegistry) {
@@ -146,11 +125,11 @@ async function doctorInfo(listing) {
 
 /**
  * Sample transaction
- * @param {org.basic.server.transaction.CreateDoctorProfile} doctorProfile 
+ * @param {org.basic.server.transaction.CreateDoctorProfile} listing 
  * @transaction
  */
 
- async function doctorProfile(listing){
+ async function createDoctorProfile(listing){
     var factory = getFactory();
     return getAssetRegistry('org.basic.server.DoctorProfile').then(async function (doctorProfileRegistry) {
         doctorProfileNew =await factory.newResource("org.basic.server", "DoctorProfile", listing.doctorProfileId)
@@ -170,11 +149,11 @@ async function doctorInfo(listing) {
 
 /**
  * Sample transaction
- * @param {org.basic.server.transaction.CreatePatientProfile} patientProfile 
+ * @param {org.basic.server.transaction.CreatePatientProfile} listing 
  * @transaction
  */
 
-async function patientProfile(listing){
+async function createPatientProfile(listing){
     var factory = getFactory();
     return getAssetRegistry('org.basic.server.PatientProfile').then(async function (patientProfileRegistry) {
         patientProfileNew =await factory.newResource("org.basic.server", "PatientProfile", listing.patientProfileId)
@@ -195,7 +174,7 @@ async function patientProfile(listing){
 
 /**
  * Sample transaction
- * @param {org.basic.server.transaction.CreateRequest} createRequest 
+ * @param {org.basic.server.transaction.CreateRequest} listing 
  * @transaction
  */
 async function createRequest(listing) {
@@ -211,25 +190,92 @@ async function createRequest(listing) {
 
         requestNew.idRequester = listing.idRequester
         requestNew.idResourceOwner = listing.idResourceOwner;
-
-
+        requestNew.status="New";
         // --> Person owner
         // --> Person resourceOwner
-
-
         var owner = await factory.newRelationship("org.basic.server", requesterRole, listing.idRequester);
         var resourceOwner = await factory.newRelationship("org.basic.server", resourceOwnerRole, listing.idResourceOwner);
         requestNew.owner = owner;
         requestNew.resourceOwner = resourceOwner;
-
-
         await requestRegistry.add(requestNew);
     });
 }
 
 /**
  * Sample transaction
- * @param {org.basic.server.transaction.DoctorAcceptRequestOfPatient} doctorAcceptRequestOfPatient 
+ * @param {org.basic.server.transaction.DeleteRequest} listing 
+ * @transaction
+ */
+async function deleteRequest(listing) {
+    var factory = getFactory();
+
+    return getAssetRegistry('org.basic.server.Request').then(async function (requestRegistry) {
+
+        var request=await requestRegistry.get(listing.requestId);
+
+        await requestRegistry.remove(request);
+    });
+}
+
+
+/**
+ * Sample transaction
+ * @param {org.basic.server.transaction.PatientRevokeRequestOfDoctor} listing 
+ * @transaction
+ */
+async function patientRevokeRequestOfDoctor(listing) {
+    
+
+    return getAssetRegistry('org.basic.server.Request').then(async function (requestRegistry) {
+
+        var request= await requestRegistry.get(listing.requestId);
+
+
+        var resourceRegistry=await getAssetRegistry('org.basic.server.'+req.resourceType); 
+        var resource=await resourceRegistry.get(request.resourceId);
+
+        var doctor=request.owner;
+
+        //delete doctor in authorizedDoctors and update resourceRegistry
+        await resource.authorizedDoctors.splice(resource.authorizedDoctors.indexOf(doctor,"1"));
+        await resourceRegistry.update(resource);
+
+        request.status="Rejected";
+        await requestRegistry.update(request);
+    });
+}
+
+/**
+ * Sample transaction
+ * @param {org.basic.server.transaction.DoctorRevokeRequestOfPatient} listing 
+ * @transaction
+ */
+async function doctorRevokeRequestOfPatient(listing) {
+    
+
+    return getAssetRegistry('org.basic.server.Request').then(async function (requestRegistry) {
+
+        var request= await requestRegistry.get(listing.requestId);
+
+
+        var resourceRegistry=await getAssetRegistry('org.basic.server.'+req.resourceType); 
+        var resource=await resourceRegistry.get(request.resourceId);
+
+        var patient=request.owner;
+
+        //delete doctor in authorizedDoctors and update resourceRegistry
+        await resource.authorizedPatients.splice(resource.authorizedPatients.indexOf(patient,"1"));
+        await resourceRegistry.update(resource);
+
+        request.status="Rejected";
+        await requestRegistry.update(request);
+    });
+}
+
+
+/**
+ * Sample transaction
+ * @param {org.basic.server.transaction.DoctorAcceptRequestOfPatient} listing 
  * @transaction
  */
 
@@ -251,7 +297,7 @@ async function createRequest(listing) {
 
  /**
  * Sample transaction
- * @param {org.basic.server.transaction.PatientAcceptRequestOfDoctor} patientAcceptRequestOfDoctor 
+ * @param {org.basic.server.transaction.PatientAcceptRequestOfDoctor} listing 
  * @transaction
  */
 

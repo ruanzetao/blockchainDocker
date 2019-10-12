@@ -1,0 +1,24 @@
+namespace org.basic.server.transaction 
+transaction CreateDoctor {
+  o String personId
+  o String name
+  o String address
+  o String email
+  o String phone
+  o String type
+  o String sex
+  o DateTime createAt
+  o DateTime updateAt optional
+}
+
+transaction CreatePatient {
+  o String personId
+  o String name
+  o String address
+  o String email
+  o String phone
+  o String type
+  o String sex
+  o DateTime createAt
+  o DateTime updateAt optional
+}

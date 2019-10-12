@@ -15,6 +15,12 @@ enum RequestType{
   o Read
 }
 
+enum RequestStatus{
+  o Accepted
+  o New
+  o Rejected
+}
+
 enum ResourceType{
   o HealthRecord
   o PatientInfo
