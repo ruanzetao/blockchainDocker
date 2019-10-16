@@ -16,36 +16,12 @@
  * Sample access control list.
  */
 
-
-rule AuthorizedPatientReadDoctorInfo {
-  description:"Patient can request read doctor info"
-  participant(p):"org.basic.server.Patient"
-  operation: READ
-  resource(r):"org.basic.server.DoctorInfo"
-  condition: (r.authorizedPatients.some(function(patient){
-    return patient.getIdentifier()===p.getIdentifier();
-      }))
-  action: ALLOW
-}
-
-rule AuthorizedDoctorReadPatientInfo{
-  description:"Doctor can request read Patient info"
-  participant(p):"org.basic.server.Doctor"
-  operation: READ
-  resource(r):"org.basic.server.PatientInfo"
-  condition: (r.authorizedDoctors.some(function(doctor){
-    return doctor.getIdentifier()===p.getIdentifier();
-      }))
-  action: ALLOW
-}
-
-rule PatientReadPatientInfo{
-  description:"Patient can read doctor info"
-  participant(p):"org.basic.server.Patient"
-  operation: READ,UPDATE
-  resource(r):"org.basic.server.PatientInfo"
-  condition: (p.getIdentifier()===r.owner.getIdentifier())
-  action: ALLOW
+rule SystemACL {
+    description: "System ACL to permit all access"
+    participant: "org.hyperledger.composer.system.Participant"
+    operation: ALL
+    resource: "org.hyperledger.composer.system.**"
+    action: ALLOW
 }
 
 rule NetworkAdminUser {
@@ -63,4 +39,125 @@ rule NetworkAdminSystem {
     resource: "org.hyperledger.composer.system.**"
     action: ALLOW
 }
+
+//Rule of Patient
+rule PatientReadParticipantInfo{
+  description:"Patient can read their participant info"
+  participant(p):"org.basic.server.Patient"
+  operation: READ
+  resource(r):"org.basic.server.Patient"
+  condition: (p.getIdentifier()===r.getIdentifier())
+  action: ALLOW
+}
+
+rule PatientReadPatientInfo{
+  description:"Patient can read Patient info"
+  participant(p):"org.basic.server.Patient"
+  operation: READ,UPDATE
+  resource(r):"org.basic.server.PatientInfo"
+  condition: (p.getIdentifier()===r.owner.getIdentifier())
+  action: ALLOW
+}
+
+rule PatientReadDoctorInfo{
+  description:"Patient can read Doctor info"
+  participant(p):"org.basic.server.Patient"
+  operation: READ,UPDATE
+  resource(r):"org.basic.server.DoctorInfo"
+    condition: (r.authorizedPatients.some(function(patient){
+    return patient.getIdentifier()===p.getIdentifier();
+      }))
+  action: ALLOW
+}
+
+rule AuthorizedPatientReadDoctorInfo {
+  description:"Patient can request read doctor info"
+  participant(p):"org.basic.server.Patient"
+  operation: READ
+  resource(r):"org.basic.server.DoctorInfo"
+  condition: (r.authorizedPatients.some(function(patient){
+    return patient.getIdentifier()===p.getIdentifier();
+      }))
+  action: ALLOW
+}
+
+rule PatientCreateRequest{
+   description: "Patient can create read request"
+    participant: "org.basic.server.Patient"
+    operation: CREATE
+    resource: "org.basic.server.Request"
+    action: ALLOW
+}
+
+rule PatientReadFromRequest{
+  description:"Patient can see all request about Patient"
+  participant(p):"org.basic.server.Patient"
+  operation: READ,DELETE,UPDATE
+  resource: "org.basic.server.Request"
+  condition: ((p.getIdentifier() === r.owner.getIdentifier()) 
+    || p.getIdentifier() === r.resourceOwner.getIdentifier() )
+  action:ALLOW
+}
+
+//Rule of Doctor
+rule DoctorReadParticipantInfo{
+  description:"Patient can read their participant info"
+  participant(p):"org.basic.server.Doctor"
+  operation: READ
+  resource(r):"org.basic.server.Doctor"
+  condition: (p.getIdentifier()===r.getIdentifier())
+  action: ALLOW
+}
+
+rule DoctorReadDoctorInfo{
+  description:"Doctor can read Doctor info"
+  participant(p):"org.basic.server.Doctor"
+  operation: READ,UPDATE
+  resource(r):"org.basic.server.DoctorInfo"
+  condition: (p.getIdentifier()===r.owner.getIdentifier())
+  action: ALLOW
+}
+
+rule DoctorCreateRequest{
+   description: "Patient can create read request"
+    participant: "org.basic.server.Doctor"
+    operation: CREATE
+    resource: "org.basic.server.Request"
+    action: ALLOW
+}
+
+rule DoctorReadFromRequest{
+  description:"Doctor can see all request about Doctor"
+  participant(p):"org.basic.server.Doctor"
+  operation: READ,DELETE,UPDATE
+  resource: "org.basic.server.Request"
+  condition: ((p.getIdentifier() === r.owner.getIdentifier()) 
+    || p.getIdentifier() === r.resourceOwner.getIdentifier() )
+  action:ALLOW
+}
+
+rule DoctorReadPatientInfo{
+  description:"Patient can read Doctor info"
+  participant(p):"org.basic.server.Doctor"
+  operation: READ,UPDATE
+  resource(r):"org.basic.server.PatientInfo"
+  condition: (r.authorizedDoctors.some(function(doctor){
+    return doctor.getIdentifier()===p.getIdentifier();
+      }))
+  action: ALLOW
+}
+
+rule AuthorizedDoctorReadPatientInfo{
+  description:"Doctor can request read Patient info"
+  participant(p):"org.basic.server.Doctor"
+  operation: READ
+  resource(r):"org.basic.server.PatientInfo"
+  condition: (r.authorizedDoctors.some(function(doctor){
+    return doctor.getIdentifier()===p.getIdentifier();
+      }))
+  action: ALLOW
+}
+
+
+
 

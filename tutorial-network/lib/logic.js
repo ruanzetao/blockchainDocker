@@ -178,25 +178,28 @@ async function createPatientProfile(listing){
  * @transaction
  */
 async function createRequest(listing) {
-    var factory = getFactory();
+    var factory =await getFactory();
 
     return getAssetRegistry('org.basic.server.Request').then(async function (requestRegistry) {
         requestNew = await factory.newResource("org.basic.server", "Request", listing.requestId)
+        requestNew.resourceId = listing.resourceId;
+
+       
+
+        
 
         requestNew.requesterRole = listing.requesterRole;
         requestNew.resourceOwnerRole = listing.resourceOwnerRole;
         requestNew.resourceType = listing.resourceType;
-        requestNew.resourceId = listing.resourceId;
 
-        requestNew.idRequester = listing.idRequester
-        requestNew.idResourceOwner = listing.idResourceOwner;
         requestNew.status="New";
         // --> Person owner
         // --> Person resourceOwner
-        var owner = await factory.newRelationship("org.basic.server", requesterRole, listing.idRequester);
-        var resourceOwner = await factory.newRelationship("org.basic.server", resourceOwnerRole, listing.idResourceOwner);
+        var owner = await factory.newRelationship("org.basic.server", listing.requesterRole, listing.idRequester);
+        var resourceOwner = await factory.newRelationship("org.basic.server", listing.resourceOwnerRole, listing.idResourceOwner);
         requestNew.owner = owner;
-        requestNew.resourceOwner = resourceOwner;
+        requestNew.resourceOwner = resourceOwner; 
+
         await requestRegistry.add(requestNew);
     });
 }
@@ -231,13 +234,13 @@ async function patientRevokeRequestOfDoctor(listing) {
         var request= await requestRegistry.get(listing.requestId);
 
 
-        var resourceRegistry=await getAssetRegistry('org.basic.server.'+req.resourceType); 
+        var resourceRegistry=await getAssetRegistry('org.basic.server.'+request.resourceType); 
         var resource=await resourceRegistry.get(request.resourceId);
 
         var doctor=request.owner;
 
         //delete doctor in authorizedDoctors and update resourceRegistry
-        await resource.authorizedDoctors.splice(resource.authorizedDoctors.indexOf(doctor,"1"));
+        await resource.authorizedDoctors.splice(resource.authorizedDoctors.indexOf(doctor,"1"));//van de do:V 2 cho d phai giong nhau :V 
         await resourceRegistry.update(resource);
 
         request.status="Rejected";
@@ -258,7 +261,7 @@ async function doctorRevokeRequestOfPatient(listing) {
         var request= await requestRegistry.get(listing.requestId);
 
 
-        var resourceRegistry=await getAssetRegistry('org.basic.server.'+req.resourceType); 
+        var resourceRegistry=await getAssetRegistry('org.basic.server.'+request.resourceType); 
         var resource=await resourceRegistry.get(request.resourceId);
 
         var patient=request.owner;
@@ -281,7 +284,7 @@ async function doctorRevokeRequestOfPatient(listing) {
 
  async function doctorAcceptRequestOfPatient(listing){
     return getAssetRegistry('org.basic.server.Request').then(async function (requestRegistry){
-        var req=requestRegistry.get(listing.requestId);
+        var req=await requestRegistry.get(listing.requestId);
 
         
         var resourceRegistry=await getAssetRegistry('org.basic.server.'+req.resourceType);
@@ -292,6 +295,9 @@ async function doctorRevokeRequestOfPatient(listing) {
         resource.authorizedPatients.push(owner);
 
         await resourceRegistry.update(resource);
+
+        req.status="Accepted";
+        await requestRegistry.update(req);
     })
  }
 
@@ -303,7 +309,7 @@ async function doctorRevokeRequestOfPatient(listing) {
 
  async function patientAcceptRequestOfDoctor(listing){
      return getAssetRegistry('org.basic.server.Request').then(async function (requestRegistry){
-        var req=requestRegistry.get(listing.requestId);
+        var req=await requestRegistry.get(listing.requestId);
 
         var resourceRegistry=await getAssetRegistry('org.basic.server.'+req.resourceType);
         var resource=await resourceRegistry.get(req.resourceId);
@@ -313,5 +319,7 @@ async function doctorRevokeRequestOfPatient(listing) {
         resource.authorizedDoctors.push(owner);
 
         await resourceRegistry.update(resource);
+        req.status="Accepted";
+        await requestRegistry.update(req);
      })
  }

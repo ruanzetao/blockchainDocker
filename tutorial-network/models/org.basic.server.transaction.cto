@@ -94,6 +94,10 @@ transaction DeleteRequest {
 transaction PatientRevokeRequestOfDoctor {
   o String requestId
 }
+
+transaction DoctorRevokeRequestOfPatient {
+  o String requestId
+}
 transaction DoctorAcceptRequestOfPatient {
   o String requestId
 }
