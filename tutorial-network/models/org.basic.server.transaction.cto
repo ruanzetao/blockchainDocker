@@ -40,15 +40,6 @@ transaction CreateNewPatientInfo {
   o String specialist
 }
 
-transaction CreatePatientProfile {
-  o String patientProfileId
-  o String patientId
-  o Role role
-  o String avatar
-  o DateTime createAt
-  o DateTime updateAt
-}
-//--------------------------
 transaction CreateNewDoctorInfo {
   o String doctorInfoId
   o String doctorId
@@ -63,6 +54,18 @@ transaction CreateNewDoctorInfo {
   o String specialist
 }
 
+
+
+//--------------------------
+transaction CreatePatientProfile {
+  o String patientProfileId
+  o String patientId
+  o Role role
+  o String avatar
+  o DateTime createAt
+  o DateTime updateAt
+}
+
 transaction CreateDoctorProfile {
   o String doctorProfileId
   o String doctorId
@@ -71,6 +74,27 @@ transaction CreateDoctorProfile {
   o DateTime createAt
   o DateTime updateAt
 }
+//---------------------------
+transaction CreateHealthRecord {
+  o String healthRecordId
+  o String doctorId
+  o String patientId
+  o String hight
+  o String thaingoai
+  o String tuoithai
+  o String cogiat
+  o String truyenmau
+  o String hattruong0
+  o String tieucau0
+  o String tq0
+  o String aptt0
+  o String fibrinogen0
+   
+  // o Doctor [] authorizedDoctors
+  // -->Patient owner
+}
+
+
 //---------------------------
 transaction CreateRequest {
 
@@ -103,5 +127,9 @@ transaction DoctorAcceptRequestOfPatient {
 }
 
 transaction PatientAcceptRequestOfDoctor {
+  o String requestId
+}
+
+transaction PatientAcceptRequestHealthRecordOfDoctor {
   o String requestId
 }

@@ -25,21 +25,18 @@ Asset for chaincode
 
 asset HealthRecord identified by healthRecordId {
   o String healthRecordId
-  o String cp
-  o String trestbps
-  o String chol
-  o String fbs
-  o String restecg
-  o String thalach
-  o String exang
-  o String oldpeak
-  o String slope
-  o String ca 
-  o String thal 
-  o String target
-  o String status
-  o Doctor [] authorizedDoctors
-  -->Patient owner
+  o String hight
+  o String thaingoai
+  o String tuoithai
+  o String cogiat
+  o String truyenmau
+  o String hattruong0
+  o String tieucau0
+  o String tq0
+  o String aptt0
+  o String fibrinogen0 
+  --> Doctor [] authorizedDoctors
+  --> Patient owner
   }
 /**
  * An abstract participant type in this business network
@@ -138,16 +135,4 @@ asset PatientProfile identified by patientProfileId{
   o DateTime createAt
   o DateTime updateAt
   --> Patient owner
-}
-
-/**
-Concepts
- */
-
-
-concept PhysicalStatistics {
-  o String weight default="NA"
-  o String height default="NA"
-  o String bloodPressure default="NA"
-  o String cardiacRate default="NA"
 }

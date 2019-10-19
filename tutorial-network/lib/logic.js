@@ -112,7 +112,6 @@ async function createNewDoctorInfo(listing) {
         doctorInfoNew.sex = listing.sex;
         doctorInfoNew.createAt = listing.createAt;
         doctorInfoNew.specialist = listing.specialist;
-
         doctorInfoNew.authorizedPatients = [];
 
         var owner = await factory.newRelationship("org.basic.server", "Doctor", listing.doctorId);
@@ -121,6 +120,65 @@ async function createNewDoctorInfo(listing) {
 
         await doctorInfoRegistry.add(doctorInfoNew);
     });
+}
+
+/**
+ * Sample transaction
+ * @param {org.basic.server.transaction.CreateHealthRecord} listing 
+ * @transaction
+ */
+async function createHealthRecord(listing) {
+    var factory = getFactory();
+
+    return getAssetRegistry('org.basic.server.HealthRecord').then(async function (healthRecordRegistry) {
+        healthRecord =await factory.newResource("org.basic.server", "HealthRecord", listing.healthRecordId)
+        healthRecord.hight = listing.hight;
+        healthRecord.thaingoai = listing.thaingoai;
+        healthRecord.tuoithai = listing.tuoithai;
+        healthRecord.cogiat = listing.cogiat;
+        healthRecord.truyenmau = listing.truyenmau;
+        healthRecord.hattruong0 = listing.hattruong0;
+        healthRecord.tieucau0 = listing.tieucau0;
+        healthRecord.tq0 = listing.tq0;
+        healthRecord.aptt0 = listing.aptt0;
+        healthRecord.fibrinogen0 = listing.fibrinogen0;
+        healthRecord.authorizedDoctors = [];
+
+        // var resourceRegistry=await getParticipantRegistry('org.basic.server.Doctor');
+        // var doctor=await resourceRegistry.get(listing.doctorId);
+
+        var doctor=await factory.newRelationship("org.basic.server","Doctor",listing.doctorId);
+
+        var owner = await factory.newRelationship("org.basic.server", "Patient", listing.patientId);
+        healthRecord.owner = owner;
+
+        healthRecord.authorizedDoctors.push(doctor);
+
+        await healthRecordRegistry.add(healthRecord);
+    });
+}
+
+/**
+ * Sample transaction
+ * @param {org.basic.server.transaction.PatientAcceptRequestHealthRecordOfDoctor} listing 
+ * @transaction
+ */
+
+async function patientAcceptRequestHealthRecordOfDoctor(listing){
+    return getAssetRegistry('org.basic.server.Request').then(async function (requestRegistry){
+       var req=await requestRegistry.get(listing.requestId);
+
+       var resourceRegistry=await getAssetRegistry('org.basic.server.'+req.resourceType);
+       var resource=await resourceRegistry.get(req.resourceId);
+
+       var owner=req.owner;
+
+       resource.authorizedDoctors.push(owner);
+
+       await resourceRegistry.update(resource);
+       req.status="Accepted";
+       await requestRegistry.update(req);
+    })
 }
 
 /**
@@ -183,11 +241,6 @@ async function createRequest(listing) {
     return getAssetRegistry('org.basic.server.Request').then(async function (requestRegistry) {
         requestNew = await factory.newResource("org.basic.server", "Request", listing.requestId)
         requestNew.resourceId = listing.resourceId;
-
-       
-
-        
-
         requestNew.requesterRole = listing.requesterRole;
         requestNew.resourceOwnerRole = listing.resourceOwnerRole;
         requestNew.resourceType = listing.resourceType;
