@@ -32,10 +32,11 @@ async function createDoctor(listing) {
         doctorNew.address = listing.address;
         doctorNew.email = listing.email;
         doctorNew.phone = listing.phone;
-        doctorNew.type = listing.type;
+        doctorNew.identityCardNumber = listing.identityCardNumber;
         doctorNew.sex = listing.sex;
+        doctorNew.birthday = listing.birthday;
         doctorNew.createAt = listing.createAt;
-
+        doctorNew.updateAt = listing.updateAt;
         return await doctorRegistry.add(doctorNew);
     });
 }
@@ -55,20 +56,55 @@ async function createPatient(listing) {
         patientNew.address = listing.address;
         patientNew.email = listing.email;
         patientNew.phone = listing.phone;
-        patientNew.type = listing.type;
+        patientNew.identityCardNumber = listing.identityCardNumber;
         patientNew.sex = listing.sex;
+        patientNew.birthday = listing.birthday;
         patientNew.createAt = listing.createAt;
-
+        patientNew.updateAt = listing.updateAt;
         return await patientRegistry.add(patientNew);
     });
 }
 
 /**
  * Sample transaction
- * @param {org.basic.server.transaction.CreateNewPatientInfo} listing 
+ * @param {org.basic.server.transaction.CreateDoctorInfo} listing 
  * @transaction
  */
-async function createNewPatientInfo(listing) {
+async function createDoctorInfo(listing) {
+    var factory = getFactory();
+
+    return getAssetRegistry('org.basic.server.DoctorInfo').then(async function (doctorInfoRegistry) {
+        doctorInfoNew =await factory.newResource("org.basic.server", "DoctorInfo", listing.doctorInfoId)
+        doctorInfoNew.doctorId = listing.doctorId;
+        doctorInfoNew.name = listing.name;
+        doctorInfoNew.address = listing.address;
+        doctorInfoNew.email = listing.email;
+        doctorInfoNew.phone = listing.phone;
+        doctorInfoNew.identityCardNumber = listing.identityCardNumber;
+        doctorInfoNew.sex = listing.sex;
+        doctorInfoNew.birthday = listing.birthday;
+        doctorInfoNew.specialist = listing.specialist;
+        doctorInfoNew.marriageStatus = listing.marriageStatus;
+        doctorInfoNew.tittle = listing.tittle;
+        doctorInfoNew.createAt = listing.createAt;
+        doctorInfoNew.updateAt = listing.updateAt;
+        doctorInfoNew.authorizedPatients = [];
+
+        var owner = await factory.newRelationship("org.basic.server", "Doctor", listing.doctorId);
+
+        doctorInfoNew.owner = owner;
+
+        await doctorInfoRegistry.add(doctorInfoNew);
+    });
+}
+
+
+/**
+ * Sample transaction
+ * @param {org.basic.server.transaction.CreatePatientInfo} listing 
+ * @transaction
+ */
+async function createPatientInfo(listing) {
     var factory = getFactory();
 
     return getAssetRegistry('org.basic.server.PatientInfo').then(async function (patientInfoRegistry) {
@@ -78,10 +114,13 @@ async function createNewPatientInfo(listing) {
         patientInfoNew.address = listing.address;
         patientInfoNew.email = listing.email;
         patientInfoNew.phone = listing.phone;
-        patientInfoNew.type = listing.type;
+        patientInfoNew.identityCardNumber = listing.identityCardNumber;
         patientInfoNew.sex = listing.sex;
+        patientInfoNew.birthday = listing.birthday;
+        patientInfoNew.career = listing.career;
+        patientInfoNew.marriageStatus = listing.marriageStatus;
         patientInfoNew.createAt = listing.createAt;
-        patientInfoNew.specialist = listing.specialist;
+        patientInfoNew.updateAt = listing.updateAt;
 
         patientInfoNew.authorizedDoctors = [];
 
@@ -93,34 +132,6 @@ async function createNewPatientInfo(listing) {
     });
 }
 
-/**
- * Sample transaction
- * @param {org.basic.server.transaction.CreateNewDoctorInfo} listing 
- * @transaction
- */
-async function createNewDoctorInfo(listing) {
-    var factory = getFactory();
-
-    return getAssetRegistry('org.basic.server.DoctorInfo').then(async function (doctorInfoRegistry) {
-        doctorInfoNew =await factory.newResource("org.basic.server", "DoctorInfo", listing.doctorInfoId)
-        doctorInfoNew.doctorId = listing.doctorId;
-        doctorInfoNew.name = listing.name;
-        doctorInfoNew.address = listing.address;
-        doctorInfoNew.email = listing.email;
-        doctorInfoNew.phone = listing.phone;
-        doctorInfoNew.type = listing.type;
-        doctorInfoNew.sex = listing.sex;
-        doctorInfoNew.createAt = listing.createAt;
-        doctorInfoNew.specialist = listing.specialist;
-        doctorInfoNew.authorizedPatients = [];
-
-        var owner = await factory.newRelationship("org.basic.server", "Doctor", listing.doctorId);
-
-        doctorInfoNew.owner = owner;
-
-        await doctorInfoRegistry.add(doctorInfoNew);
-    });
-}
 
 /**
  * Sample transaction

@@ -36,4 +36,11 @@ enum Role{
 
 enum Specialist{
   o Cardiology
+  o Obstetrics
+}
+
+enum MarriageStatus {
+  o Single
+  o Mariage
+  o Divorced
 }

@@ -47,8 +47,9 @@ abstract participant  Person identified by personId {
   o String address
   o String email
   o String phone
-  o String type
-  o String sex
+  o String identityCardNumber
+  o Gender sex
+  o DateTime birthday
   o DateTime createAt
   o DateTime updateAt optional
  }
@@ -88,18 +89,22 @@ asset DoctorInfo identified by doctorInfoId {
   o String address
   o String email
   o String phone
-  o String type
+  o String identityCardNumber
   o String sex
+  o DateTime birthday
+  o Specialist specialist
+  o MarriageStatus marriageStatus
+  o String tittle optional
   o DateTime createAt
   o DateTime updateAt optional
-  o String specialist
+
   --> Patient[] authorizedPatients
   --> Doctor owner
 }
 
 asset DoctorProfile identified by doctorProfileId{
   o String doctorProfileId
-  o String participantId
+  o String doctorId
   o Role role
   o String avatar default="default"
   o DateTime createAt
@@ -118,18 +123,21 @@ Asset of patient
   o String address
   o String email
   o String phone
-  o String type
+  o String identityCardNumber
   o String sex
+  o DateTime birthday
+  o String career
+  o MarriageStatus marriageStatus
   o DateTime createAt
   o DateTime updateAt optional
-  o String specialist
+  
   --> Doctor[] authorizedDoctors
   --> Patient owner
 }
 
 asset PatientProfile identified by patientProfileId{
   o String patientProfileId
-  o String participantId
+  o String patientId
   o Role role
   o String avatar default="default"
   o DateTime createAt

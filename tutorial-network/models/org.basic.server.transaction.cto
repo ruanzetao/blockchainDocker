@@ -8,8 +8,9 @@ transaction CreateDoctor {
   o String address
   o String email
   o String phone
-  o String type
-  o String sex
+  o String identityCardNumber
+  o Gender sex
+  o DateTime birthday
   o DateTime createAt
   o DateTime updateAt optional
 }
@@ -20,43 +21,61 @@ transaction CreatePatient {
   o String address
   o String email
   o String phone
-  o String type
-  o String sex
+  o String identityCardNumber
+  o Gender sex
+  o DateTime birthday
   o DateTime createAt
   o DateTime updateAt optional
 }
 //------------------------
-transaction CreateNewPatientInfo {
-  o String patientInfoId
-  o String patientId
-  o String name
-  o String address
-  o String email
-  o String phone
-  o String type
-  o String sex
-  o DateTime createAt
-  o DateTime updateAt optional
-  o String specialist
-}
 
-transaction CreateNewDoctorInfo {
+transaction CreateDoctorInfo {
   o String doctorInfoId
   o String doctorId
   o String name
   o String address
   o String email
   o String phone
-  o String type
+  o String identityCardNumber
   o String sex
+  o DateTime birthday
+  o Specialist specialist
+  o MarriageStatus marriageStatus
+  o String tittle optional
   o DateTime createAt
   o DateTime updateAt optional
-  o String specialist
+  
+}
+
+transaction CreatePatientInfo {
+  o String patientInfoId
+  o String patientId
+  o String name
+  o String address
+  o String email
+  o String phone
+  o String identityCardNumber
+  o String sex
+  o DateTime birthday
+  o String career
+  o MarriageStatus marriageStatus
+  o DateTime createAt
+  o DateTime updateAt optional
 }
 
 
 
+
 //--------------------------
+transaction CreateDoctorProfile {
+  o String doctorProfileId
+  o String doctorId
+  o Role role
+  o String avatar
+  o DateTime createAt
+  o DateTime updateAt
+}
+
 transaction CreatePatientProfile {
   o String patientProfileId
   o String patientId
@@ -66,14 +85,7 @@ transaction CreatePatientProfile {
   o DateTime updateAt
 }
 
-transaction CreateDoctorProfile {
-  o String doctorProfileId
-  o String doctorId
-  o Role role
-  o String avatar
-  o DateTime createAt
-  o DateTime updateAt
-}
+
 //---------------------------
 transaction CreateHealthRecord {
   o String healthRecordId
