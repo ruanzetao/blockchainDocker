@@ -108,7 +108,7 @@ asset DoctorProfile identified by doctorProfileId{
   o Role role
   o String avatar default="default"
   o DateTime createAt
-  o DateTime updateAt
+  o DateTime updateAt optional
   --> Doctor owner
 }
 
@@ -141,6 +141,6 @@ asset PatientProfile identified by patientProfileId{
   o Role role
   o String avatar default="default"
   o DateTime createAt
-  o DateTime updateAt
+  o DateTime updateAt optional
   --> Patient owner
 }

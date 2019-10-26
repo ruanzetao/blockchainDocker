@@ -202,7 +202,7 @@ async function patientAcceptRequestHealthRecordOfDoctor(listing){
     var factory = getFactory();
     return getAssetRegistry('org.basic.server.DoctorProfile').then(async function (doctorProfileRegistry) {
         doctorProfileNew =await factory.newResource("org.basic.server", "DoctorProfile", listing.doctorProfileId)
-        doctorProfileNew.participantId = listing.doctorId;
+        doctorProfileNew.doctorId = listing.doctorId;
         doctorProfileNew.role = listing.role;
         doctorProfileNew.avatar = listing.avatar;
         doctorProfileNew.createAt = listing.createAt;  
@@ -212,7 +212,7 @@ async function patientAcceptRequestHealthRecordOfDoctor(listing){
 
         doctorProfileNew.owner = owner;
 
-        await doctorInfoRegistry.add(doctorProfileNew);
+        await doctorProfileRegistry.add(doctorProfileNew);
     });
  }
 
@@ -226,7 +226,7 @@ async function createPatientProfile(listing){
     var factory = getFactory();
     return getAssetRegistry('org.basic.server.PatientProfile').then(async function (patientProfileRegistry) {
         patientProfileNew =await factory.newResource("org.basic.server", "PatientProfile", listing.patientProfileId)
-        patientProfileNew.participantId = listing.patientId;
+        patientProfileNew.patientId = listing.patientId;
         patientProfileNew.role = listing.role;
         patientProfileNew.avatar = listing.avatar;
         patientProfileNew.createAt = listing.createAt;  

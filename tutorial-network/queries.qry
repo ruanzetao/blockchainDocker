@@ -1,0 +1,8 @@
+/** Sample queries for business network
+*/
+
+query selectAllDoctorInfo {
+  description: "Select all doctor info"
+  statement: 
+    SELECT org.basic.server.DoctorInfo
+}
