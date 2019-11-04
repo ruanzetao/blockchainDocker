@@ -12,4 +12,12 @@ const userSchema=new Schema({
     __v:{type:Number, select:false}    
 });
 
+userSchema.statics.getUser = function (email) {
+    return this.findOne({ email: email });
+  };
+
+userSchema.statics.getUsers = function(){
+    return this.find();
+};
+
 module.exports = mongoose.model('User', userSchema)
