@@ -88,9 +88,9 @@ passport.deserializeUser(function (email, done) {
 
 
 app.get('/', function(req, res){
-    //res.redirect("/login");
+    res.render("login");
     //User.getUsers().then(user=>res.json(user));
-    User.getUsers().then(user=>res.json(user));
+    //User.getUsers().then(user=>res.json(user));
 });
 
 
@@ -102,13 +102,17 @@ app.post('/register', function(req, res, next){
             user.email=req.body.email;
             user.password=req.body.password;
             user.card_name=req.body.card_name;
+            user.card_name="networkadmin";
             user.role=req.body.role;
             user.save((err,result)=>{
                 if(err) {return res.json({err})}
-                    res.json({user: result})
+                    //res.json({user: result})
+                    res.redirect("login");
             });
+            res.redirect("index");
         }else{
-            res.json({err:'Email has been used'});
+            //res.json({err:'Email has been used'});
+            res.redirect("login");
         }
     });
 });
@@ -128,12 +132,12 @@ app.post('/login',async function(req,res,next){
 
     database.Authentication(req,res,(result)=>{
         if(result.success){
-            res.cookie('access_token',result.token,{expires: new Date(Date.now() + 3600000)});
-            res.json({msg: 'ok',token:result.token});
-            //res.redirect('/home');
+            // res.cookie('access_token',result.token,{expires: new Date(Date.now() + 3600000)});
+            // res.json({msg: 'ok',token:result.token});
+            res.redirect('/index');
         }else{
             console.log("From post /login - Authentication function:\n" + result.error);
-            //res.redirect("/login");
+            res.redirect("/login");
         }
     })
     // var {email,password}=req.body;
@@ -157,6 +161,12 @@ app.post('/login',async function(req,res,next){
     //         res.status(401).json({ msg: 'Password is incorrect' });
     //     }
     // }
+});
+
+app.get('/index', function(req, res){
+    res.render("index");
+    //User.getUsers().then(user=>res.json(user));
+    //User.getUsers().then(user=>res.json(user));
 });
 
 app.listen(PORT, function(){
