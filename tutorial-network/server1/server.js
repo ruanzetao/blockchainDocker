@@ -17,6 +17,7 @@ var JwtStrategy = passportJWT.Strategy;
 var jwtOptions = {};
 var jwt = require('jsonwebtoken');
 const database=require('./database/index');
+const blockchain=require('./blockchain/index');
 
 // jwtOptions.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
 jwtOptions.secretOrKey = 'thisisanexamplesecret';
@@ -93,6 +94,10 @@ app.get('/', function(req, res){
     //User.getUsers().then(user=>res.json(user));
 });
 
+app.get('/register', function(req, res){
+    res.render("register");
+});
+
 
 app.post('/register', function(req, res, next){
     console.log(req.body);
@@ -105,14 +110,14 @@ app.post('/register', function(req, res, next){
             user.card_name="networkadmin";
             user.role=req.body.role;
             user.save((err,result)=>{
-                if(err) {return res.json({err})}
+                //if(err) {return res.json({err})}
                     //res.json({user: result})
-                    res.redirect("login");
+                    res.redirect("register");
             });
             res.redirect("index");
         }else{
             //res.json({err:'Email has been used'});
-            res.redirect("login");
+            res.redirect("register");
         }
     });
 });
@@ -168,6 +173,19 @@ app.get('/index', function(req, res){
     //User.getUsers().then(user=>res.json(user));
     //User.getUsers().then(user=>res.json(user));
 });
+
+app.post('/adddoctor',async function(req,res){
+    // if ("admin@tutorial-network" !== req.user.cardName) {
+    //     res.redirect("/register");
+    //     return;
+    // }
+
+    // var idCardNumber = req.body.idCardNumber;
+    // var email = req.body.email;
+
+    var result = await blockchain.createDoctor(req.body);
+    console.log(result);
+})
 
 app.listen(PORT, function(){
     console.log('Express is running on port 3000');
