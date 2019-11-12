@@ -106,15 +106,21 @@ app.post('/register', function(req, res, next){
             const user=new User(req.body);
             user.email=req.body.email;
             user.password=req.body.password;
-            user.card_name=req.body.card_name;
-            user.card_name="networkadmin";
             user.role=req.body.role;
-            user.save((err,result)=>{
-                //if(err) {return res.json({err})}
-                    //res.json({user: result})
-                    res.redirect("register");
-            });
-            res.redirect("index");
+            user.name=req.body.name;
+            user.address=req.body.address;
+            user.phone=req.body.phone;
+            user.gender=req.body.gender;
+            user.identityCardNumber=req.body.identityCardNumber;
+
+            user.save();
+
+            if(user){
+                res.redirect("index");
+            }else{
+                res.redirect("register");
+            }
+            
         }else{
             //res.json({err:'Email has been used'});
             res.redirect("register");
