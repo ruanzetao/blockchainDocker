@@ -180,10 +180,16 @@ app.post('/adddoctor',async function(req,res){
     //     return;
     // }
 
-    // var idCardNumber = req.body.idCardNumber;
+    var idCardNumber = req.body.identityCardNumber;
     // var email = req.body.email;
 
     var result = await blockchain.createDoctor(req.body);
+    await blockchain.createDoctorIdentity(idCardNumber);
+    var cardName = idCardNumber + "@tutorial-network";
+    await blockchain.ping(cardName);
+    const cardData=await blockchain.exportCard(cardName);
+    await blockchain.deleteCard(cardName);
+    await blockchain.importCard(cardName,cardData);
     console.log(result);
 })
 

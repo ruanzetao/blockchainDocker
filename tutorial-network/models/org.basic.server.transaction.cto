@@ -10,8 +10,8 @@ transaction CreateDoctor {
   o String phone
   o String identityCardNumber
   o Gender sex
-  o DateTime birthday
-  o DateTime createAt
+  o DateTime birthday optional
+  o DateTime createAt optional
   o DateTime updateAt optional
 }
 
@@ -23,8 +23,8 @@ transaction CreatePatient {
   o String phone
   o String identityCardNumber
   o Gender sex
-  o DateTime birthday
-  o DateTime createAt
+  o DateTime birthday optional
+  o DateTime createAt optional
   o DateTime updateAt optional
 }
 //------------------------
@@ -38,11 +38,11 @@ transaction CreateDoctorInfo {
   o String phone
   o String identityCardNumber
   o String sex
-  o DateTime birthday
+  o DateTime birthday optional
   o Specialist specialist
   o MarriageStatus marriageStatus
   o String tittle optional
-  o DateTime createAt
+  o DateTime createAt optional
   o DateTime updateAt optional
   
 }
@@ -56,10 +56,10 @@ transaction CreatePatientInfo {
   o String phone
   o String identityCardNumber
   o String sex
-  o DateTime birthday
+  o DateTime birthday optional
   o String career
   o MarriageStatus marriageStatus
-  o DateTime createAt
+  o DateTime createAt optional
   o DateTime updateAt optional
 }
 
@@ -72,8 +72,8 @@ transaction CreateDoctorProfile {
   o String doctorId
   o Role role
   o String avatar
-  o DateTime createAt
-  o DateTime updateAt
+  o DateTime createAt optional
+  o DateTime updateAt optional
 }
 
 transaction CreatePatientProfile {
@@ -81,8 +81,8 @@ transaction CreatePatientProfile {
   o String patientId
   o Role role
   o String avatar
-  o DateTime createAt
-  o DateTime updateAt
+  o DateTime createAt optional
+  o DateTime updateAt optional
 }
 
 
