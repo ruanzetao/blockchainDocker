@@ -99,9 +99,10 @@ app.get('/register', function(req, res){
 });
 
 
-app.post('/register', function(req, res, next){
+app.post('/register', async function(req, res, next){
     console.log(req.body);
-    User.findOne({email:req.body.email},(err,user)=>{
+    //var count =User.find().count();
+    User.findOne({email:req.body.email},async (err,user)=>{
         if(user==null){
             const user=new User(req.body);
             user.email=req.body.email;
@@ -112,10 +113,38 @@ app.post('/register', function(req, res, next){
             user.phone=req.body.phone;
             user.sex=req.body.sex;
             user.identityCardNumber=req.body.identityCardNumber;
-
             user.save();
 
-            if(user){
+            var done=0;
+
+            if(req.body.role=="Doctor"){
+                var idCardNumber = req.body.identityCardNumber;
+                var result = await blockchain.createDoctor(req.body);
+                await blockchain.createDoctorIdentity(idCardNumber);
+                var cardName = idCardNumber + "@tutorial-network";
+                await blockchain.ping(cardName);
+                const cardData=await blockchain.exportCard(cardName);
+                await blockchain.deleteCard(cardName);
+                await blockchain.importCard(cardName,cardData);
+                console.log(result);
+                console.log("Done add doctor!");
+                done=1;
+            }
+            if(req.body.role=="Patient"){
+                var idCardNumber = req.body.identityCardNumber;
+                var result = await blockchain.createPatient(req.body);
+                await blockchain.createPatientIdentity(idCardNumber);
+                var cardName = idCardNumber + "@tutorial-network";
+                await blockchain.ping(cardName);
+                const cardData=await blockchain.exportCard(cardName);
+                await blockchain.deleteCard(cardName);
+                await blockchain.importCard(cardName,cardData);
+                console.log(result);
+                console.log("Done add patient!");
+                done=1;
+            }          
+
+            if(done==1){
                 res.redirect("index");
             }else{
                 res.redirect("register");
@@ -175,20 +204,23 @@ app.post('/login',async function(req,res,next){
 });
 
 app.get('/index', function(req, res){
-    var idCardNumber = req.body.identityCardNumber;
-    var result = await blockchain.createDoctor(req.body);
-    await blockchain.createDoctorIdentity(idCardNumber);
-    var cardName = idCardNumber + "@tutorial-network";
-    await blockchain.ping(cardName);
-    const cardData=await blockchain.exportCard(cardName);
-    await blockchain.deleteCard(cardName);
-    await blockchain.importCard(cardName,cardData);
-    console.log(result);
-    console.log("Done add doctor!");
     res.render("index");
     //User.getUsers().then(user=>res.json(user));
     //User.getUsers().then(user=>res.json(user));
 });
+
+app.get('/doctors', async function(req, res){
+    var cardName='admin@tutorial-network';
+    var result=await blockchain.getDoctor(cardName);
+    res.json({msg:'ok',result:result});
+});
+
+app.get('/patients', async function(req, res){
+    var cardName='admin@tutorial-network';
+    var result=await blockchain.getPatient(cardName);
+    res.json({msg:'ok',result:result});
+});
+
 
 app.post('/adddoctor',async function(req,res){
     // if ("admin@tutorial-network" !== req.user.cardName) {
