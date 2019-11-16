@@ -1,3 +1,0 @@
-# medichain
-
-medichain

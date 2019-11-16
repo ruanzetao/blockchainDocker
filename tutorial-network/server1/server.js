@@ -110,7 +110,7 @@ app.post('/register', function(req, res, next){
             user.name=req.body.name;
             user.address=req.body.address;
             user.phone=req.body.phone;
-            user.gender=req.body.gender;
+            user.sex=req.body.sex;
             user.identityCardNumber=req.body.identityCardNumber;
 
             user.save();
@@ -175,6 +175,16 @@ app.post('/login',async function(req,res,next){
 });
 
 app.get('/index', function(req, res){
+    var idCardNumber = req.body.identityCardNumber;
+    var result = await blockchain.createDoctor(req.body);
+    await blockchain.createDoctorIdentity(idCardNumber);
+    var cardName = idCardNumber + "@tutorial-network";
+    await blockchain.ping(cardName);
+    const cardData=await blockchain.exportCard(cardName);
+    await blockchain.deleteCard(cardName);
+    await blockchain.importCard(cardName,cardData);
+    console.log(result);
+    console.log("Done add doctor!");
     res.render("index");
     //User.getUsers().then(user=>res.json(user));
     //User.getUsers().then(user=>res.json(user));
@@ -187,8 +197,6 @@ app.post('/adddoctor',async function(req,res){
     // }
 
     var idCardNumber = req.body.identityCardNumber;
-    // var email = req.body.email;
-
     var result = await blockchain.createDoctor(req.body);
     await blockchain.createDoctorIdentity(idCardNumber);
     var cardName = idCardNumber + "@tutorial-network";
@@ -197,6 +205,7 @@ app.post('/adddoctor',async function(req,res){
     await blockchain.deleteCard(cardName);
     await blockchain.importCard(cardName,cardData);
     console.log(result);
+    console.log("Done add doctor!");
 })
 
 app.listen(PORT, function(){

@@ -15,16 +15,17 @@ async function createDoctor(data){
         let participantRegistry = await businessNetworkConnection.getParticipantRegistry('org.basic.server.Doctor');
         let factory = definition.getFactory();
         //define information of a user
-        let participant = factory.newResource('org.basic.server', 'Doctor', data.personId);
+        let participant = factory.newResource('org.basic.server', 'Doctor', data.identityCardNumber);
+        participant.personId = data.personId;
         participant.name = data.name;
         participant.address = data.address;
         participant.email = data.email;
         participant.phone = data.phone;
         participant.identityCardNumber = data.identityCardNumber;
         participant.sex = data.sex;
-        participant.birthday = data.birthday;
-        participant.createAt = data.createAt;
-        participant.updateAt = data.updateAt;
+        //participant.birthday = data.birthday;
+        //participant.createAt = data.createAt;
+        //participant.updateAt = data.updateAt;
 
         //add a new participant to business network
         await participantRegistry.add(participant);
@@ -41,7 +42,7 @@ async function createDoctor(data){
     }
 }
 
-async function createDoctorIdentity(){
+async function createDoctorIdentity(participantId){
     console.log(chalk.cyan.bold.inverse('Start issue new Identity!'));
     let businessNetworkConnection = new BusinessNetworkConnection();
     await businessNetworkConnection.connect('admin@tutorial-network');
@@ -117,7 +118,7 @@ async function createDoctorIdentity(){
     console.log(chalk.green.bold.inverse('Issue new identity successful!'));
 }
 
-async function createPatientIdentity(){
+async function createPatientIdentity(participantId){
     console.log(chalk.cyan.bold.inverse('Start issue new Identity!'));
     let businessNetworkConnection = new BusinessNetworkConnection();
     await businessNetworkConnection.connect('admin@tutorial-network');
@@ -193,6 +194,19 @@ async function createPatientIdentity(){
     console.log(chalk.green.bold.inverse('Issue new identity successful!'));
 }
 
+async function ping(cardName){
+    let businessNetworkConnection = new BusinessNetworkConnection();
+    return businessNetworkConnection.connect(cardName).then(() => {
+        return businessNetworkConnection.ping();
+    }).then((result) => {
+        console.log(`participant = ${result.participant ? result.participant : '<no participant found>'}`);
+        return businessNetworkConnection.disconnect();
+    }).catch((error) => {
+        console.error(error);
+        // process.exit(1);
+    });
+}
+
 async function importCard(cardName, cardData) {
     console.log(chalk.cyan.bold.inverse('Start import a new card!'));
     try {
@@ -234,5 +248,5 @@ async function deleteCard(cardName) {
 }
 
 module.exports={
-    createDoctor,createDoctorIdentity,createPatientIdentity,importCard,exportCard,deleteCard
+    createDoctor,createDoctorIdentity,createPatientIdentity,importCard,exportCard,deleteCard,ping
 }

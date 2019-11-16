@@ -41,7 +41,7 @@ asset HealthRecord identified by healthRecordId {
 /**
  * An abstract participant type in this business network
  */
-abstract participant  Person identified by personId {
+abstract participant  Person identified by identityCardNumber {
   o String personId
   o String name
   o String address

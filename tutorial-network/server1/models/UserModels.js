@@ -9,7 +9,7 @@ const userSchema=new Schema({
     name:{type: String, required:true}, 
     address:{type: String, required:true}, 
     phone:{type: String, required:true}, 
-    gender:{type: String, required:true,enum:['Male','Female','Other']}, 
+    sex:{type: String, required:true,enum:['Male','Female','Other']}, 
     identityCardNumber:{type: String, required:true}, 
     createdAt: {type:Date, default:Date.now},
     deleted:{type:Boolean, default:false},
