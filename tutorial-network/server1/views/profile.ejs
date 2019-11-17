@@ -31,47 +31,6 @@
 
     <!-- Main CSS-->
     <link href="css/main1.css" rel="stylesheet" media="all">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <style>
-        .card {
-            border-top-width: 0px;
-            top: 100px;
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-            max-width: 300px;
-            margin: auto;
-            text-align: center;
-            font-family: arial;
-        }
-
-        .title {
-            color: grey;
-            font-size: 18px;
-        }
-
-        button {
-            border: none;
-            outline: 0;
-            display: inline-block;
-            padding: 8px;
-            color: white;
-            background-color: #000;
-            text-align: center;
-            cursor: pointer;
-            width: 100%;
-            font-size: 18px;
-        }
-
-        a {
-            text-decoration: none;
-            font-size: 22px;
-            color: black;
-        }
-
-        button:hover,
-        a:hover {
-            opacity: 0.7;
-        }
-    </style>
 </head>
 
 <body>
@@ -114,7 +73,6 @@
                             <li class="nav-item"><a class="nav-link" href="about-us.html">About</a></li>
                             <li class="nav-item"><a class="nav-link" href="department.html">Department</a></li>
                             <li class="nav-item"><a class="nav-link" href="doctors.html">Doctors</a></li>
-                            <li class="nav-item"><a class="nav-link" href="doctors.html">Patients</a></li>
                             <li class="nav-item submenu dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
                                     aria-haspopup="true" aria-expanded="false">Blog</a>
@@ -126,7 +84,6 @@
                                 </ul>
                             </li>
                             <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
-                            <li class="nav-item"><a class="nav-link" href="contact.html">Profile</a></li>
                         </ul>
                     </div>
                 </div>
@@ -134,20 +91,59 @@
         </div>
     </header>
     <!--================Header Menu Area =================-->
-
-    <body>
-        <h2 style="text-align:center">User Profile Card</h2>
-
-        <div class="card">
-            <img src="https://scontent.fsgn6-2.fna.fbcdn.net/v/t1.0-9/p960x960/76793150_2665872486815334_7121435997337812992_o.jpg?_nc_cat=100&_nc_oc=AQkrZY-P03oTXcpr8YV1LOSsqCbtzMohHmMNB_sY67XmIaa4SlcL4rNa68KCRwdM4uc&_nc_ht=scontent.fsgn6-2.fna&oh=81bada5de80ee8e45ba12e2d3afe2995&oe=5E8C5908"
-                alt="John" style="width:100%">
-            <h1>John Doe</h1>
-            <p class="title">CEO & Founder, Example</p>
-            <p>Harvard University</p>
-
-            <p><button>Contact</button></p>
+    <div class="page-wrapper bg-gra-01 p-t-180 p-b-100 font-poppins">
+        <div class="wrapper wrapper--w780">
+            <div class="card card-3">
+                <div class="card-heading"></div>
+                <div class="card-body">
+                    <h2 class="title">Registration Info</h2>
+                    <form method="POST">
+                        <div class="input-group">
+                            <input class="input--style-3" type="email" placeholder="Email" name="email" disabled>
+                        </div>
+                        <div class="input-group">
+                            <input class="input--style-3" type="password" placeholder="Password" name="password" disabled>
+                        </div>    
+                        <div class="input-group">
+                            <input class="input--style-3" type="role" placeholder="Role" name="role" disabled>
+                        </div>                    
+                        <div class="input-group">
+                            <input class="input--style-3" type="name" placeholder="Name" name="name" disabled>
+                        </div>
+                        <div class="input-group">
+                            <input class="input--style-3" type="address" placeholder="Address" name="address" disabled>
+                        </div>
+                        <div class="input-group">
+                            <input class="input--style-3" type="phone" placeholder="Phone" name="phone" disabled>
+                        </div>
+                        <div class="input-group">
+                            <input class="input--style-3" type="sex" placeholder="Male/Female/Other" name="sex" disabled>
+                        </div>
+                        <div class="input-group">
+                            <input class="input--style-3" type="identityCardNumber" placeholder="Identity Card Number" name="identityCardNumber">
+                        </div>
+                        <div class="p-t-10">
+                                <button class="btn btn--pill btn--green" type="edit">Edit</button>
+                            </div>
+                        <div class="p-t-10">
+                            <button class="btn btn--pill btn--green" type="submit" href="/register">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-    </body>
+    </div>
+
+    <!-- Jquery JS-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <!-- Vendor JS-->
+    <script src="vendor/select2/select2.min.js"></script>
+    <script src="vendor/datepicker/moment.min.js"></script>
+    <script src="vendor/datepicker/daterangepicker.js"></script>
+
+    <!-- Main JS-->
+    <script src="js/global.js"></script>
+
 
     <!-- start footer Area -->
     <footer class="footer-area area-padding-top">

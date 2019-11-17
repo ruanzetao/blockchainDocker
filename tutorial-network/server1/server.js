@@ -145,7 +145,18 @@ app.post('/register', async function(req, res, next){
             }          
 
             if(done==1){
-                res.redirect("index");
+                //res.redirect("index");
+                var idCardNumber = req.body.identityCardNumber;
+                if(req.body.role=="Doctor"){
+                    var getuser=await blockchain.getDoctor(cardName);
+                }
+
+                if(req.body.role=="Patient"){
+                    var getuser=await blockchain.getPatient(cardName);
+                }
+                
+                res.render("index",{data:getuser});
+                //console.log("data: "+data);
             }else{
                 res.redirect("register");
             }
@@ -204,7 +215,17 @@ app.post('/login',async function(req,res,next){
 });
 
 app.get('/index', function(req, res){
-    res.render("index");
+    res.render("index",{data: user});
+    console.log("Index: "+user);
+    //User.getUsers().then(user=>res.json(user));
+    //User.getUsers().then(user=>res.json(user));
+});
+
+app.get('/profile/:identityCardNumber',async function(req, res){
+    var identityCardNumber=req.params.identityCardNumber;
+    var cardName = identityCardNumber + "@tutorial-network";
+    var getuser=await blockchain.getDoctor(cardName);
+    res.render("doctorprofile",{data: getuser});
     //User.getUsers().then(user=>res.json(user));
     //User.getUsers().then(user=>res.json(user));
 });
@@ -239,6 +260,17 @@ app.post('/adddoctor',async function(req,res){
     console.log(result);
     console.log("Done add doctor!");
 })
+
+app.get('/countdoctorinfo', async function(req,res){
+    var cardName='admin@tutorial-network'
+    var results=await blockchain.countDoctorInfo(cardName);
+    console.log("count: "+results);
+})
+
+app.post('/adddoctorinfo', async function(req,res){
+    await blockchain.createDoctorInfo(req.body);
+    console.log("Done create doctor info");
+});
 
 app.listen(PORT, function(){
     console.log('Express is running on port 3000');
