@@ -221,6 +221,10 @@ app.get('/index', function(req, res){
     //User.getUsers().then(user=>res.json(user));
 });
 
+app.get('/demoprofile',function(req,res){
+    res.render("profile");
+})
+
 app.get('/profile/:identityCardNumber',async function(req, res){
     var identityCardNumber=req.params.identityCardNumber;
     var cardName = identityCardNumber + "@tutorial-network";

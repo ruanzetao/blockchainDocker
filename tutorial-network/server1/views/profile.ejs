@@ -96,37 +96,35 @@
             <div class="card card-3">
                 <div class="card-heading"></div>
                 <div class="card-body">
-                    <h2 class="title">Registration Info</h2>
-                    <form method="POST">
+                    <h2 class="title">User Info</h2>
+                    <button id="edit" onclick="editFunction()" class="btn btn--pill btn--green" type="edit" name="edit">Edit</button>
+                    <form method="POST" id="formprofile"name="formprofile">                
                         <div class="input-group">
-                            <input class="input--style-3" type="email" placeholder="Email" name="email" disabled>
+                            <input id="name" class="input--style-3" type="name" placeholder="Name" name="name" disabled>
                         </div>
                         <div class="input-group">
-                            <input class="input--style-3" type="password" placeholder="Password" name="password" disabled>
-                        </div>    
-                        <div class="input-group">
-                            <input class="input--style-3" type="role" placeholder="Role" name="role" disabled>
-                        </div>                    
-                        <div class="input-group">
-                            <input class="input--style-3" type="name" placeholder="Name" name="name" disabled>
+                            <input id="address" class="input--style-3" type="address" placeholder="Address" name="address" disabled>
                         </div>
                         <div class="input-group">
-                            <input class="input--style-3" type="address" placeholder="Address" name="address" disabled>
+                                <input id="email" class="input--style-3" type="email" placeholder="Email" name="email" disabled>
+                            </div> 
+                        <div class="input-group">
+                            <input id="phone" class="input--style-3" type="phone" placeholder="Phone" name="phone" disabled>
                         </div>
                         <div class="input-group">
-                            <input class="input--style-3" type="phone" placeholder="Phone" name="phone" disabled>
+                                <input id="identityCardNumber" class="input--style-3" type="identityCardNumber" placeholder="Identity Card Number" name="identityCardNumber" disabled>
+                            </div> 
+                        <div class="input-group">
+                            <input id="sex" class="input--style-3" type="sex" placeholder="Male/Female/Other" name="sex" disabled>
                         </div>
                         <div class="input-group">
-                            <input class="input--style-3" type="sex" placeholder="Male/Female/Other" name="sex" disabled>
+                            <input id="specialist" class="input--style-3" type="specialist" placeholder="Specialist" name="specialist" disabled>
                         </div>
                         <div class="input-group">
-                            <input class="input--style-3" type="identityCardNumber" placeholder="Identity Card Number" name="identityCardNumber">
+                            <input id="tittle" class="input--style-3" type="tittle" placeholder="Tittle" name="tittle" disabled>
                         </div>
                         <div class="p-t-10">
-                                <button class="btn btn--pill btn--green" type="edit">Edit</button>
-                            </div>
-                        <div class="p-t-10">
-                            <button class="btn btn--pill btn--green" type="submit" href="/register">Submit</button>
+                            <button id="save" class="btn btn--pill btn--green" type="save" name="save" href="/adddoctorinfo">Save</button>
                         </div>
                     </form>
                 </div>
@@ -143,6 +141,21 @@
 
     <!-- Main JS-->
     <script src="js/global.js"></script>
+
+    <script>
+
+        function editFunction(){
+            
+            document.getElementById("name").disabled=false;
+            document.getElementById("address").disabled=false;
+            document.getElementById("email").disabled=false;
+            document.getElementById("phone").disabled=false;
+            document.getElementById("identityCardNumber").disabled=false;
+            document.getElementById("sex").disabled=false;
+            document.getElementById("specialist").disabled=false;
+            document.getElementById("tittle").disabled=false;
+        }
+    </script>
 
 
     <!-- start footer Area -->
