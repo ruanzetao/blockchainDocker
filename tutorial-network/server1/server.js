@@ -28,8 +28,10 @@ const PORT = process.env.PORT || 3000;
 const db = mongoose.connection;
 
 app.set("view engine", "ejs");
-app.set("views", "./views");
+app.set("views",__dirname +"/views");
 app.use(express.static("public"));
+app.use('/profile', express.static(__dirname + '/public'));
+
 app.use(morgan("dev"));
 app.use(bodyParser.json());
 app.use(cookieParser());
@@ -168,24 +170,16 @@ app.post('/register', async function(req, res, next){
     });
 });
 
-
-//route login
-
-// app.get("/login", function (req, res, next) {
-//     if (req.cookies.access_token) {
-//         res.redirect("/home");
-//     } else {
-//         res.render('login1')
-//     }
-// });
-
 app.post('/login',async function(req,res,next){
-
+    console.log("login start");
     database.Authentication(req,res,(result)=>{
         if(result.success){
-            // res.cookie('access_token',result.token,{expires: new Date(Date.now() + 3600000)});
-            // res.json({msg: 'ok',token:result.token});
-            res.redirect('/index');
+            User.findOne({email:req.body.email}, async (err,user)=>{
+                console.log("email: "+req.body.email)
+                console.log(user.identityCardNumber);
+                res.render('index',{data: user});
+            });
+            
         }else{
             console.log("From post /login - Authentication function:\n" + result.error);
             res.redirect("/login");
@@ -229,9 +223,7 @@ app.get('/profile/:identityCardNumber',async function(req, res){
     var identityCardNumber=req.params.identityCardNumber;
     var cardName = identityCardNumber + "@tutorial-network";
     var getuser=await blockchain.getDoctor(cardName);
-    res.render("doctorprofile",{data: getuser});
-    //User.getUsers().then(user=>res.json(user));
-    //User.getUsers().then(user=>res.json(user));
+    await res.render("profile");
 });
 
 app.get('/doctors', async function(req, res){

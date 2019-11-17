@@ -13,7 +13,7 @@ async function createDoctor(data){
         //console.log(data.personId);
         const definition = await businessNetworkConnection.connect('admin@tutorial-network');
         let participantRegistry = await businessNetworkConnection.getParticipantRegistry('org.basic.server.Doctor');
-        let doctor =participantRegistry.get(data.identityCardNumber);
+        //let doctor =participantRegistry.get(data.identityCardNumber);
         let factory = definition.getFactory();
         //define information of a user
         let participant = factory.newResource('org.basic.server', 'Doctor', data.identityCardNumber);
