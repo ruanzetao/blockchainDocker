@@ -3,7 +3,7 @@ import org.basic.server.enums.*
 
 
 transaction CreateDoctor {
-  o String personId
+  
   o String name
   o String address
   o String email
@@ -16,7 +16,7 @@ transaction CreateDoctor {
 }
 
 transaction CreatePatient {
-  o String personId
+  
   o String name
   o String address
   o String email
@@ -31,7 +31,7 @@ transaction CreatePatient {
 
 transaction CreateDoctorInfo {
   o String doctorInfoId
-  o String doctorId
+  
   o String name
   o String address
   o String email
@@ -49,7 +49,7 @@ transaction CreateDoctorInfo {
 
 transaction CreatePatientInfo {
   o String patientInfoId
-  o String patientId
+  
   o String name
   o String address
   o String email

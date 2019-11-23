@@ -37,7 +37,7 @@ async function createDoctor(data){
         return 1;
     }catch (error) {
         //error: trung id card
-        console.error(error);
+        console.log(error);
         return 0;
         // process.exit(1);
     }
@@ -72,7 +72,7 @@ async function createDoctorInfo(data){
         doctorInfo.marriageStatus = data.marriageStatus;
         doctorInfo.tittle = data.tittle;
 
-        var owner = await factory.newRelationship("org.basic.server", "Doctor", data.doctorId);
+        var owner = await factory.newRelationship("org.basic.server", "Doctor", data.identityCardNumber);
 
         doctorInfo.owner = owner;
 
@@ -121,6 +121,54 @@ async function createPatient(data){
         //disconect admin card
         await businessNetworkConnection.disconnect();
         console.log("Add participant successfully");
+        return 1;
+    }catch (error) {
+        //error: trung id card
+        console.error(error);
+        return 0;
+        // process.exit(1);
+    }
+}
+
+async function createPatientInfo(data){
+    console.log("start creating a new doctor info");
+    let businessNetworkConnection = new BusinessNetworkConnection();
+
+    try{
+        //console.log(data.personId);
+        const definition = await businessNetworkConnection.connect('admin@tutorial-network');
+        //let participantRegistry = await businessNetworkConnection.getParticipantRegistry('org.basic.server.Doctor');
+           
+        let results=await businessNetworkConnection.query('selectAllPatientInfo');
+        let count=results.length;
+        let patientInfoId=count+1;
+        console.log("patientInfoId: "+patientInfoId);
+        let assetRegistry= await businessNetworkConnection.getAssetRegistry('org.basic.server.PatientInfo');    
+        let factory = definition.getFactory();
+        //define information of a user
+        let patientInfo = factory.newResource('org.basic.server', 'PatientInfo', patientInfoId.toString());
+        patientInfo.patientId = data.identityCardNumber;
+        patientInfo.name = data.name;
+        patientInfo.address = data.address;
+        patientInfo.email = data.email;
+        patientInfo.phone = data.phone;
+        patientInfo.identityCardNumber = data.identityCardNumber;
+        patientInfo.sex = data.sex;
+        patientInfo.career = data.career;
+        patientInfo.authorizedDoctors=[];
+        patientInfo.marriageStatus = data.marriageStatus;
+        
+
+        var owner = await factory.newRelationship("org.basic.server", "Patient", data.identityCardNumber);
+
+        patientInfo.owner = owner;
+
+        //add a new participant to business network
+        await assetRegistry.add(patientInfo);
+
+        //disconect admin card
+        await businessNetworkConnection.disconnect();
+        console.log("Add patient info successfully");
         return 1;
     }catch (error) {
         //error: trung id card
@@ -370,8 +418,65 @@ async function getDoctor(cardName) {
     }
 }
 
+async function getDoctorInfo(cardName) {
+    console.log("start get Doctor Info");
+
+    let businessNetworkConnection = new BusinessNetworkConnection();
+
+    try {
+        // await businessNetworkConnection.connect('3@identity');
+        await businessNetworkConnection.connect(cardName);
+        let participantRegistry = await businessNetworkConnection.getAssetRegistry('org.basic.server.DoctorInfo');
+
+
+        //add a new participant to business network
+        var result = await participantRegistry.getAll();
+        //console.log("Result:"+result);
+
+        //disconect admin card
+        await businessNetworkConnection.disconnect();
+
+        
+            // console.log(result);
+        var user = {
+            name: result[0].name,
+            address: result[0].address,
+            email: result[0].email,
+            phone: result[0].phone,
+            identityCardNumber: result[0].identityCardNumber,
+            sex: result[0].sex,
+            specialist: result[0].specialist,
+            marriageStatus: result[0].marriageStatus,
+            tittle: result[0].tittle
+        }
+        //console.log(user);
+        return user;
+        
+        
+    } catch (error) {
+        await businessNetworkConnection.disconnect();
+        var user = {
+            name: 'Name',
+            address: 'Address',
+            email: 'Email',
+            phone: 'Phone',
+            identityCardNumber: 'Identity Card Number',
+            sex: 'Gender',
+            specialist: 'Specialist',
+            marriageStatus: 'Marriage Status',
+            tittle: 'Tittle'
+        };
+        
+        //error: trung id card
+        //console.error(error);
+        return user
+        // process.exit(1);
+    }
+    return 1;
+}
+
 async function getPatient(cardName) {
-    console.log("start get Doctor");
+    console.log("start get Patient");
 
     let businessNetworkConnection = new BusinessNetworkConnection();
 
@@ -403,6 +508,55 @@ async function getPatient(cardName) {
         console.error(error);
         // process.exit(1);
     }
+}
+
+async function getPatientInfo(cardName) {
+    console.log("start get Patient Info");
+
+    let businessNetworkConnection = new BusinessNetworkConnection();
+
+    try {
+        // await businessNetworkConnection.connect('3@identity');
+        await businessNetworkConnection.connect(cardName);
+        let participantRegistry = await businessNetworkConnection.getAssetRegistry('org.basic.server.PatientInfo');
+
+
+        //add a new participant to business network
+        var result = await participantRegistry.getAll();
+
+        //disconect admin card
+        await businessNetworkConnection.disconnect();
+        // console.log(result);
+        var user = {
+            name: result[0].name,
+            address: result[0].address,
+            email: result[0].email,
+            phone: result[0].phone,
+            identityCardNumber: result[0].identityCardNumber,
+            sex: result[0].sex,
+            career: result[0].career,
+            marriageStatus: result[0].marriageStatus
+        };
+        console.log(user);
+        return user;
+    } catch (error) {
+        await businessNetworkConnection.disconnect();
+        var user = {
+            name: 'Name',
+            address: 'Address',
+            email: 'Email',
+            phone: 'Phone',
+            identityCardNumber: 'Identity Card Number',
+            sex: 'Gender',
+            Career: 'Career',
+            marriageStatus: 'Marriage Status'
+        };
+        //error: trung id card
+        //console.error(error);
+        return user;
+        // process.exit(1);
+    }
+    //return 1;
 }
 
 async function getDoctorById(id, onSucess) {
@@ -521,9 +675,57 @@ async function countDoctorInfo(data){
     }
 }
 
+async function createRequest(data){
+    console.log("start creating a new request");
+    let businessNetworkConnection = new BusinessNetworkConnection();
+
+    try{
+        //console.log(data.personId);
+        const definition = await businessNetworkConnection.connect('admin@tutorial-network');
+        //let participantRegistry = await businessNetworkConnection.getParticipantRegistry('org.basic.server.Doctor');
+           
+        let results=await businessNetworkConnection.query('selectAllRequest');
+        let count=results.length;
+        let requestId=count+1;
+        console.log("patientInfoId: "+requestId);
+        let assetRegistry= await businessNetworkConnection.getAssetRegistry('org.basic.server.Request');    
+        let factory = definition.getFactory();
+        //define information of a user
+        let requestInfo = factory.newResource('org.basic.server', 'Request', requestId.toString());
+        //requestInfo.requestId = requestId;
+        requestInfo.requesterRole = data.requesterRole;
+        requestInfo.resourceOwnerRole = data.resourceOwnerRole;
+        requestInfo.resourceType = data.resourceType;
+        requestInfo.status = 'New';
+        //requestInfo.idRequester = data.idRequester;
+        //requestInfo.idResourceOwner = data.idResourceOwner;
+        
+
+        var owner = await factory.newRelationship("org.basic.server", "Request", data.idRequester);
+        requestInfo.owner = owner;
+
+        var resourceOwner = await factory.newRelationship("org.basic.server", "Request", data.idResourceOwner);
+        requestInfo.resourceOwner = resourceOwner;
+
+        //add a new participant to business network
+        await assetRegistry.add(patientInfo);
+
+        //disconect admin card
+        await businessNetworkConnection.disconnect();
+        console.log("Add patient info successfully");
+        return 1;
+    }catch (error) {
+        //error: trung id card
+        console.log(error);
+        return 0;
+        // process.exit(1);
+    }
+}
+
 
 
 module.exports={
     createDoctor,createPatient,createDoctorIdentity,createPatientIdentity,importCard,exportCard,deleteCard,ping,getDoctor,getPatient,getDoctorById
-    ,getPatientById,createDoctorInfo,countDoctorInfo
+    ,getPatientById,createDoctorInfo,countDoctorInfo,getDoctorInfo,createPatientInfo,getPatientInfo
+    ,createRequest
 }

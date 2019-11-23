@@ -31,47 +31,6 @@
 
     <!-- Main CSS-->
     <link href="css/main1.css" rel="stylesheet" media="all">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <style>
-        .card {
-            border-top-width: 0px;
-            top: 100px;
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-            max-width: 300px;
-            margin: auto;
-            text-align: center;
-            font-family: arial;
-        }
-
-        .title {
-            color: grey;
-            font-size: 18px;
-        }
-
-        button {
-            border: none;
-            outline: 0;
-            display: inline-block;
-            padding: 8px;
-            color: white;
-            background-color: #000;
-            text-align: center;
-            cursor: pointer;
-            width: 100%;
-            font-size: 18px;
-        }
-
-        a {
-            text-decoration: none;
-            font-size: 22px;
-            color: black;
-        }
-
-        button:hover,
-        a:hover {
-            opacity: 0.7;
-        }
-    </style>
 </head>
 
 <body>
@@ -114,7 +73,6 @@
                             <li class="nav-item"><a class="nav-link" href="about-us.html">About</a></li>
                             <li class="nav-item"><a class="nav-link" href="department.html">Department</a></li>
                             <li class="nav-item"><a class="nav-link" href="doctors.html">Doctors</a></li>
-                            <li class="nav-item"><a class="nav-link" href="doctors.html">Patients</a></li>
                             <li class="nav-item submenu dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
                                     aria-haspopup="true" aria-expanded="false">Blog</a>
@@ -126,7 +84,6 @@
                                 </ul>
                             </li>
                             <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
-                            <li class="nav-item"><a class="nav-link" href="contact.html">Profile</a></li>
                         </ul>
                     </div>
                 </div>
@@ -134,25 +91,72 @@
         </div>
     </header>
     <!--================Header Menu Area =================-->
-
-    <body>
-        <h2 style="text-align:center">User Profile Card</h2>
-
-        <div class="card">
-            <img src="https://scontent.fsgn6-2.fna.fbcdn.net/v/t1.0-9/p960x960/76793150_2665872486815334_7121435997337812992_o.jpg?_nc_cat=100&_nc_oc=AQkrZY-P03oTXcpr8YV1LOSsqCbtzMohHmMNB_sY67XmIaa4SlcL4rNa68KCRwdM4uc&_nc_ht=scontent.fsgn6-2.fna&oh=81bada5de80ee8e45ba12e2d3afe2995&oe=5E8C5908"
-                alt="John" style="width:100%">
-            <h1>John Doe</h1>
-            <p class="title">CEO & Founder, Example</p>
-            <p>Harvard University</p>
-            <div style="margin: 24px 0;">
-                <a href="#"><i class="fa fa-dribbble"></i></a>
-                <a href="#"><i class="fa fa-twitter"></i></a>
-                <a href="#"><i class="fa fa-linkedin"></i></a>
-                <a href="#"><i class="fa fa-facebook"></i></a>
+    <div class="page-wrapper bg-gra-01 p-t-180 p-b-100 font-poppins">
+        <div class="wrapper wrapper--w780">
+            <div class="card card-3">
+                <div class="card-heading"></div>
+                <div class="card-body">
+                    <h2 class="title">User Info</h2>
+                    <button id="edit" onclick="editFunction()" class="btn btn--pill btn--green" type="edit" name="edit">Edit</button>
+                    <form method="POST" id="formprofile" name="formprofile">                
+                        <div class="input-group">
+                            <input id="name" class="input--style-3" type="name" placeholder="Name" name="name" disabled value=<%=data.name%>>
+                        </div>
+                        <div class="input-group">
+                            <input id="address" class="input--style-3" type="address" placeholder="Address" name="address" disabled value=<%=data.address%>>
+                        </div>
+                        <div class="input-group">
+                                <input id="email" class="input--style-3" type="email" placeholder="Email" name="email" disabled value=<%=data.email%>>
+                            </div> 
+                        <div class="input-group">
+                            <input id="phone" class="input--style-3" type="phone" placeholder="Phone" name="phone" disabled value=<%=data.phone%>>
+                        </div>
+                        <div class="input-group">
+                                <input id="identityCardNumber" class="input--style-3" type="identityCardNumber" placeholder="Identity Card Number" name="identityCardNumber" disabled value=<%=data.identityCardNumber%>>
+                            </div> 
+                        <div class="input-group">
+                            <input id="sex" class="input--style-3" type="sex" placeholder="Male/Female/Other" name="sex" disabled value=<%=data.sex%>>
+                        </div>
+                        <div class="input-group">
+                            <input id="career" class="input--style-3" type="career" placeholder="Career" name="career" disabled value=<%=data.career%>>
+                        </div>
+                        <div class="input-group">
+                            <input id="marriageStatus" class="input--style-3" type="marriageStatus" placeholder="marriageStatus" name="marriageStatus" disabled value=<%=data.marriageStatus%>>
+                        </div>
+                        <div class="p-t-10">
+                            <button id="save" class="btn btn--pill btn--green" type="save" name="save" href="/addpatientinfo">Save</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <p><button>Contact</button></p>
         </div>
-    </body>
+    </div>
+
+    <!-- Jquery JS-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <!-- Vendor JS-->
+    <script src="vendor/select2/select2.min.js"></script>
+    <script src="vendor/datepicker/moment.min.js"></script>
+    <script src="vendor/datepicker/daterangepicker.js"></script>
+
+    <!-- Main JS-->
+    <script src="js/global.js"></script>
+
+    <script>
+
+        function editFunction(){            
+            document.getElementById("name").disabled=false;
+            document.getElementById("address").disabled=false;
+            document.getElementById("email").disabled=false;
+            document.getElementById("phone").disabled=false;
+            document.getElementById("identityCardNumber").disabled=false;
+            document.getElementById("sex").disabled=false;
+            document.getElementById("career").disabled=false;
+            document.getElementById("marriageStatus").disabled=false;
+            
+        }
+    </script>
+
 
     <!-- start footer Area -->
     <footer class="footer-area area-padding-top">
@@ -236,11 +240,6 @@
         </div>
     </footer>
     <!-- End footer Area -->
-
-
-
-
-
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

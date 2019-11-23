@@ -18,10 +18,10 @@ var jwtOptions = {};
 var jwt = require('jsonwebtoken');
 const database=require('./database/index');
 const blockchain=require('./blockchain/index');
-
+var jwtPayloadDecoder = require('jwt-payload-decoder');
 // jwtOptions.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
 jwtOptions.secretOrKey = 'thisisanexamplesecret';
-
+var atob = require('atob');
 const app=express();
 
 const PORT = process.env.PORT || 3000;
@@ -85,8 +85,6 @@ passport.deserializeUser(function (email, done) {
         next(null,false);
     }
 });
-
-
 
 
 
@@ -170,6 +168,22 @@ app.post('/register', async function(req, res, next){
     });
 });
 
+function parseJwt (token) {
+    var base64Url = token.split('.')[1];
+    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+
+    console.log("jsonPayload"+jsonPayload);
+    var object=JSON.parse(jsonPayload);
+    console.log("object: "+ object)
+    var email=object.email;
+    console.log("email: "+email);
+
+    return email;
+};
+
 app.post('/login',async function(req,res,next){
     console.log("login start");
     database.Authentication(req,res,(result)=>{
@@ -177,6 +191,9 @@ app.post('/login',async function(req,res,next){
             User.findOne({email:req.body.email}, async (err,user)=>{
                 console.log("email: "+req.body.email)
                 console.log(user.identityCardNumber);
+                res.cookie('access_token', result.token, { expires: new Date(Date.now() + 3600000) });
+                console.log("token: "+result.token);
+                console.log("email: "+parseJwt(result.token));
                 res.render('index',{data: user});
             });
             
@@ -208,7 +225,7 @@ app.post('/login',async function(req,res,next){
     // }
 });
 
-app.get('/index', function(req, res){
+app.get('/index',passport.authenticate('jwt',{failureRedirect:"/login"}), function(req, res){
     res.render("index",{data: user});
     console.log("Index: "+user);
     //User.getUsers().then(user=>res.json(user));
@@ -219,11 +236,88 @@ app.get('/demoprofile',function(req,res){
     res.render("profile");
 })
 
-app.get('/profile/:identityCardNumber',async function(req, res){
+app.get('/profile/:identityCardNumber',passport.authenticate('jwt',{failureRedirect:"/login"}),async function(req, res){ 
+    
+        var identityCardNumber=req.params.identityCardNumber;
+        var cardName = identityCardNumber + "@tutorial-network";
+        
+
+        User.findOne({identityCardNumber:req.params.identityCardNumber},async (err,user)=>{
+            if(user){
+                if(user.role=='Doctor'){
+                    var doctor=await blockchain.getDoctorInfo(cardName);
+                    if(doctor==1){
+                        var doctor = {
+                            name: 'Name',
+                            address: 'Address',
+                            email: 'Email',
+                            phone: 'Phone',
+                            identityCardNumber: 'Identity Card Number',
+                            sex: 'Male/Female/Other',
+                            specialist: 'Specialist',
+                            marriageStatus: 'Marriage Status',
+                            tittle: 'Tittle'
+                        };
+                    }
+                    res.render("profile",{data: doctor});
+                }
+
+                if(user.role=='Patient'){
+                    var patient=await blockchain.getPatientInfo(cardName);
+                    if(patient==1){
+                        var patient = {
+                            name: 'Name',
+                            address: 'Address',
+                            email: 'Email',
+                            phone: 'Phone',
+                            identityCardNumber: 'Identity Card Number',
+                            sex: 'Male/Female/Other',
+                            career: 'Career',
+                            marriageStatus: 'Marriage Status'
+                        };
+                    }
+                    res.render("patientprofile",{data: patient});
+                }
+            }else{
+                console.log("error in /profile/:identityCardNumber:"+err);
+            }
+        });
+
+});
+
+app.post('/profile/:identityCardNumber',passport.authenticate('jwt',{failureRedirect:"/login"}),async function(req, res){ 
+    User.findOne({identityCardNumber:req.params.identityCardNumber},async (err,user)=>{
+        if(user){
+            if(user.role=='Doctor'){
+                await blockchain.createDoctorInfo(req.body);
+                console.log("Done create doctor info");
+            }  
+            if(user.role=='Patient'){
+                await blockchain.createPatientInfo(req.body);
+                console.log("Done create patient info");
+            }
+        }else{
+            console.log("User not found!"+err);
+        }
+    });
+});
+
+app.get('/request/:identityCardNumber',passport.authenticate('jwt',{failureRedirect:"/login"}),async function(req, res){ 
+    
     var identityCardNumber=req.params.identityCardNumber;
     var cardName = identityCardNumber + "@tutorial-network";
-    var getuser=await blockchain.getDoctor(cardName);
-    await res.render("profile");
+    
+
+    User.findOne({identityCardNumber:req.params.identityCardNumber},async (err,user)=>{
+        if(user){
+                //var doctor=await blockchain.getDoctorInfo(cardName);
+                res.render("request");
+            
+        }else{
+            console.log("error in /request/:identityCardNumber:"+err);
+        }
+    });
+
 });
 
 app.get('/doctors', async function(req, res){
@@ -268,8 +362,13 @@ app.post('/adddoctorinfo', async function(req,res){
     console.log("Done create doctor info");
 });
 
+app.post('/addpatientinfo', async function(req,res){
+    await blockchain.createPatientInfo(req.body);
+    console.log("Done create doctor info");
+});
+
 app.listen(PORT, function(){
     console.log('Express is running on port 3000');
 });
 
-module.exports = app;
+module.exports = {app,parseJwt};

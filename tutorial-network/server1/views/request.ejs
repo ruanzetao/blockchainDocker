@@ -31,46 +31,31 @@
 
     <!-- Main CSS-->
     <link href="css/main1.css" rel="stylesheet" media="all">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
-        .card {
-            border-top-width: 0px;
-            top: 100px;
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-            max-width: 300px;
-            margin: auto;
-            text-align: center;
-            font-family: arial;
-        }
-
-        .title {
-            color: grey;
-            font-size: 18px;
-        }
-
-        button {
-            border: none;
-            outline: 0;
+        .requestForm{
+            width: 80%;
+            margin-left: 5%;
+            margin-right: 5%;
+            padding-left: 5%;
+            
             display: inline-block;
-            padding: 8px;
-            color: white;
-            background-color: #000;
-            text-align: center;
-            cursor: pointer;
-            width: 100%;
-            font-size: 18px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
         }
 
-        a {
-            text-decoration: none;
-            font-size: 22px;
-            color: black;
+        .input--request {
+            width: 50%;
+            padding: 5px;
+            margin: 8px 0;
+            margin-left: 2em;
+            margin-right: 2em;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
         }
-
-        button:hover,
-        a:hover {
-            opacity: 0.7;
-        }
+        
     </style>
 </head>
 
@@ -114,7 +99,6 @@
                             <li class="nav-item"><a class="nav-link" href="about-us.html">About</a></li>
                             <li class="nav-item"><a class="nav-link" href="department.html">Department</a></li>
                             <li class="nav-item"><a class="nav-link" href="doctors.html">Doctors</a></li>
-                            <li class="nav-item"><a class="nav-link" href="doctors.html">Patients</a></li>
                             <li class="nav-item submenu dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
                                     aria-haspopup="true" aria-expanded="false">Blog</a>
@@ -126,28 +110,59 @@
                                 </ul>
                             </li>
                             <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
-                            <li class="nav-item"><a class="nav-link" href="contact.html">Profile</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/request/<%= data.identityCardNumber %>">Request</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/profile/<%= data.identityCardNumber %>">Profile</a></li>
                         </ul>
                     </div>
                 </div>
             </nav>
         </div>
     </header>
-    <!--================Header Menu Area =================-->
 
-    <body>
-        <h2 style="text-align:center">User Profile Card</h2>
+    <div class="requestForm">
+        <form method="POST" id="requestForm" name="requestForm">
+            <div class="input-group">
+                <label for="requesterRole">Requester Role:</label>
+                <input class="input--request" id="requesterRole" type="text" placeholder="requesterRole"
+                    name="requesterRole">
+            </div>
+            <div class="input-group">
+                
+                <label for="resourceOwnerRole">Resource Owner Role:</label>
+                <input class="input--request" id="resourceOwnerRole" type="text" placeholder="resourceOwnerRole"
+                    name="resourceOwnerRole">
+            </div>
+            <div class="input-group">
+                <label for="resourceType">Resource Type:</label>
+                <input class="input--request" id="resourceType" type="text" placeholder="resourceType"
+                    name="resourceType">
+            </div>
+            <div class="input-group">
+                <label for="idRequester">ID of Requester:</label>
+                <input class="input--request" id="idRequester" type="text" placeholder="idRequester" name="idRequester">
+            </div>
+            <div class="input-group">
+                <label for="idResourceOwner">ID of Resource Owner:</label>
+                <input class="input--request" id="idResourceOwner" type="text" placeholder="idResourceOwner"
+                    name="idResourceOwner">
+            </div>
+            <div class="p-t-10">
+                <button class="btn btn--pill btn--green" type="submit" href="/addrequest" style="margin-left: 300px;">Submit</button>
+            </div>
+        </form>
+    </div>
 
-        <div class="card">
-            <img src="https://scontent.fsgn6-2.fna.fbcdn.net/v/t1.0-9/p960x960/76793150_2665872486815334_7121435997337812992_o.jpg?_nc_cat=100&_nc_oc=AQkrZY-P03oTXcpr8YV1LOSsqCbtzMohHmMNB_sY67XmIaa4SlcL4rNa68KCRwdM4uc&_nc_ht=scontent.fsgn6-2.fna&oh=81bada5de80ee8e45ba12e2d3afe2995&oe=5E8C5908"
-                alt="John" style="width:100%">
-            <h1>John Doe</h1>
-            <p class="title">CEO & Founder, Example</p>
-            <p>Harvard University</p>
 
-            <p><button>Contact</button></p>
-        </div>
-    </body>
+    <!-- Jquery JS-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <!-- Vendor JS-->
+    <script src="vendor/select2/select2.min.js"></script>
+    <script src="vendor/datepicker/moment.min.js"></script>
+    <script src="vendor/datepicker/daterangepicker.js"></script>
+
+    <!-- Main JS-->
+    <script src="js/global.js"></script>
+
 
     <!-- start footer Area -->
     <footer class="footer-area area-padding-top">

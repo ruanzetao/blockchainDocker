@@ -2,7 +2,19 @@
 */
 
 query selectAllDoctorInfo {
-  description: "Select all doctor info"
+  description: "Select all Doctor Info"
   statement: 
     SELECT org.basic.server.DoctorInfo
+}
+
+query selectAllPatientInfo {
+  description: "Select all Patient Info"
+  statement: 
+    SELECT org.basic.server.PatientInfo
+}
+
+query selectAllRequest {
+  description: "Select all Request"
+  statement: 
+    SELECT org.basic.server.Request
 }

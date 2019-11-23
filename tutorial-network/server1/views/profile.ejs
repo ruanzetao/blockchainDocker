@@ -98,30 +98,33 @@
                 <div class="card-body">
                     <h2 class="title">User Info</h2>
                     <button id="edit" onclick="editFunction()" class="btn btn--pill btn--green" type="edit" name="edit">Edit</button>
-                    <form method="POST" id="formprofile"name="formprofile">                
+                    <form method="POST" id="formprofile" name="formprofile">                
                         <div class="input-group">
-                            <input id="name" class="input--style-3" type="name" placeholder="Name" name="name" disabled>
+                            <input id="name" class="input--style-3" type="name" placeholder="Name" name="name" disabled value=<%=data.name%>>
                         </div>
                         <div class="input-group">
-                            <input id="address" class="input--style-3" type="address" placeholder="Address" name="address" disabled>
+                            <input id="address" class="input--style-3" type="address" placeholder="Address" name="address" disabled value=<%=data.address%>>
                         </div>
                         <div class="input-group">
-                                <input id="email" class="input--style-3" type="email" placeholder="Email" name="email" disabled>
+                                <input id="email" class="input--style-3" type="email" placeholder="Email" name="email" disabled value=<%=data.email%>>
                             </div> 
                         <div class="input-group">
-                            <input id="phone" class="input--style-3" type="phone" placeholder="Phone" name="phone" disabled>
+                            <input id="phone" class="input--style-3" type="phone" placeholder="Phone" name="phone" disabled value=<%=data.phone%>>
                         </div>
                         <div class="input-group">
-                                <input id="identityCardNumber" class="input--style-3" type="identityCardNumber" placeholder="Identity Card Number" name="identityCardNumber" disabled>
+                                <input id="identityCardNumber" class="input--style-3" type="identityCardNumber" placeholder="Identity Card Number" name="identityCardNumber" disabled value=<%=data.identityCardNumber%>>
                             </div> 
                         <div class="input-group">
-                            <input id="sex" class="input--style-3" type="sex" placeholder="Male/Female/Other" name="sex" disabled>
+                            <input id="sex" class="input--style-3" type="sex" placeholder="Male/Female/Other" name="sex" disabled value=<%=data.sex%>>
                         </div>
                         <div class="input-group">
-                            <input id="specialist" class="input--style-3" type="specialist" placeholder="Specialist" name="specialist" disabled>
+                            <input id="specialist" class="input--style-3" type="specialist" placeholder="Specialist" name="specialist" disabled value=<%=data.specialist%>>
                         </div>
                         <div class="input-group">
-                            <input id="tittle" class="input--style-3" type="tittle" placeholder="Tittle" name="tittle" disabled>
+                            <input id="marriageStatus" class="input--style-3" type="marriageStatus" placeholder="marriageStatus" name="marriageStatus" disabled value=<%=data.marriageStatus%>>
+                        </div>
+                        <div class="input-group">
+                            <input id="tittle" class="input--style-3" type="tittle" placeholder="Tittle" name="tittle" disabled value=<%=data.tittle%>>
                         </div>
                         <div class="p-t-10">
                             <button id="save" class="btn btn--pill btn--green" type="save" name="save" href="/adddoctorinfo">Save</button>
@@ -144,8 +147,7 @@
 
     <script>
 
-        function editFunction(){
-            
+        function editFunction(){            
             document.getElementById("name").disabled=false;
             document.getElementById("address").disabled=false;
             document.getElementById("email").disabled=false;
@@ -153,6 +155,7 @@
             document.getElementById("identityCardNumber").disabled=false;
             document.getElementById("sex").disabled=false;
             document.getElementById("specialist").disabled=false;
+            document.getElementById("marriageStatus").disabled=false;
             document.getElementById("tittle").disabled=false;
         }
     </script>
@@ -240,11 +243,6 @@
         </div>
     </footer>
     <!-- End footer Area -->
-
-
-
-
-
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

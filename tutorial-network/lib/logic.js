@@ -27,7 +27,8 @@ async function createDoctor(listing) {
     var factory = getFactory();
 
     return getParticipantRegistry('org.basic.server.Doctor').then(async function (doctorRegistry) {
-        doctorNew = await factory.newResource("org.basic.server", "Doctor", listing.personId)
+        doctorNew = await factory.newResource("org.basic.server", "Doctor", listing.identityCardNumber)
+        doctorNew.personId = listing.identityCardNumber;
         doctorNew.name = listing.name;
         doctorNew.address = listing.address;
         doctorNew.email = listing.email;
@@ -51,7 +52,8 @@ async function createPatient(listing) {
     var factory = getFactory();
 
     return getParticipantRegistry('org.basic.server.Patient').then(async function (patientRegistry) {
-        patientNew = await factory.newResource("org.basic.server", "Patient", listing.personId)
+        patientNew = await factory.newResource("org.basic.server", "Patient", listing.identityCardNumber)
+        patientNew.personId = listing.identityCardNumber;
         patientNew.name = listing.name;
         patientNew.address = listing.address;
         patientNew.email = listing.email;
@@ -75,7 +77,7 @@ async function createDoctorInfo(listing) {
 
     return getAssetRegistry('org.basic.server.DoctorInfo').then(async function (doctorInfoRegistry) {
         doctorInfoNew =await factory.newResource("org.basic.server", "DoctorInfo", listing.doctorInfoId)
-        doctorInfoNew.doctorId = listing.doctorId;
+        doctorInfoNew.doctorId = listing.identityCardNumber;
         doctorInfoNew.name = listing.name;
         doctorInfoNew.address = listing.address;
         doctorInfoNew.email = listing.email;
@@ -90,7 +92,7 @@ async function createDoctorInfo(listing) {
         doctorInfoNew.updateAt = listing.updateAt;
         doctorInfoNew.authorizedPatients = [];
 
-        var owner = await factory.newRelationship("org.basic.server", "Doctor", listing.doctorId);
+        var owner = await factory.newRelationship("org.basic.server", "Doctor", listing.identityCardNumber);
 
         doctorInfoNew.owner = owner;
 
@@ -109,7 +111,7 @@ async function createPatientInfo(listing) {
 
     return getAssetRegistry('org.basic.server.PatientInfo').then(async function (patientInfoRegistry) {
         patientInfoNew =await factory.newResource("org.basic.server", "PatientInfo", listing.patientInfoId)
-        patientInfoNew.patientId = listing.patientId;
+        patientInfoNew.patientId = listing.identityCardNumber;
         patientInfoNew.name = listing.name;
         patientInfoNew.address = listing.address;
         patientInfoNew.email = listing.email;
@@ -124,11 +126,11 @@ async function createPatientInfo(listing) {
 
         patientInfoNew.authorizedDoctors = [];
 
-        var owner = await factory.newRelationship("org.basic.server", "Patient", listing.patientId);
+        var owner = await factory.newRelationship("org.basic.server", "Patient", listing.identityCardNumber);
 
         patientInfoNew.owner = owner;
 
-        await patientInfoRegistry.add(patientInfoNew);
+        await patientInfoRegistry.add(pgatientInfoNew);
     });
 }
 

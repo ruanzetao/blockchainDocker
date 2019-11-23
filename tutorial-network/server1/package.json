@@ -9,6 +9,7 @@
   "author": "Sang Nguyen",
   "license": "ISC",
   "dependencies": {
+    "atob": "^2.1.2",
     "bcrypt": "^3.0.6",
     "body-parser": "^1.19.0",
     "chalk": "^3.0.0",
@@ -25,6 +26,7 @@
     "formidable": "^1.2.1",
     "fs": "0.0.1-security",
     "jsonwebtoken": "^8.5.1",
+    "jwt-payload-decoder": "^1.2.4",
     "mongoose": "^5.7.7",
     "morgan": "^1.9.1",
     "nodemailer": "^6.3.1",
