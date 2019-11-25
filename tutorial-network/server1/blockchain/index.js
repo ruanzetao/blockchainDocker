@@ -687,7 +687,7 @@ async function createRequest(data){
         let results=await businessNetworkConnection.query('selectAllRequest');
         let count=results.length;
         let requestId=count+1;
-        console.log("patientInfoId: "+requestId);
+        console.log("requestInfoId: "+requestId);
         let assetRegistry= await businessNetworkConnection.getAssetRegistry('org.basic.server.Request');    
         let factory = definition.getFactory();
         //define information of a user
@@ -696,23 +696,24 @@ async function createRequest(data){
         requestInfo.requesterRole = data.requesterRole;
         requestInfo.resourceOwnerRole = data.resourceOwnerRole;
         requestInfo.resourceType = data.resourceType;
+        requestInfo.resourceId = data.resourceId;
         requestInfo.status = 'New';
         //requestInfo.idRequester = data.idRequester;
         //requestInfo.idResourceOwner = data.idResourceOwner;
         
 
-        var owner = await factory.newRelationship("org.basic.server", "Request", data.idRequester);
+        var owner = await factory.newRelationship("org.basic.server", data.requesterRole, data.idRequester);
         requestInfo.owner = owner;
 
-        var resourceOwner = await factory.newRelationship("org.basic.server", "Request", data.idResourceOwner);
+        var resourceOwner = await factory.newRelationship("org.basic.server", data.resourceOwnerRole, data.idResourceOwner);
         requestInfo.resourceOwner = resourceOwner;
 
         //add a new participant to business network
-        await assetRegistry.add(patientInfo);
+        await assetRegistry.add(requestInfo);
 
         //disconect admin card
         await businessNetworkConnection.disconnect();
-        console.log("Add patient info successfully");
+        console.log("Create Request successfully");
         return 1;
     }catch (error) {
         //error: trung id card
@@ -722,10 +723,204 @@ async function createRequest(data){
     }
 }
 
+async function getRequestByDoctor(cardName,identityCardNumber) {
+    console.log("start get Request by Doctor");
 
+    let businessNetworkConnection = new BusinessNetworkConnection();
+
+    try {
+        // await businessNetworkConnection.connect('3@identity');
+        await businessNetworkConnection.connect('admin@tutorial-network');
+        let participantRegistry = await businessNetworkConnection.getAssetRegistry('org.basic.server.Request');
+
+
+        //add a new participant to business network
+        var result = await participantRegistry.getAll();
+        console.log("result: "+result);
+
+        arrayResult=[];
+
+        for(var i=0; i<result.length;i++){
+            var item={
+                requestId: result[i].requestId,
+                requesterRole: result[i].requesterRole,
+                resourceOwnerRole: result[i].resourceOwnerRole,
+                resourceType: result[i].resourceType,
+                status: result[i].status,
+                resourceId: result[i].resourceId,
+                owner: result[i].owner.getIdentifier(),
+                resourceOwner: result[i].resourceOwner.getIdentifier()
+            }
+            console.log("request id: "+item.requestId);
+            console.log("item: "+item.owner);
+            console.log("identifier: "+item.owner);
+            if(item.owner==identityCardNumber||
+                item.resourceOwner==identityCardNumber){
+                    console.log("element: "+item);
+                    arrayResult.push(item);
+                }
+        }
+
+        //disconect admin card
+        await businessNetworkConnection.disconnect();
+        // console.log(result);
+        console.log(arrayResult);
+        return arrayResult;
+    } catch (error) {
+        await businessNetworkConnection.disconnect();
+        var arrayResult = {
+            requestId: 'requestId',
+            requesterRole: 'requesterRole',
+            resourceOwnerRole: 'resourceOwnerRole',
+            resourceType: 'resourceType',
+            status: 'status',
+            resourceId: 'resourceId',
+            owner: 'owner',
+            resourceOwner: 'resourceOwner'
+        };
+        //error: trung id card
+        //console.error(error);
+        return arrayResult;
+        // process.exit(1);
+    }
+    //return 1;
+}
+
+async function getRequestByPatient(cardName,identityCardNumber) {
+    console.log("start get Request by Patient");
+
+    let businessNetworkConnection = new BusinessNetworkConnection();
+
+    try {
+        // await businessNetworkConnection.connect('3@identity');
+        await businessNetworkConnection.connect('admin@tutorial-network');
+        let participantRegistry = await businessNetworkConnection.getAssetRegistry('org.basic.server.Request');
+
+
+        //add a new participant to business network
+        var result = await participantRegistry.getAll();
+        console.log("result: "+result);
+        arrayResult=[];
+        for(var i=0; i<result.length;i++){
+            var item={
+                requestId: result[i].requestId,
+                requesterRole: result[i].requesterRole,
+                resourceOwnerRole: result[i].resourceOwnerRole,
+                resourceType: result[i].resourceType,
+                status: result[i].status,
+                resourceId: result[i].resourceId,
+                owner: result[i].owner.getIdentifier(),
+                resourceOwner: result[i].resourceOwner.getIdentifier()
+            }
+            console.log("request id: "+item.requestId);
+            console.log("item: "+item.owner);
+            console.log("identifier: "+item.owner);
+
+            if(item.owner==identityCardNumber||
+                item.resourceOwner==identityCardNumber){
+                    console.log("element: "+item);
+                    arrayResult.push(item);
+                }
+        }
+        //disconect admin card
+        await businessNetworkConnection.disconnect();
+        // console.log(result);
+        
+        console.log(arrayResult);
+        return arrayResult;
+    } catch (error) {
+        await businessNetworkConnection.disconnect();
+        var arrayResult = {
+            requestId: 'requestId',
+            requesterRole: 'requesterRole',
+            resourceOwnerRole: 'resourceOwnerRole',
+            resourceType: 'resourceType',
+            status: 'status',
+            resourceId: 'resourceId',
+            owner: 'owner',
+            resourceOwner: 'resourceOwner'
+        };
+        //error: trung id card
+        //console.error(error);
+        return arrayResult;
+        // process.exit(1);
+    }
+    //return 1;
+}
+
+async function doctorAcceptRequestOfPatient(requestId) {
+    console.log("start accept request of Patient");
+
+    let businessNetworkConnection = new BusinessNetworkConnection();
+
+    try {
+        // await businessNetworkConnection.connect('3@identity');
+        await businessNetworkConnection.connect('admin@tutorial-network');
+        let requestRegistry = await businessNetworkConnection.getAssetRegistry('org.basic.server.Request');
+        var req = await requestRegistry.get(requestId);
+        let resourceRegistry = await businessNetworkConnection.getAssetRegistry('org.basic.server.'+req.resourceType);
+        var resource=await resourceRegistry.get(req.resourceId);
+
+        var owner=req.owner;
+
+        resource.authorizedPatients.push(owner);
+        await resourceRegistry.update(resource);
+
+        req.status="Accepted";
+        await requestRegistry.update(req);
+        
+        //disconect admin card
+        await businessNetworkConnection.disconnect();
+        // console.log(result); 
+        return 1;
+    } catch (error) {
+        await businessNetworkConnection.disconnect();
+        //error: trung id card
+        console.log(error);
+        return 0;
+        // process.exit(1);
+    }
+    //return 1;
+}
+
+async function patientAcceptRequestOfDoctor(requestId) {
+    console.log("start accept request of Patient");
+
+    let businessNetworkConnection = new BusinessNetworkConnection();
+
+    try {
+        // await businessNetworkConnection.connect('3@identity');
+        await businessNetworkConnection.connect('admin@tutorial-network');
+        let requestRegistry = await businessNetworkConnection.getAssetRegistry('org.basic.server.Request');
+        var req = await requestRegistry.get(requestId);
+        let resourceRegistry = await businessNetworkConnection.getAssetRegistry('org.basic.server.'+req.resourceType);
+        var resource=await resourceRegistry.get(req.resourceId);
+
+        var owner=req.owner;
+
+        resource.authorizedPatients.push(owner);
+        await resourceRegistry.update(resource);
+
+        req.status="Accepted";
+        await requestRegistry.update(req);
+        
+        //disconect admin card
+        await businessNetworkConnection.disconnect();
+        // console.log(result); 
+        return 1;
+    } catch (error) {
+        await businessNetworkConnection.disconnect();
+        //error: trung id card
+        console.log(error);
+        return 0;
+        // process.exit(1);
+    }
+    //return 1;
+}
 
 module.exports={
     createDoctor,createPatient,createDoctorIdentity,createPatientIdentity,importCard,exportCard,deleteCard,ping,getDoctor,getPatient,getDoctorById
     ,getPatientById,createDoctorInfo,countDoctorInfo,getDoctorInfo,createPatientInfo,getPatientInfo
-    ,createRequest
+    ,createRequest,getRequestByDoctor,getRequestByPatient,
+    doctorAcceptRequestOfPatient,patientAcceptRequestOfDoctor
 }

@@ -71,9 +71,6 @@ asset Request identified by requestId {
   o RequestStatus status
   o String resourceId
 
-  // o String idRequester
-  // o String idResourceOwner
-
   --> Person owner
   --> Person resourceOwner
 }

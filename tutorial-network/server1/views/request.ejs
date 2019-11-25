@@ -32,12 +32,12 @@
     <!-- Main CSS-->
     <link href="css/main1.css" rel="stylesheet" media="all">
     <style>
-        .requestForm{
+        .requestForm {
             width: 80%;
             margin-left: 5%;
             margin-right: 5%;
             padding-left: 5%;
-            
+
             display: inline-block;
             border: 1px solid #ccc;
             border-radius: 4px;
@@ -55,7 +55,28 @@
             border-radius: 4px;
             box-sizing: border-box;
         }
-        
+
+        table {
+            font-family: arial, sans-serif;
+            padding-left: 5%;
+            padding-right: 5%;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td,
+        th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+        .request-button{
+            border: 1px solid black;
+        }
     </style>
 </head>
 
@@ -110,8 +131,9 @@
                                 </ul>
                             </li>
                             <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/request/<%= data.identityCardNumber %>">Request</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/profile/<%= data.identityCardNumber %>">Profile</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/request/">Request</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/profile/">Profile</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/logout/">Logout</a></li>
                         </ul>
                     </div>
                 </div>
@@ -127,7 +149,7 @@
                     name="requesterRole">
             </div>
             <div class="input-group">
-                
+
                 <label for="resourceOwnerRole">Resource Owner Role:</label>
                 <input class="input--request" id="resourceOwnerRole" type="text" placeholder="resourceOwnerRole"
                     name="resourceOwnerRole">
@@ -136,6 +158,10 @@
                 <label for="resourceType">Resource Type:</label>
                 <input class="input--request" id="resourceType" type="text" placeholder="resourceType"
                     name="resourceType">
+            </div>
+            <div class="input-group">
+                <label for="resourceId">Resource ID:</label>
+                <input class="input--request" id="resourceId" type="text" placeholder="resourceId" name="resourceId">
             </div>
             <div class="input-group">
                 <label for="idRequester">ID of Requester:</label>
@@ -147,9 +173,37 @@
                     name="idResourceOwner">
             </div>
             <div class="p-t-10">
-                <button class="btn btn--pill btn--green" type="submit" href="/addrequest" style="margin-left: 300px;">Submit</button>
+                <button class="btn btn--pill btn--green" type="submit" href="/addrequest"
+                    style="margin-left: 300px;">Submit</button>
             </div>
         </form>
+        <table>
+            <tr>
+                <th>Request ID</th>
+                <th>Requester Role</th>
+                <th>Resource Owner Role</th>
+                <th>Resource Type</th>
+                <th>Resource ID</th>
+                <th>Requester ID</th>
+                <th>Resource Owner ID</th>
+                <th>Action</th>
+            </tr>
+            <% for(var i=0;i < data.length;i++){ %>
+            <tr>
+                <td id="requestId"><%= data[i].requestId%></td>  
+                <td id="requesterRole"><%= data[i].requesterRole%></td>
+                <td id="resourceOwnerRole"><%= data[i].resourceOwnerRole%></td>
+                <td id="resourceType"><%= data[i].resourceType%></td>
+                <td id="resourceId"><%= data[i].resourceId%></td>
+                <td id="idRequester"><%= data[i].owner%></td>
+                <td id="idResourceOwner"><%= data[i].resourceOwner%></td>
+                <td>
+                    <button class="request-button" type="accept" href="/accept/<%= data[i].requestId%>">Accept</button>
+                    <button class="request-button" type="reject" href="/reject/<%= data[i].requestId%>">Reject</button>
+                </td>
+            </tr>
+            <% } %>
+        </table>
     </div>
 
 

@@ -18,3 +18,11 @@ query selectAllRequest {
   statement: 
     SELECT org.basic.server.Request
 }
+
+query selectRequestHaveIdentityCardNumber {
+  description: "Select Request have Identity Card Number"
+  statement: 
+    SELECT org.basic.server.Request
+    WHERE (owner == _$idRequester  OR resourceOwner ==_$idResourceOwner )
+}
+
