@@ -32,6 +32,8 @@ app.set("views", __dirname + "/views");
 app.use(express.static("public"));
 app.use("/profile", express.static(__dirname + "/public"));
 app.use("/request", express.static(__dirname + "/public"));
+app.use("/request/accept", express.static(__dirname + "/public"));
+app.use("/request/reject", express.static(__dirname + "/public"));
 
 app.use(morgan("dev"));
 app.use(bodyParser.json());
@@ -182,7 +184,7 @@ app.post("/register", async function(req, res, next) {
           var getuser = await blockchain.getPatient(cardName);
         }
 
-        res.render("index");
+        res.render("login");
         //console.log("data: "+data);
       } else {
         res.redirect("register");
@@ -323,12 +325,14 @@ app.post(
         if (user.role == "Doctor") {
           await blockchain.createDoctorInfo(req.body);
           console.log("Done create doctor info");
-          //res.redirect("/profile");
+          var doctorinfo=await blockchain.getDoctorInfo(cardName);
+          res.render("profile",{data:doctorinfo});
         }
         if (user.role == "Patient") {
           await blockchain.createPatientInfo(req.body);
           console.log("Done create patient info");
-          //res.redirect("/patientprofile");
+          var patientinfo=await blockchain.getPatientInfo(cardName);
+          res.render("patientprofile",{data:patientinfo});
         }
       } else {
         console.log("User not found!" + err);
@@ -391,12 +395,14 @@ app.post(
         if (user.role == "Doctor") {
           await blockchain.createRequest(req.body);
           console.log("Done create doctor Request");
-          //res.redirect("/request");
+          var result=await blockchain.getRequestByDoctor(cardName,identityCardNumber);
+          res.render("request",{data:result});
         }
         if (user.role == "Patient") {
           await blockchain.createRequest(req.body);
           console.log("Done create patient Request");
-          //res.redirect("/request");
+          var result=await blockchain.getRequestByPatient(cardName,identityCardNumber);
+          res.render("request",{data:result});
         }
       } else {
         console.log("User not found!" + err);
@@ -452,22 +458,46 @@ app.post("/addpatientinfo", async function(req, res) {
   console.log("Done create doctor info");
 });
 
-app.post("/accept/:requestId",passport.authenticate('jwt',{ failureRedirect: "/login" }), async function(req, res) {
-    var requestId = req.params.requestId;
+app.post("/request/accept/",passport.authenticate('jwt',{ failureRedirect: "/login" }), async function(req, res) {
+  console.log("start /request/accept/:requestId");
+    var requestId = req.body.requestId;
+    console.log("request id: "+requestId);
     
     var token = req.cookies.access_token;
     console.log("request token: " + token);
     var email = parseJwt(token);
     console.log("request email: " + email);
-  
+
+    User.findOne({email:email}, async (err,user)=>{
+      if(user){
+        if(user.role=='Doctor'){
+          await blockchain.doctorAcceptRequestOfPatient(requestId);
+          console.log("Done accept request by Doctor");
+          var identityCardNumber = user.identityCardNumber;
+          var cardName = identityCardNumber + "@tutorial-network";
+          var result=await blockchain.getRequestByDoctor(cardName,identityCardNumber);
+          res.render("request",{data:result});
+      }
+      if(user.role=='Patient'){
+          await blockchain.patientAcceptRequestOfDoctor(requestId);
+          console.log("Done accept request by Patient");
+          var identityCardNumber = user.identityCardNumber;
+          var cardName = identityCardNumber + "@tutorial-network";
+          var result=await blockchain.getRequestByPatient(cardName,identityCardNumber);
+          res.render("request",{data:result});
+      }
+      }else{
+        console.log("error: user not found "+err);
+      }
+        
+    });
+});
+
+app.post("/request/reject/", async function(req, res) {
   await blockchain.createDoctorInfo(req.body);
   console.log("Done create doctor info");
 });
 
-app.post("/reject/:requestId", async function(req, res) {
-  await blockchain.createDoctorInfo(req.body);
-  console.log("Done create doctor info");
-});
 app.listen(PORT, function() {
   console.log("Express is running on port 3000");
 });

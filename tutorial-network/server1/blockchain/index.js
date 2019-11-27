@@ -131,7 +131,7 @@ async function createPatient(data){
 }
 
 async function createPatientInfo(data){
-    console.log("start creating a new doctor info");
+    console.log("start creating a new patient info");
     let businessNetworkConnection = new BusinessNetworkConnection();
 
     try{
@@ -862,6 +862,7 @@ async function doctorAcceptRequestOfPatient(requestId) {
         var resource=await resourceRegistry.get(req.resourceId);
 
         var owner=req.owner;
+        console.log("owner: "+owner);
 
         resource.authorizedPatients.push(owner);
         await resourceRegistry.update(resource);
@@ -884,7 +885,7 @@ async function doctorAcceptRequestOfPatient(requestId) {
 }
 
 async function patientAcceptRequestOfDoctor(requestId) {
-    console.log("start accept request of Patient");
+    console.log("start accept request of Doctor");
 
     let businessNetworkConnection = new BusinessNetworkConnection();
 
@@ -898,7 +899,7 @@ async function patientAcceptRequestOfDoctor(requestId) {
 
         var owner=req.owner;
 
-        resource.authorizedPatients.push(owner);
+        resource.authorizedDoctors.push(owner);
         await resourceRegistry.update(resource);
 
         req.status="Accepted";
