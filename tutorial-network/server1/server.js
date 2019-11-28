@@ -493,11 +493,40 @@ app.post("/request/accept/",passport.authenticate('jwt',{ failureRedirect: "/log
     });
 });
 
-app.post("/request/reject/", async function(req, res) {
-  await blockchain.createDoctorInfo(req.body);
-  console.log("Done create doctor info");
-});
+app.post("/request/reject/",passport.authenticate('jwt',{ failureRedirect: "/login" }), async function(req, res) {
+  console.log("start /request/accept/:requestId");
+    var requestId = req.body.requestId;
+    console.log("request id: "+requestId);
+    
+    var token = req.cookies.access_token;
+    console.log("request token: " + token);
+    var email = parseJwt(token);
+    console.log("request email: " + email);
 
+    User.findOne({email:email}, async (err,user)=>{
+      if(user){
+        if(user.role=='Doctor'){
+          await blockchain.doctorRevokeRequestOfPatient(requestId);
+          console.log("Done accept request by Doctor");
+          var identityCardNumber = user.identityCardNumber;
+          var cardName = identityCardNumber + "@tutorial-network";
+          var result=await blockchain.getRequestByDoctor(cardName,identityCardNumber);
+          res.render("request",{data:result});
+      }
+      if(user.role=='Patient'){
+          await blockchain.patientRevokeRequestOfDoctor(requestId);
+          console.log("Done accept request by Patient");
+          var identityCardNumber = user.identityCardNumber;
+          var cardName = identityCardNumber + "@tutorial-network";
+          var result=await blockchain.getRequestByPatient(cardName,identityCardNumber);
+          res.render("request",{data:result});
+      }
+      }else{
+        console.log("error: user not found "+err);
+      }
+        
+    });
+});
 app.listen(PORT, function() {
   console.log("Express is running on port 3000");
 });
