@@ -118,10 +118,9 @@
                         <ul class="nav navbar-nav menu_nav ml-auto">
                             <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
                             <li class="nav-item"><a class="nav-link" href="about-us.html">About</a></li>
-                            <li class="nav-item"><a class="nav-link" href="department.html">Department</a></li>
-                            <li class="nav-item"><a class="nav-link" href="doctors.html">Doctors</a></li>
-                            
-                            <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/healthrecord">Health Record</a></li>
+                            <li class="nav-item"><a class="nav-link" href="doctors.html">Doctors</a></li>    
+                            <li class="nav-item"><a class="nav-link" href="doctors.html">Patients</a></li>
                             <li class="nav-item"><a class="nav-link" href="/request/">Request</a></li>
                             <li class="nav-item"><a class="nav-link" href="/profile/">Profile</a></li>
                             <li class="nav-item"><a class="nav-link" href="/logout/">Logout</a></li>
@@ -190,12 +189,14 @@
                 <td id="idResourceOwner"><%= data[i].resourceOwner%></td>
                 <td>
                         <form action="/request/accept" method="POST">
-                                <input type="hidden" name="requestId" value="<%= data[i].requestId%>">
-                                <button class="request-button" type="submit">Accept</button>
+                            <input type="hidden" name="requestId" value="<%= data[i].requestId%>">
+                            
+                            <button class="request-button" type="submit">Accept</button>
                                 
                         </form> 
                         <form action="/request/reject" method="POST">
                             <input type="hidden" name="requestId" value="<%= data[i].requestId%>">
+                            
                             <button class="request-button" type="submit">Reject</button>
                             
                         </form> 

@@ -953,6 +953,7 @@ async function patientAcceptRequestOfDoctor(requestId) {
     //return 1;
 }
 
+
 async function patientRevokeRequestOfPatient(requestId) {
     console.log("start accept request of Patient");
 
@@ -987,10 +988,225 @@ async function patientRevokeRequestOfPatient(requestId) {
     //return 1;
 }
 
+async function createHealthRecord(identityCardNumber){
+    console.log("start creating a new health record");
+    let businessNetworkConnection = new BusinessNetworkConnection();
+
+    try{
+        //console.log(data.personId);
+        const definition = await businessNetworkConnection.connect('admin@tutorial-network');
+        let assetRegistry= await businessNetworkConnection.getAssetRegistry('org.basic.server.HealthRecord');    
+        let factory = definition.getFactory();
+
+        //define information of a user
+        let healthRecordInfo = factory.newResource('org.basic.server', 'HealthRecord', identityCardNumber);
+        healthRecordInfo.hight = "";
+        healthRecordInfo.tuoithai = "";
+        healthRecordInfo.hatthu0 = "";
+        healthRecordInfo.hattruong0 = "";
+        healthRecordInfo.tieucau0 = "";
+        healthRecordInfo.tq0 = "";
+        healthRecordInfo.aptt0 = "";
+        healthRecordInfo.fibrinogen0 = "";
+        healthRecordInfo.ast0 = "";
+        healthRecordInfo.alt0 = "";
+        healthRecordInfo.creatinin0 = "";
+        healthRecordInfo.ure0 = "";
+        healthRecordInfo.auric0 = "";
+        healthRecordInfo.ldh0 = "";
+        healthRecordInfo.damnieu0 = "";
+        healthRecordInfo.damnieu24h0 = "";
+        healthRecordInfo.protein0 = "";
+        healthRecordInfo.albumin0 = "";
+        healthRecordInfo.bilirubintp0 = "";
+        healthRecordInfo.bilirubintt0 = "";
+        healthRecordInfo.conclusion = "";
+
+        healthRecordInfo.authorizedDoctors=[];
+
+        var owner = await factory.newRelationship("org.basic.server", "Patient", identityCardNumber);
+        healthRecordInfo.owner = owner;
+
+        //add a new participant to business network
+        await assetRegistry.add(healthRecordInfo);
+
+        //disconect admin card
+        await businessNetworkConnection.disconnect();
+        console.log("Add health record successfully");
+        return 1;
+    }catch (error) {
+        //error: trung id card
+        console.log(error);
+        return 0;
+        // process.exit(1);
+    }
+}
+
+async function getHealthRecordByDoctor(cardName,identityCardNumber) {
+    console.log("start get Request by Doctor");
+
+    let businessNetworkConnection = new BusinessNetworkConnection();
+
+    try {
+        // await businessNetworkConnection.connect('3@identity');
+        await businessNetworkConnection.connect('admin@tutorial-network');
+        let participantRegistry = await businessNetworkConnection.getAssetRegistry('org.basic.server.HealthRecord');
+
+
+        //add a new participant to business network
+        var result = await participantRegistry.getAll();
+        console.log("result: "+result);
+
+        arrayResult=[];
+
+        for(var i=0; i<result.length;i++){
+            var item={
+                healthRecordId: result[i].healthRecordId,
+                owner: result[i].owner.getIdentifier(),
+                authorizedDoctors:result[i].authorizedDoctors         
+            }
+
+            for(var j=0;j<item.authorizedDoctors.length;j++){
+                if(item.authorizedDoctors[j].getIdentifier()==identityCardNumber){
+                    arrayResult.push(item);
+                }
+            }
+        }
+
+        //disconect admin card
+        await businessNetworkConnection.disconnect();
+        // console.log(result);
+        console.log(arrayResult);
+        return arrayResult;
+    } catch (error) {
+        await businessNetworkConnection.disconnect();
+        
+        //error: trung id card
+        //console.error(error);
+        return 1;
+        // process.exit(1);
+    }
+    //return 1;
+}
+
+async function getDetailHealthRecord(healthRecordId) {
+    console.log("start get detail health record");
+
+    let businessNetworkConnection = new BusinessNetworkConnection();
+
+    try {
+        // await businessNetworkConnection.connect('3@identity');
+        await businessNetworkConnection.connect('admin@tutorial-network');
+        let participantRegistry = await businessNetworkConnection.getAssetRegistry('org.basic.server.HealthRecord');
+
+
+        //add a new participant to business network
+        var result = await participantRegistry.get(healthRecordId);
+
+        var item={
+            healthRecordId: result.healthRecordId,
+            hight: result.hight,
+            tuoithai: result.tuoithai,
+            hatthu0: result.hatthu0,
+            hattruong0: result.hattruong0,
+            tieucau0: result.tieucau0,
+            tq0: result.tq0,
+            aptt0: result.aptt0,
+            fibrinogen0: result.fibrinogen0,
+            ast0: result.ast0,
+            alt0: result.alt0,
+            creatinin0: result.creatinin0,
+            ure0: result.ure0,
+            auric0: result.auric0,
+            ldh0: result.ldh0,
+            damnieu0: result.damnieu0,
+            damnieu24h0: result.damnieu24h0,
+            protein0: result.protein0,
+            albumin0: result.albumin0,
+            bilirubintp0: result.bilirubintt0,
+            bilirubintt0: result.bilirubintt0,
+            owner: result.owner.getIdentifier()
+        }
+
+        //disconect admin card
+        await businessNetworkConnection.disconnect();
+        // console.log(result);
+        
+        return item;
+    } catch (error) {
+        await businessNetworkConnection.disconnect();
+        
+        //error: trung id card
+        console.log(error);
+        return 1;
+        // process.exit(1);
+    }
+    //return 1;
+}
+
+async function doctorUpdateHealthRecord(data,healthRecordId,identityCardNumber){
+    console.log("doctor start to update Health Record");
+    let businessNetworkConnection = new BusinessNetworkConnection();
+
+    try{
+        //console.log(data.personId);
+        const definition = await businessNetworkConnection.connect('admin@tutorial-network');
+        //let participantRegistry = await businessNetworkConnection.getParticipantRegistry('org.basic.server.Doctor');
+
+        let assetRegistry= await businessNetworkConnection.getAssetRegistry('org.basic.server.HealthRecord');    
+        var healthRecordAsset=assetRegistry.get(healthRecordId)
+        //define information of a user
+        healthRecordAsset.hight = data.hight;
+        healthRecordAsset.tuoithai = data.tuoithai;
+        healthRecordAsset.hatthu0 = data.hatthu0;
+        healthRecordAsset.hattruong0 = data.hattruong0;
+        healthRecordAsset.tieucau0 = data.tieucau0;
+        healthRecordAsset.tq0 = data.tq0;
+        healthRecordAsset.aptt0 = data.aptt0;
+        healthRecordAsset.fibrinogen0 = data.fibrinogen0;
+        
+        healthRecordAsset.ast0 = data.ast0;
+        healthRecordAsset.alt0 = data.alt0;
+        healthRecordAsset.creatinin0 = data.creatinin0;
+        healthRecordAsset.ure0 = data.ure0;
+        healthRecordAsset.auric0 = data.auric0;
+        healthRecordAsset.ldh0 = data.ldh0;
+        healthRecordAsset.damnieu0 = data.damnieu0;
+        healthRecordAsset.damnieu24h0 = data.damnieu24h0;
+        healthRecordAsset.protein0 = data.protein0;
+        healthRecordAsset.albumin0 = data.albumin0;
+        healthRecordAsset.bilirubintp0 = data.bilirubintp0;
+        healthRecordAsset.bilirubintt0 = data.bilirubintt0;
+        healthRecordAsset.conclusion = data.conclusion;
+        
+
+        var doctor = await factory.newRelationship("org.basic.server", "Doctor", identityCardNumber);
+
+        //healthRecordAsset.owner = owner;
+
+        healthRecordAsset.authorizedDoctors.push(doctor);
+
+        //add a new participant to business network
+        await assetRegistry.update(healthRecordAsset);
+
+        //disconect admin card
+        await businessNetworkConnection.disconnect();
+        console.log("Add patient info successfully");
+        return 1;
+    }catch (error) {
+        //error: trung id card
+        console.error(error);
+        return 0;
+        // process.exit(1);
+    }
+}
+
 module.exports={
     createDoctor,createPatient,createDoctorIdentity,createPatientIdentity,importCard,exportCard,deleteCard,ping,getDoctor,getPatient,getDoctorById
     ,getPatientById,createDoctorInfo,countDoctorInfo,getDoctorInfo,createPatientInfo,getPatientInfo
     ,createRequest,getRequestByDoctor,getRequestByPatient,
     doctorAcceptRequestOfPatient,patientAcceptRequestOfDoctor,
-    doctorRevokeRequestOfPatient,patientRevokeRequestOfPatient
+    doctorRevokeRequestOfPatient,patientRevokeRequestOfPatient,
+    createHealthRecord,doctorUpdateHealthRecord,
+    getHealthRecordByDoctor,getDetailHealthRecord
 }

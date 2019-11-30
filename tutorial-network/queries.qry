@@ -19,6 +19,12 @@ query selectAllRequest {
     SELECT org.basic.server.Request
 }
 
+query selectAllHealthRecord {
+  description: "Select all Health Record"
+  statement: 
+    SELECT org.basic.server.HealthRecord
+}
+
 query selectRequestHaveIdentityCardNumber {
   description: "Select Request have Identity Card Number"
   statement: 

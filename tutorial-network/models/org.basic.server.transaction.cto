@@ -89,18 +89,6 @@ transaction CreatePatientProfile {
 //---------------------------
 transaction CreateHealthRecord {
   o String healthRecordId
-  o String doctorId
-  o String patientId
-  o String hight
-  o String thaingoai
-  o String tuoithai
-  o String cogiat
-  o String truyenmau
-  o String hattruong0
-  o String tieucau0
-  o String tq0
-  o String aptt0
-  o String fibrinogen0
    
   // o Doctor [] authorizedDoctors
   // -->Patient owner

@@ -31,6 +31,62 @@
 
     <!-- Main CSS-->
     <link href="css/main1.css" rel="stylesheet" media="all">
+    <style>
+        .requestForm {
+            width: 80%;
+            margin-left: 5%;
+            margin-right: 5%;
+            padding-left: 5%;
+
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .input--request {
+            width: 50%;
+            padding: 5px;
+            margin: 8px 0;
+            margin-left: 2em;
+            margin-right: 2em;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        table {
+            font-family: arial, sans-serif;
+            padding-left: 5%;
+            padding-right: 5%;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td,
+        th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+
+        .request-button {
+            border: 1px solid black;
+        }
+
+        label {
+
+            text-align: right;
+            clear: both;
+            float: left;
+            margin-right: 15px;
+        }
+    </style>
 </head>
 
 <body>
@@ -72,7 +128,7 @@
                             <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
                             <li class="nav-item"><a class="nav-link" href="about-us.html">About</a></li>
                             <li class="nav-item"><a class="nav-link" href="/healthrecord">Health Record</a></li>
-                            <li class="nav-item"><a class="nav-link" href="doctors.html">Doctors</a></li>     
+                            <li class="nav-item"><a class="nav-link" href="doctors.html">Doctors</a></li>
                             <li class="nav-item"><a class="nav-link" href="doctors.html">Patients</a></li>
                             <li class="nav-item"><a class="nav-link" href="/request/">Request</a></li>
                             <li class="nav-item"><a class="nav-link" href="/profile/">Profile</a></li>
@@ -83,47 +139,149 @@
             </nav>
         </div>
     </header>
-    <!--================Header Menu Area =================-->
-    <div class="page-wrapper bg-gra-01 p-t-180 p-b-100 font-poppins">
-        <div class="wrapper wrapper--w780">
-            <div class="card card-3">
-                <div class="card-heading"></div>
-                <div class="card-body">
-                    <h2 class="title">User Info</h2>
-                    <button id="edit" onclick="editFunction()" class="btn btn--pill btn--green" type="edit" name="edit">Edit</button>
-                    <form method="POST" id="formprofile" name="formprofile">                
-                        <div class="input-group">
-                            <input id="name" class="input--style-3" type="name" placeholder="Name" name="name" disabled value=<%=data.name%>>
-                        </div>
-                        <div class="input-group">
-                            <input id="address" class="input--style-3" type="address" placeholder="Address" name="address" disabled value=<%=data.address%>>
-                        </div>
-                        <div class="input-group">
-                                <input id="email" class="input--style-3" type="email" placeholder="Email" name="email" disabled value=<%=data.email%>>
-                            </div> 
-                        <div class="input-group">
-                            <input id="phone" class="input--style-3" type="phone" placeholder="Phone" name="phone" disabled value=<%=data.phone%>>
-                        </div>
-                        <div class="input-group">
-                                <input id="identityCardNumber" class="input--style-3" type="identityCardNumber" placeholder="Identity Card Number" name="identityCardNumber" disabled value=<%=data.identityCardNumber%>>
-                            </div> 
-                        <div class="input-group">
-                            <input id="sex" class="input--style-3" type="sex" placeholder="Male/Female/Other" name="sex" disabled value=<%=data.sex%>>
-                        </div>
-                        <div class="input-group">
-                            <input id="career" class="input--style-3" type="career" placeholder="Career" name="career" disabled value=<%=data.career%>>
-                        </div>
-                        <div class="input-group">
-                            <input id="marriageStatus" class="input--style-3" type="marriageStatus" placeholder="marriageStatus" name="marriageStatus" disabled value=<%=data.marriageStatus%>>
-                        </div>
-                        <div class="p-t-10">
-                            <button id="save" class="btn btn--pill btn--green" type="save" name="save" href="/addpatientinfo">Save</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
+    <% if(data.conclusion != null){ %>
+    <div class="requestForm">
+        <table>
+            <tr>
+                <th>healthRecordId</th>
+                <td><%=data.healthRecordId%></td>
+            </tr>
+            <tr>
+                <th>hight</th>
+                <td><%=data.hight%></td>
+            </tr>
+            <tr>
+                <th>tuoithai</th>
+                <td><%=data.tuoithai%></td>
+            </tr>
+            <tr>
+                <th>hatthu0</th>
+                <td><%=data.hatthu0%></td>
+            </tr>
+            <tr>
+                <th>hattruong0</th>
+                <td><%=data.hattruong0%></td>
+            </tr>
+            <tr>
+                <th>tieucau0</th>
+                <td><%=data.tieucau0%></td>
+            </tr>
+            <tr>
+                <th>tq0</th>
+                <td><%=data.tq0%></td>
+            </tr>
+            <tr>
+                <th>aptt0</th>
+                <td><%=data.aptt0%></td>
+            </tr>
+            <tr>
+                <th>fibrinogen0</th>
+                <td><%=data.fibrinogen0%></td>
+            </tr>
+            <tr>
+                <th>ast0</th>
+                <td><%=data.ast0%></td>
+            </tr>
+            <tr>
+                <th>alt0</th>
+                <td><%=data.alt0%></td>
+            </tr>
+            <tr>
+                <th>creatinin0</th>
+                <td><%=data.creatinin0%></td>
+            </tr>
+            <tr>
+                <th>ure0</th>
+                <td><%=data.ure0%></td>
+            </tr>
+            <tr>
+                <th>auric0</th>
+                <td><%=data.auric0%></td>
+            </tr>
+            <tr>
+                <th>ldh0</th>
+                <td><%=data.ldh0%></td>
+            </tr>
+            <tr>
+                <th>damnieu0</th>
+                <td><%=data.damnieu0%></td>
+            </tr>
+            <tr>
+                <th>damnieu24h0</th>
+                <td><%=data.damnieu24h0%></td>
+            </tr>
+            <tr>
+                <th>protein0</th>
+                <td><%=data.protein0%></td>
+            </tr>
+            <tr>
+                <th>bilirubintp0</th>
+                <td><%=data.bilirubintp0%></td>
+            </tr>
+            <tr>
+                <th>bilirubintt0</th>
+                <td><%=data.bilirubintt0%></td>
+            </tr>
+            <tr>
+                <th>conclusion</th>
+                <td><%=data.conclusion%></td>
+            </tr>
+            <tr>
+                <th>owner</th>
+                <td><%=data.owner%></td>
+            </tr>
+        </table>
     </div>
+    <% } %>
+    <% if (data.conclusion == null) { %>
+    <div class="inputForm">
+        <form action="/healthrecord" method="POST">
+            <!-- <label for="hight" style="float: left">hight</label> -->
+            <input type="number" placeholder="Hight" name="hight" id="hight">
+            <!-- <label for="tuoithai" style="float: left">tuoithai</label> -->
+            <input type="number" placeholder="Age of pregnancy" name="tuoithai" id="tuoithai">
+            <!-- <label for="hatthu0" style="float: left">hatthu0</label> -->
+            <input type="number" placeholder="hatthu0" name="hatthu0" id="hatthu0">
+            <!-- <label for="hattruong0" style="float: left">hattruong0</label> -->
+            <input type="number" placeholder="hattruong0" name="hattruong0" id="hattruong0">
+            <!-- <label for="tieucau0" style="float: left">tieucau0</label> -->
+            <input type="number" placeholder="tieucau0" name="tieucau0" id="tieucau0">
+            <!-- <label for="tq0" style="float: left">tq0</label> -->
+            <input type="number" placeholder="tq0" name="tq0" id="tq0">
+            <!-- <label for="aptt0" style="float: left">aptt0</label> -->
+            <input type="number" placeholder="aptt0" name="aptt0" id="aptt0">
+            <!-- <label for="fibrinogen0" style="float: left">fibrinogen0</label> -->
+            <input type="number" placeholder="fibrinogen0" name="fibrinogen0" id="fibrinogen0">
+            <!-- <label for="ast0" style="float: left">ast0</label> -->
+            <input type="number" placeholder="ast0" name="ast0" id="ast0">
+            <!-- <label for="alt0" style="float: left">alt0</label> -->
+            <input type="number" placeholder="alt0" name="alt0" id="alt0">
+            <!-- <label for="creatinin0" style="float: left">creatinin0</label> -->
+            <input type="number" placeholder="creatinin0" name="creatinin0" id="creatinin0">
+            <!-- <label for="ure0" style="float: left">ure0</label> -->
+            <input type="number" placeholder="ure0" name="ure0" id="ure0">
+            <!-- <label for="auric0" style="float: left">auric0</label> -->
+            <input type="number" placeholder="auric0" name="auric0" id="auric0">
+            <!-- <label for="ldh0" style="float: left">ldh0</label> -->
+            <input type="number" placeholder="ldh0" name="ldh0" id="ldh0">
+            <!-- <label for="damnieu0" style="float: left">damnieu0</label> -->
+            <input type="number" placeholder="damnieu0" name="damnieu0" id="damnieu0">
+            <!-- <label for="damnieu24h0" style="float: left">damnieu24h0</label> -->
+            <input type="number" placeholder="damnieu24h0" name="damnieu24h0" id="damnieu24h0">
+            <!-- <label for="protein0" style="float: left">protein0</label> -->
+            <input type="number" placeholder="protein0" name="protein0" id="protein0">
+            <!-- <label for="albumin0" style="float: left">albumin0</label> -->
+            <input type="number" placeholder="albumin0" name="albumin0" id="albumin0">
+            <!-- <label for="bilirubintp0" style="float: left">bilirubintp0</label> -->
+            <input type="number" placeholder="bilirubintp0" name="bilirubintp0" id="bilirubintp0">
+            <!-- <label for="bilirubintt0" style="float: left">bilirubintt0</label> -->
+            <input type="number" placeholder="bilirubintt0" name="bilirubintt0" id="bilirubintt0">
+            <!-- <label for="conclusion" style="float: left">conclusion</label> -->
+            <input type="text" placeholder="conclusion" name="conclusion" id="conclusion">
+        </form>
+    </div>
+    <% } %>
+
 
     <!-- Jquery JS-->
     <script src="vendor/jquery/jquery.min.js"></script>
@@ -134,21 +292,6 @@
 
     <!-- Main JS-->
     <script src="js/global.js"></script>
-
-    <script>
-
-        function editFunction(){            
-            document.getElementById("name").disabled=false;
-            document.getElementById("address").disabled=false;
-            document.getElementById("email").disabled=false;
-            document.getElementById("phone").disabled=false;
-            document.getElementById("identityCardNumber").disabled=false;
-            document.getElementById("sex").disabled=false;
-            document.getElementById("career").disabled=false;
-            document.getElementById("marriageStatus").disabled=false;
-            
-        }
-    </script>
 
 
     <!-- start footer Area -->
@@ -233,6 +376,11 @@
         </div>
     </footer>
     <!-- End footer Area -->
+
+
+
+
+
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

@@ -24,17 +24,28 @@ Asset for chaincode
  */
 
 asset HealthRecord identified by healthRecordId {
-  o String healthRecordId
-  o String hight
-  o String thaingoai
-  o String tuoithai
-  o String cogiat
-  o String truyenmau
-  o String hattruong0
-  o String tieucau0
-  o String tq0
-  o String aptt0
-  o String fibrinogen0 
+  o String healthRecordId 
+  o String hight optional
+  o String tuoithai optional
+  o String hatthu0 optional
+  o String hattruong0 optional
+  o String tieucau0 optional
+  o String tq0 optional
+  o String aptt0 optional
+  o String fibrinogen0 optional
+  o String ast0 optional
+  o String alt0 optional
+  o String creatinin0 optional
+  o String ure0 optional
+  o String auric0 optional
+  o String ldh0 optional
+  o String damnieu0 optional
+  o String damnieu24h0 optional
+  o String protein0 optional
+  o String albumin0 optional
+  o String bilirubintp0 optional
+  o String bilirubintt0 optional
+  o String conclusion optional
   --> Doctor [] authorizedDoctors
   --> Patient owner
   }
