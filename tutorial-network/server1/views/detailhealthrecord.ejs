@@ -235,7 +235,8 @@
     <% } %>
     <% if (data.conclusion == null) { %>
     <div class="inputForm">
-        <form action="/healthrecord" method="POST">
+        <form action="/healthrecord/detail" method="POST">
+            <input type="hidden" name="healthRecordId" id="healthRecordId" value="<%=data.healthRecordId%>">
             <!-- <label for="hight" style="float: left">hight</label> -->
             <input type="number" placeholder="Hight" name="hight" id="hight">
             <!-- <label for="tuoithai" style="float: left">tuoithai</label> -->
@@ -278,6 +279,7 @@
             <input type="number" placeholder="bilirubintt0" name="bilirubintt0" id="bilirubintt0">
             <!-- <label for="conclusion" style="float: left">conclusion</label> -->
             <input type="text" placeholder="conclusion" name="conclusion" id="conclusion">
+            <button type="submit" name="submit" id="submit">Submit</button>
         </form>
     </div>
     <% } %>

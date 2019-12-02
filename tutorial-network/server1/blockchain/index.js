@@ -1099,6 +1099,8 @@ async function getDetailHealthRecord(healthRecordId) {
         await businessNetworkConnection.connect('admin@tutorial-network');
         let participantRegistry = await businessNetworkConnection.getAssetRegistry('org.basic.server.HealthRecord');
 
+        
+
 
         //add a new participant to business network
         var result = await participantRegistry.get(healthRecordId);
@@ -1144,17 +1146,21 @@ async function getDetailHealthRecord(healthRecordId) {
     //return 1;
 }
 
-async function doctorUpdateHealthRecord(data,healthRecordId,identityCardNumber){
+async function doctorUpdateHealthRecord(data){
     console.log("doctor start to update Health Record");
     let businessNetworkConnection = new BusinessNetworkConnection();
 
     try{
         //console.log(data.personId);
-        const definition = await businessNetworkConnection.connect('admin@tutorial-network');
-        //let participantRegistry = await businessNetworkConnection.getParticipantRegistry('org.basic.server.Doctor');
-
-        let assetRegistry= await businessNetworkConnection.getAssetRegistry('org.basic.server.HealthRecord');    
-        var healthRecordAsset=assetRegistry.get(healthRecordId)
+        var definition= await businessNetworkConnection.connect('admin@tutorial-network');
+       
+        
+        let assetRegistry= await businessNetworkConnection.getAssetRegistry('org.basic.server.HealthRecord'); 
+        let factory = definition.getFactory();   
+        var healthRecordAsset=await assetRegistry.get(data.healthRecordId);
+        console.log("healthRecordAsset"+healthRecordAsset);
+        console.log("healthRecordId"+data.healthRecordId);
+        console.log("healthRecordId by asset: "+ healthRecordAsset.healthRecordId);
         //define information of a user
         healthRecordAsset.hight = data.hight;
         healthRecordAsset.tuoithai = data.tuoithai;
@@ -1163,8 +1169,7 @@ async function doctorUpdateHealthRecord(data,healthRecordId,identityCardNumber){
         healthRecordAsset.tieucau0 = data.tieucau0;
         healthRecordAsset.tq0 = data.tq0;
         healthRecordAsset.aptt0 = data.aptt0;
-        healthRecordAsset.fibrinogen0 = data.fibrinogen0;
-        
+        healthRecordAsset.fibrinogen0 = data.fibrinogen0;       
         healthRecordAsset.ast0 = data.ast0;
         healthRecordAsset.alt0 = data.alt0;
         healthRecordAsset.creatinin0 = data.creatinin0;
@@ -1177,21 +1182,16 @@ async function doctorUpdateHealthRecord(data,healthRecordId,identityCardNumber){
         healthRecordAsset.albumin0 = data.albumin0;
         healthRecordAsset.bilirubintp0 = data.bilirubintp0;
         healthRecordAsset.bilirubintt0 = data.bilirubintt0;
-        healthRecordAsset.conclusion = data.conclusion;
+        healthRecordAsset.conclusion = data.conclusion;  
         
-
-        var doctor = await factory.newRelationship("org.basic.server", "Doctor", identityCardNumber);
-
-        //healthRecordAsset.owner = owner;
-
-        healthRecordAsset.authorizedDoctors.push(doctor);
+        console.log("healthRecordAsset.conclusion"+healthRecordAsset.conclusion);
 
         //add a new participant to business network
         await assetRegistry.update(healthRecordAsset);
 
         //disconect admin card
         await businessNetworkConnection.disconnect();
-        console.log("Add patient info successfully");
+        console.log("update health record successfully");
         return 1;
     }catch (error) {
         //error: trung id card

@@ -617,12 +617,9 @@ app.post(
   passport.authenticate("jwt", { failureRedirect: "/login" }),
   async function(req, res) {
     console.log("/healthrecord/detail");
-    var token = req.cookies.access_token;
-    console.log("request token: " + token);
+    var token = req.cookies.access_token;  
     var email = parseJwt(token);
-    console.log("request email: " + email);
-
-    var healthRecordId = req.body.healthRecordId;
+    
 
     User.findOne({ email: email }, async (err, user) => {
       if (user) {
@@ -631,12 +628,10 @@ app.post(
           var cardName = identityCardNumber + "@tutorial-network";
 
           await blockchain.doctorUpdateHealthRecord(
-            data,
-            healthRecordId,
-            identityCardNumber
+            req.body
           );
 
-          var result = await blockchain.getDetailHealthRecord(healthRecordId);
+          var result = await blockchain.getDetailHealthRecord(req.body.healthRecordId);
           res.render("detailhealthrecord", { data: result });
         }
       } else {
