@@ -135,20 +135,24 @@
         <table>
             
             <tr>
-                <th>Health Record ID</th>
-                <th>Owner</th>
+                <th>Name</th>
+                <th>Career</th>
+                <th>Identity Card</th>
 
             </tr>
             <% for(var i=0;i < data.length;i++){ %>
             <tr>
-                <td id="healthRecordId"><%= data[i].healthRecordId%></td>  
-                <td id="owner"><%= data[i].owner%></td>
-
+                <td id="name"><%= data[i].name%></td>  
+                <td id="career"><%= data[i].career%></td>
+                <td id="identityCardNumber"><%= data[i].identityCardNumber%></td>
                 <td>
 
-                        <form action="/healthrecord" method="POST">
-                                <input type="hidden" name="healthRecordId" value="<%=data[i].healthRecordId%>">
-                                <button class="request-button" type="submit">Get Info</button>                               
+                        <form action="/requestpatientinfo" method="POST">
+                            <input type="hidden" name="resourceOwnerRole" value="Patient">
+                            <input type="hidden" name="resourceType" value="PatientInfo">
+                            <input type="hidden" name="resourceId" value="<%=data[i].patientInfoId%>">
+                            <input type="hidden" name="resourceOwner" value="<%=data[i].patientId%>">
+                                <button class="request-button" type="submit">Request Info</button>                               
                         </form> 
 
                     </td>
@@ -173,6 +177,7 @@
     <!-- start footer Area -->
     <footer class="footer-area area-padding-top">
         <div class="container">
+            
             <div class="row footer-bottom d-flex justify-content-between">
                 <p class="col-lg-8 col-sm-12 footer-text m-0">
                     <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->

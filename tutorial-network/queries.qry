@@ -25,7 +25,14 @@ query selectAllHealthRecord {
     SELECT org.basic.server.HealthRecord
 }
 
-query selectRequestHaveIdentityCardNumber {
+query selectHealthRecordHasIdentityCardNumber {
+  description: "Select all Health Record"
+  statement: 
+    SELECT org.basic.server.HealthRecord
+    WHERE (healthRecordId == _$healthRecordId)
+}
+
+query selectRequestHasIdentityCardNumber {
   description: "Select Request have Identity Card Number"
   statement: 
     SELECT org.basic.server.Request

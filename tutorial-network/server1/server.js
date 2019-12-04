@@ -97,24 +97,45 @@ passport.deserializeUser(function(email, done) {
   });
 });
 
-app.get("/", function(req, res) {
-  res.render("login");
-  //User.getUsers().then(user=>res.json(user));
-  //User.getUsers().then(user=>res.json(user));
-});
-
-app.get("/login", function(req, res) {
-  if (req.cookies.access_token) {
-    var email = parseJwt(req.cookies.access_token);
-    User.findOne({ email: email }, async (err, user) => {
-      if (user) {
-        res.redirect("/index");
-      }
-    });
-  } else {
-    res.render("login");
+app.get(
+  "/",
+  passport.authenticate("jwt", { failureRedirect: "/login" }),
+  async function(req, res) {
+    var token = req.cookies.access_token;
+    var email = parseJwt(token);
+    if (email) {
+      User.findOne({ email: email }, async (err, user) => {
+        if (user) {
+          res.render("index");
+        } else {
+          res.render("login");
+        }
+      });
+    } else {
+      res.render("login");
+    }
   }
-});
+);
+
+app.get(
+  "/login",
+  passport.authenticate("jwt", { failureRedirect: "/login" }),
+  async function(req, res) {
+    var token = req.cookies.access_token;
+    var email = parseJwt(token);
+    if (email) {
+      User.findOne({ email: email }, async (err, user) => {
+        if (user) {
+          res.render("index");
+        } else {
+          res.render("login");
+        }
+      });
+    } else {
+      res.render("login");
+    }
+  }
+);
 
 app.get("/logout", async function(req, res) {
   await req.logout();
@@ -125,13 +146,27 @@ app.get("/logout", async function(req, res) {
   return res.redirect("/");
 });
 
-app.get("/register", function(req, res) {
-  res.render("register");
-});
-
+app.get(
+  "/register",
+  passport.authenticate("jwt", { failureRedirect: "/login" }),
+  async function(req, res) {
+    var token = req.cookies.access_token;
+    var email = parseJwt(token);
+    if (email) {
+      User.findOne({ email: email }, async (err, user) => {
+        if (user) {
+          res.render("index");
+        } else {
+          res.render("register");
+        }
+      });
+    } else {
+      res.render("register");
+    }
+  }
+);
 app.post("/register", async function(req, res, next) {
-  console.log(req.body);
-  //var count =User.find().count();
+  
   User.findOne({ email: req.body.email }, async (err, user) => {
     if (user == null) {
       const user = new User(req.body);
@@ -209,11 +244,11 @@ function parseJwt(token) {
       .join("")
   );
 
-  console.log("jsonPayload" + jsonPayload);
+  
   var object = JSON.parse(jsonPayload);
-  console.log("object: " + object);
+  
   var email = object.email;
-  console.log("email: " + email);
+  
 
   return email;
 }
@@ -223,19 +258,15 @@ app.post("/login", async function(req, res, next) {
   database.Authentication(req, res, result => {
     if (result.success) {
       User.findOne({ email: req.body.email }, async (err, user) => {
-        console.log("email: " + req.body.email);
-        console.log(user.identityCardNumber);
+        
         res.cookie("access_token", result.token, {
           expires: new Date(Date.now() + 3600000)
         });
-        console.log("token: " + result.token);
-        console.log("email: " + parseJwt(result.token));
+        
         res.render("index");
       });
     } else {
-      console.log(
-        "From post /login - Authentication function:\n" + result.error
-      );
+      
       res.redirect("/login");
     }
   });
@@ -244,26 +275,30 @@ app.post("/login", async function(req, res, next) {
 app.get(
   "/index",
   passport.authenticate("jwt", { failureRedirect: "/login" }),
-  function(req, res) {
-    res.render("index");
-    console.log("Index: " + user);
-    //User.getUsers().then(user=>res.json(user));
-    //User.getUsers().then(user=>res.json(user));
+  async function(req, res) {
+    var token = req.cookies.access_token;
+    var email = parseJwt(token);
+    if (email) {
+      User.findOne({ email: email }, async (err, user) => {
+        if (user) {
+          res.render("index");
+        } else {
+          res.render("login");
+        }
+      });
+    } else {
+      res.render("login");
+    }
   }
 );
-
-app.get("/demoprofile", function(req, res) {
-  res.render("profile");
-});
 
 app.get(
   "/profile/",
   passport.authenticate("jwt", { failureRedirect: "/login" }),
   async function(req, res) {
     var token = req.cookies.access_token;
-    console.log("request token: " + token);
+
     var email = parseJwt(token);
-    console.log("request email: " + email);
 
     User.findOne({ email: email }, async (err, user) => {
       if (user) {
@@ -348,9 +383,8 @@ app.get(
   passport.authenticate("jwt", { failureRedirect: "/login" }),
   async function(req, res) {
     var token = req.cookies.access_token;
-    console.log("request token: " + token);
+
     var email = parseJwt(token);
-    console.log("request email: " + email);
 
     User.findOne({ email: email }, async (err, user) => {
       if (user) {
@@ -374,7 +408,7 @@ app.get(
           res.render("request", { data: result });
         }
       } else {
-        console.log("error in /request/" + err);
+        
         res.render("request");
       }
     });
@@ -386,9 +420,7 @@ app.post(
   passport.authenticate("jwt", { failureRedirect: "/login" }),
   async function(req, res) {
     var token = req.cookies.access_token;
-    console.log("request token: " + token);
     var email = parseJwt(token);
-    console.log("request email: " + email);
 
     User.findOne({ email: email }, async (err, user) => {
       if (user) {
@@ -396,7 +428,7 @@ app.post(
         var cardName = identityCardNumber + "@tutorial-network";
         if (user.role == "Doctor") {
           await blockchain.createRequest(req.body);
-          console.log("Done create doctor Request");
+
           var result = await blockchain.getRequestByDoctor(
             cardName,
             identityCardNumber
@@ -405,7 +437,7 @@ app.post(
         }
         if (user.role == "Patient") {
           await blockchain.createRequest(req.body);
-          console.log("Done create patient Request");
+
           var result = await blockchain.getRequestByPatient(
             cardName,
             identityCardNumber
@@ -420,24 +452,124 @@ app.post(
   }
 );
 
-app.get("/doctors", async function(req, res) {
-  var cardName = "admin@tutorial-network";
-  var result = await blockchain.getDoctor(cardName);
-  res.json({ msg: "ok", result: result });
-});
+app.get(
+  "/doctors",
+  passport.authenticate("jwt", { failureRedirect: "/login" }),
+  async function(req, res) {
+    //var cardName = "admin@tutorial-network";
+    var result = await blockchain.getDoctorInfos();
+    res.render("doctors", { data: result });
+  }
+);
 
-app.get("/patients", async function(req, res) {
-  var cardName = "admin@tutorial-network";
-  var result = await blockchain.getPatient(cardName);
-  res.json({ msg: "ok", result: result });
-});
+app.post(
+  "/requestdoctorinfo",
+  passport.authenticate("jwt", { failureRedirect: "/login" }),
+  async function(req, res) {
+    var token = req.cookies.access_token;
+    var email = parseJwt(token);
+    User.findOne({ email: email }, async (err, user) => {
+      if (user) {
+        var identityCardNumber = user.identityCardNumber;
+        var cardName = identityCardNumber + "@tutorial-network";
+        if (user.role == "Doctor") {
+          var requesterRole = user.role;
+          var resourceOwnerRole = req.body.resourceOwnerRole;
+          var resourceType = req.body.resourceType;
+          var resourceId = req.body.resourceId;
+          var idRequester = user.identityCardNumber;
+          var idResourceOwner = req.body.resourceOwner;
+          var data = {
+            requesterRole,
+            resourceOwnerRole,
+            resourceType,
+            resourceId,
+            idRequester,
+            idResourceOwner
+          };
+          await blockchain.createRequest(data);
+          var result = await blockchain.getRequestByDoctor(
+            cardName,
+            identityCardNumber
+          );
+          res.render("request", { data: result });
+        }
+      } else {
+        res.render("index");
+      }
+    });
+  }
+);
+
+app.post(
+  "/requestpatientinfo",
+  passport.authenticate("jwt", { failureRedirect: "/login" }),
+  async function(req, res) {
+    var token = req.cookies.access_token;
+    var email = parseJwt(token);
+    User.findOne({ email: email }, async (err, user) => {
+      if (user) {
+        var identityCardNumber = user.identityCardNumber;
+        var cardName = identityCardNumber + "@tutorial-network";
+        if (user.role == "Doctor") {
+          var requesterRole = user.role;
+          var resourceOwnerRole = req.body.resourceOwnerRole;
+          var resourceType = req.body.resourceType;
+          var resourceId = req.body.resourceId;
+          var idRequester = user.identityCardNumber;
+          var idResourceOwner = req.body.resourceOwner;
+          var data = {
+            requesterRole,
+            resourceOwnerRole,
+            resourceType,
+            resourceId,
+            idRequester,
+            idResourceOwner
+          };
+          await blockchain.createRequest(data);
+          var result = await blockchain.getRequestByDoctor(
+            cardName,
+            identityCardNumber
+          );
+          res.render("request", { data: result });
+        }
+      } else {
+        res.render("index");
+      }
+    });
+  }
+);
+
+app.get(
+  "/patients",
+  passport.authenticate("jwt", { failureRedirect: "/login" }),
+  async function(req, res) {
+    //var cardName = "admin@tutorial-network";
+
+    var token = req.cookies.access_token;
+
+    var email = parseJwt(token);
+
+    User.findOne({ email: email }, async (err, user) => {
+      if (user) {
+        var identityCardNumber = user.identityCardNumber;
+        var cardName = identityCardNumber + "@tutorial-network";
+        if (user.role == "Doctor") {
+          var result = await blockchain.getPatientInfos();
+          res.render("patients", { data: result });
+        }
+        if (user.role == "Patient") {
+          res.render("patientserror");
+        }
+      } else {
+        console.log("User not found!");
+        //res.redirect("/index");
+      }
+    });
+  }
+);
 
 app.post("/adddoctor", async function(req, res) {
-  // if ("admin@tutorial-network" !== req.user.cardName) {
-  //     res.redirect("/register");
-  //     return;
-  // }
-
   var idCardNumber = req.body.identityCardNumber;
   var result = await blockchain.createDoctor(req.body);
   await blockchain.createDoctorIdentity(idCardNumber);
@@ -446,31 +578,14 @@ app.post("/adddoctor", async function(req, res) {
   const cardData = await blockchain.exportCard(cardName);
   await blockchain.deleteCard(cardName);
   await blockchain.importCard(cardName, cardData);
-  console.log(result);
-  console.log("Done add doctor!");
-});
-
-app.get("/countdoctorinfo", async function(req, res) {
-  var cardName = "admin@tutorial-network";
-  var results = await blockchain.countDoctorInfo(cardName);
-  console.log("count: " + results);
-});
-
-app.post("/adddoctorinfo", async function(req, res) {
-  await blockchain.createDoctorInfo(req.body);
-  console.log("Done create doctor info");
-});
-
-app.post("/addpatientinfo", async function(req, res) {
-  await blockchain.createPatientInfo(req.body);
-  console.log("Done create doctor info");
+  
 });
 
 app.post(
   "/request/accept/",
   passport.authenticate("jwt", { failureRedirect: "/login" }),
   async function(req, res) {
-    console.log("start /request/accept/:requestId");
+    
     var requestId = req.body.requestId;
 
     var token = req.cookies.access_token;
@@ -481,7 +596,7 @@ app.post(
       if (user) {
         if (user.role == "Doctor") {
           await blockchain.doctorAcceptRequestOfPatient(requestId);
-          console.log("Done accept request by Doctor");
+          
           var identityCardNumber = user.identityCardNumber;
           var cardName = identityCardNumber + "@tutorial-network";
           var result = await blockchain.getRequestByDoctor(
@@ -492,7 +607,7 @@ app.post(
         }
         if (user.role == "Patient") {
           await blockchain.patientAcceptRequestOfDoctor(requestId);
-          console.log("Done accept request by Patient");
+          
           var identityCardNumber = user.identityCardNumber;
           var cardName = identityCardNumber + "@tutorial-network";
           var result = await blockchain.getRequestByPatient(
@@ -512,20 +627,20 @@ app.post(
   "/request/reject/",
   passport.authenticate("jwt", { failureRedirect: "/login" }),
   async function(req, res) {
-    console.log("start /request/accept/:requestId");
+    
     var requestId = req.body.requestId;
-    console.log("request id: " + requestId);
+    
 
     var token = req.cookies.access_token;
-    console.log("request token: " + token);
+    
     var email = parseJwt(token);
-    console.log("request email: " + email);
+    
 
     User.findOne({ email: email }, async (err, user) => {
       if (user) {
         if (user.role == "Doctor") {
           await blockchain.doctorRevokeRequestOfPatient(requestId);
-          console.log("Done accept request by Doctor");
+          
           var identityCardNumber = user.identityCardNumber;
           var cardName = identityCardNumber + "@tutorial-network";
           var result = await blockchain.getRequestByDoctor(
@@ -536,7 +651,7 @@ app.post(
         }
         if (user.role == "Patient") {
           await blockchain.patientRevokeRequestOfDoctor(requestId);
-          console.log("Done accept request by Patient");
+          
           var identityCardNumber = user.identityCardNumber;
           var cardName = identityCardNumber + "@tutorial-network";
           var result = await blockchain.getRequestByPatient(
@@ -557,9 +672,9 @@ app.get(
   passport.authenticate("jwt", { failureRedirect: "/login" }),
   async function(req, res) {
     var token = req.cookies.access_token;
-    console.log("request token: " + token);
+   
     var email = parseJwt(token);
-    console.log("request email: " + email);
+    
 
     User.findOne({ email: email }, async (err, user) => {
       if (user) {
@@ -576,7 +691,7 @@ app.get(
           res.render("index");
         }
       } else {
-        console.log("error in /request/" + err);
+        
         res.render("login");
       }
     });
@@ -587,14 +702,14 @@ app.post(
   "/healthrecord",
   passport.authenticate("jwt", { failureRedirect: "/login" }),
   async function(req, res) {
-    console.log("/healthrecord/detail hihi");
+    
     var healthRecordId = req.body.healthRecordId;
-    console.log("healthRecordId"+healthRecordId);
+   
 
     var token = req.cookies.access_token;
-    console.log("request token: " + token);
+    
     var email = parseJwt(token);
-    console.log("request email: " + email);
+    
 
     User.findOne({ email: email }, async (err, user) => {
       if (user) {
@@ -616,10 +731,9 @@ app.post(
   "/healthrecord/detail",
   passport.authenticate("jwt", { failureRedirect: "/login" }),
   async function(req, res) {
-    console.log("/healthrecord/detail");
-    var token = req.cookies.access_token;  
-    var email = parseJwt(token);
     
+    var token = req.cookies.access_token;
+    var email = parseJwt(token);
 
     User.findOne({ email: email }, async (err, user) => {
       if (user) {
@@ -627,11 +741,11 @@ app.post(
           var identityCardNumber = user.identityCardNumber;
           var cardName = identityCardNumber + "@tutorial-network";
 
-          await blockchain.doctorUpdateHealthRecord(
-            req.body
-          );
+          await blockchain.doctorUpdateHealthRecord(req.body);
 
-          var result = await blockchain.getDetailHealthRecord(req.body.healthRecordId);
+          var result = await blockchain.getDetailHealthRecord(
+            req.body.healthRecordId
+          );
           res.render("detailhealthrecord", { data: result });
         }
       } else {
