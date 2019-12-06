@@ -74,7 +74,8 @@
         tr:nth-child(even) {
             background-color: #dddddd;
         }
-        .request-button{
+
+        .request-button {
             border: 1px solid black;
         }
     </style>
@@ -119,7 +120,7 @@
                             <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
                             <li class="nav-item"><a class="nav-link" href="about-us.html">About</a></li>
                             <li class="nav-item"><a class="nav-link" href="/healthrecord">Health Record</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/doctors">Doctors</a></li>    
+                            <li class="nav-item"><a class="nav-link" href="/doctors">Doctors</a></li>
                             <li class="nav-item"><a class="nav-link" href="/patients">Patients</a></li>
                             <li class="nav-item"><a class="nav-link" href="/request/">Request</a></li>
                             <li class="nav-item"><a class="nav-link" href="/profile/">Profile</a></li>
@@ -167,6 +168,7 @@
                     style="margin-left: 300px;">Submit</button>
             </div>
         </form>
+        <% if(data.berequest){ %>
         <table>
             <tr>
                 <th>Request ID</th>
@@ -176,34 +178,78 @@
                 <th>Resource ID</th>
                 <th>Requester ID</th>
                 <th>Resource Owner ID</th>
+                <th>Status</th>
                 <th>Action</th>
             </tr>
-            <% for(var i=0;i < data.length;i++){ %>
+
+            <% for(var i=0;i < data.berequest.length;i++){ %>
             <tr>
-                <td id="requestId"><%= data[i].requestId%></td>  
-                <td id="requesterRole"><%= data[i].requesterRole%></td>
-                <td id="resourceOwnerRole"><%= data[i].resourceOwnerRole%></td>
-                <td id="resourceType"><%= data[i].resourceType%></td>
-                <td id="resourceId"><%= data[i].resourceId%></td>
-                <td id="idRequester"><%= data[i].owner%></td>
-                <td id="idResourceOwner"><%= data[i].resourceOwner%></td>
+                <td id="requestId"><%= data.berequest[i].requestId%></td>
+                <td id="requesterRole"><%= data.berequest[i].requesterRole%></td>
+                <td id="resourceOwnerRole"><%= data.berequest[i].resourceOwnerRole%></td>
+                <td id="resourceType"><%= data.berequest[i].resourceType%></td>
+                <td id="resourceId"><%= data.berequest[i].resourceId%></td>
+                <td id="idRequester"><%= data.berequest[i].owner%></td>
+                <td id="idResourceOwner"><%= data.berequest[i].resourceOwner%></td>
+                <td id="idResourceOwner"><%= data.berequest[i].status%></td>
                 <td>
-                        <form action="/request/accept" method="POST">
-                            <input type="hidden" name="requestId" value="<%= data[i].requestId%>">
-                            
-                            <button class="request-button" type="submit">Accept</button>
-                                
-                        </form> 
-                        <form action="/request/reject" method="POST">
-                            <input type="hidden" name="requestId" value="<%= data[i].requestId%>">
-                            
-                            <button class="request-button" type="submit">Reject</button>
-                            
-                        </form> 
-                    </td>
+                    <% if(data.berequest[i].status=='Accepted') {%>
+                    <form action="/request/reject" method="POST">
+                        <input type="hidden" name="requestId" value="<%= data.berequest[i].requestId%>">
+
+                        <button class="request-button" type="submit">Reject</button>
+
+                    </form>
+                    <% } %>
+                    <% if(data.berequest[i].status=='New') {%>
+                    <form action="/request/accept" method="POST">
+                        <input type="hidden" name="requestId" value="<%= data.berequest[i].requestId%>">
+
+                        <button class="request-button" type="submit">Accept</button>
+
+                    </form>
+                    <form action="/request/reject" method="POST">
+                        <input type="hidden" name="requestId" value="<%= data.berequest[i].requestId%>">
+
+                        <button class="request-button" type="submit">Reject</button>
+
+                    </form>
+                    <% } %>
+                </td>
             </tr>
             <% } %>
         </table>
+
+        <% } %>
+
+        <% if(data.request){ %>
+        <table>
+            <tr>
+                <th>Request ID</th>
+                <th>Requester Role</th>
+                <th>Resource Owner Role</th>
+                <th>Resource Type</th>
+                <th>Resource ID</th>
+                <th>Requester ID</th>
+                <th>Resource Owner ID</th>
+                <th>Status</th>
+
+            </tr>
+
+            <% for(var i=0;i < data.request.length;i++){ %>
+            <tr>
+                <td id="requestId"><%= data.request[i].requestId%></td>
+                <td id="requesterRole"><%= data.request[i].requesterRole%></td>
+                <td id="resourceOwnerRole"><%= data.request[i].resourceOwnerRole%></td>
+                <td id="resourceType"><%= data.request[i].resourceType%></td>
+                <td id="resourceId"><%= data.request[i].resourceId%></td>
+                <td id="idRequester"><%= data.request[i].owner%></td>
+                <td id="idResourceOwner"><%= data.request[i].resourceOwner%></td>
+                <td id="idResourceOwner"><%= data.request[i].status%></td>
+            </tr>
+            <% } %>
+        </table>
+        <% } %>
     </div>
 
 
@@ -221,7 +267,7 @@
     <!-- start footer Area -->
     <footer class="footer-area area-padding-top">
         <div class="container">
-            
+
             <div class="row footer-bottom d-flex justify-content-between">
                 <p class="col-lg-8 col-sm-12 footer-text m-0">
                     <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
