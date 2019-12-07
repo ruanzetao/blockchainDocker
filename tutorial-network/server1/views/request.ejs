@@ -106,7 +106,7 @@
             <nav class="navbar navbar-expand-lg navbar-light">
                 <div class="container">
                     <!-- Brand and toggle get grouped for better mobile display -->
-                    <a class="navbar-brand logo_h" href="index.html"><img src="img/logo.png" alt=""></a>
+                    <a class="navbar-brand logo_h" href="/index"><img src="img/logo.png" alt=""></a>
                     <button class="navbar-toggler" type="button" data-toggle="collapse"
                         data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -117,7 +117,7 @@
                     <!-- Collect the nav links, forms, and other content for toggling -->
                     <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
                         <ul class="nav navbar-nav menu_nav ml-auto">
-                            <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/index">Home</a></li>
                             <li class="nav-item"><a class="nav-link" href="about-us.html">About</a></li>
                             <li class="nav-item"><a class="nav-link" href="/healthrecord">Health Record</a></li>
                             <li class="nav-item"><a class="nav-link" href="/doctors">Doctors</a></li>
@@ -191,7 +191,7 @@
                 <td id="resourceId"><%= data.berequest[i].resourceId%></td>
                 <td id="idRequester"><%= data.berequest[i].owner%></td>
                 <td id="idResourceOwner"><%= data.berequest[i].resourceOwner%></td>
-                <td id="idResourceOwner"><%= data.berequest[i].status%></td>
+                <td id="status"><%= data.berequest[i].status%></td>
                 <td>
                     <% if(data.berequest[i].status=='Accepted') {%>
                     <form action="/request/reject" method="POST">
@@ -204,13 +204,13 @@
                     <% if(data.berequest[i].status=='New') {%>
                     <form action="/request/accept" method="POST">
                         <input type="hidden" name="requestId" value="<%= data.berequest[i].requestId%>">
-
+                        <input type="hidden" name="requesterRole" value="<%= data.berequest[i].requesterRole%>">
                         <button class="request-button" type="submit">Accept</button>
 
                     </form>
                     <form action="/request/reject" method="POST">
                         <input type="hidden" name="requestId" value="<%= data.berequest[i].requestId%>">
-
+                        <input type="hidden" name="requesterRole" value="<%= data.berequest[i].requesterRole%>">
                         <button class="request-button" type="submit">Reject</button>
 
                     </form>
@@ -233,6 +233,7 @@
                 <th>Requester ID</th>
                 <th>Resource Owner ID</th>
                 <th>Status</th>
+               
 
             </tr>
 
@@ -245,7 +246,7 @@
                 <td id="resourceId"><%= data.request[i].resourceId%></td>
                 <td id="idRequester"><%= data.request[i].owner%></td>
                 <td id="idResourceOwner"><%= data.request[i].resourceOwner%></td>
-                <td id="idResourceOwner"><%= data.request[i].status%></td>
+                <td id="status"><%= data.request[i].status%></td>
             </tr>
             <% } %>
         </table>

@@ -105,7 +105,7 @@ asset DoctorInfo identified by doctorInfoId {
   o String tittle optional
   o DateTime createAt optional
   o DateTime updateAt optional
-
+  --> Doctor[] authorizedDoctors
   --> Patient[] authorizedPatients
   --> Doctor owner
 }

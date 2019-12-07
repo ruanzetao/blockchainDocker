@@ -85,6 +85,7 @@ async function createDoctorInfo(data) {
     doctorInfo.identityCardNumber = data.identityCardNumber;
     doctorInfo.sex = data.sex;
     doctorInfo.specialist = data.specialist;
+    doctorInfo.authorizedDoctors = [];
     doctorInfo.authorizedPatients = [];
     doctorInfo.marriageStatus = data.marriageStatus;
     doctorInfo.tittle = data.tittle;
@@ -985,6 +986,84 @@ async function doctorAcceptRequestOfPatient(requestId) {
   //return 1;
 }
 
+async function doctorAcceptRequestOfDoctor(requestId) {
+    console.log("start accept request of Doctor");
+  
+    let businessNetworkConnection = new BusinessNetworkConnection();
+  
+    try {
+      // await businessNetworkConnection.connect('3@identity');
+      await businessNetworkConnection.connect("admin@tutorial-network");
+      let requestRegistry = await businessNetworkConnection.getAssetRegistry(
+        "org.basic.server.Request"
+      );
+      var req = await requestRegistry.get(requestId);
+      let resourceRegistry = await businessNetworkConnection.getAssetRegistry(
+        "org.basic.server." + req.resourceType
+      );
+      var resource = await resourceRegistry.get(req.resourceId);
+  
+      var owner = req.owner;
+      console.log("owner: " + owner);
+  
+      resource.authorizedDoctors.push(owner);
+      await resourceRegistry.update(resource);
+  
+      req.status = "Accepted";
+      await requestRegistry.update(req);
+  
+      //disconect admin card
+      await businessNetworkConnection.disconnect();
+      // console.log(result);
+      return 1;
+    } catch (error) {
+      await businessNetworkConnection.disconnect();
+      //error: trung id card
+      console.log(error);
+      return 0;
+      // process.exit(1);
+    }
+    //return 1;
+  }
+  async function doctorRevokeRequestOfDoctor(requestId) {
+    console.log("start accept request of Doctor");
+  
+    let businessNetworkConnection = new BusinessNetworkConnection();
+  
+    try {
+      // await businessNetworkConnection.connect('3@identity');
+      await businessNetworkConnection.connect("admin@tutorial-network");
+      let requestRegistry = await businessNetworkConnection.getAssetRegistry(
+        "org.basic.server.Request"
+      );
+      var req = await requestRegistry.get(requestId);
+      let resourceRegistry = await businessNetworkConnection.getAssetRegistry(
+        "org.basic.server." + req.resourceType
+      );
+      var resource = await resourceRegistry.get(req.resourceId);
+  
+      var doctor = req.owner;
+      await resource.authorizedDoctors.splice(
+        resource.authorizedDoctors.indexOf(doctor, "1")
+      );
+      await resourceRegistry.update(resource);
+  
+      req.status = "Rejected";
+      await requestRegistry.update(req);
+  
+      //disconect admin card
+      await businessNetworkConnection.disconnect();
+      // console.log(result);
+      return 1;
+    } catch (error) {
+      await businessNetworkConnection.disconnect();
+      //error: trung id card
+      console.log(error);
+      return 0;
+      // process.exit(1);
+    }
+    //return 1;
+  }
 async function doctorRevokeRequestOfPatient(requestId) {
   console.log("start accept request of Patient");
 
@@ -1361,5 +1440,7 @@ module.exports = {
   getDetailHealthRecord,
   getDoctorInfos,
   getPatientInfos,
-  getRequestBeRequest
+  getRequestBeRequest,
+  doctorAcceptRequestOfDoctor,
+  doctorRevokeRequestOfDoctor
 };
