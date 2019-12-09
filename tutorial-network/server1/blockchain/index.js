@@ -739,7 +739,7 @@ async function createRequest(data) {
   let businessNetworkConnection = new BusinessNetworkConnection();
 
   try {
-    //console.log(data.personId);
+    
     const definition = await businessNetworkConnection.connect(
       "admin@tutorial-network"
     );
@@ -748,7 +748,7 @@ async function createRequest(data) {
     let results = await businessNetworkConnection.query("selectAllRequest");
     let count = results.length;
     let requestId = count + 1;
-    console.log("requestInfoId: " + requestId);
+    
     let assetRegistry = await businessNetworkConnection.getAssetRegistry(
       "org.basic.server.Request"
     );
@@ -946,14 +946,15 @@ async function getRequestByPatient(cardName, identityCardNumber) {
   //return 1;
 }
 
-async function doctorAcceptRequestOfPatient(requestId) {
+async function doctorAcceptRequestOfPatient(cardName,requestId) {
   console.log("start accept request of Patient");
 
   let businessNetworkConnection = new BusinessNetworkConnection();
 
   try {
-    // await businessNetworkConnection.connect('3@identity');
-    await businessNetworkConnection.connect("admin@tutorial-network");
+    
+    // await businessNetworkConnection.connect("admin@tutorial-network");
+    await businessNetworkConnection.connect(cardName);
     let requestRegistry = await businessNetworkConnection.getAssetRegistry(
       "org.basic.server.Request"
     );
@@ -986,92 +987,95 @@ async function doctorAcceptRequestOfPatient(requestId) {
   //return 1;
 }
 
-async function doctorAcceptRequestOfDoctor(requestId) {
-    console.log("start accept request of Doctor");
-  
-    let businessNetworkConnection = new BusinessNetworkConnection();
-  
-    try {
-      // await businessNetworkConnection.connect('3@identity');
-      await businessNetworkConnection.connect("admin@tutorial-network");
-      let requestRegistry = await businessNetworkConnection.getAssetRegistry(
-        "org.basic.server.Request"
-      );
-      var req = await requestRegistry.get(requestId);
-      let resourceRegistry = await businessNetworkConnection.getAssetRegistry(
-        "org.basic.server." + req.resourceType
-      );
-      var resource = await resourceRegistry.get(req.resourceId);
-  
-      var owner = req.owner;
-      console.log("owner: " + owner);
-  
-      resource.authorizedDoctors.push(owner);
-      await resourceRegistry.update(resource);
-  
-      req.status = "Accepted";
-      await requestRegistry.update(req);
-  
-      //disconect admin card
-      await businessNetworkConnection.disconnect();
-      // console.log(result);
-      return 1;
-    } catch (error) {
-      await businessNetworkConnection.disconnect();
-      //error: trung id card
-      console.log(error);
-      return 0;
-      // process.exit(1);
-    }
-    //return 1;
-  }
-  async function doctorRevokeRequestOfDoctor(requestId) {
-    console.log("start accept request of Doctor");
-  
-    let businessNetworkConnection = new BusinessNetworkConnection();
-  
-    try {
-      // await businessNetworkConnection.connect('3@identity');
-      await businessNetworkConnection.connect("admin@tutorial-network");
-      let requestRegistry = await businessNetworkConnection.getAssetRegistry(
-        "org.basic.server.Request"
-      );
-      var req = await requestRegistry.get(requestId);
-      let resourceRegistry = await businessNetworkConnection.getAssetRegistry(
-        "org.basic.server." + req.resourceType
-      );
-      var resource = await resourceRegistry.get(req.resourceId);
-  
-      var doctor = req.owner;
-      await resource.authorizedDoctors.splice(
-        resource.authorizedDoctors.indexOf(doctor, "1")
-      );
-      await resourceRegistry.update(resource);
-  
-      req.status = "Rejected";
-      await requestRegistry.update(req);
-  
-      //disconect admin card
-      await businessNetworkConnection.disconnect();
-      // console.log(result);
-      return 1;
-    } catch (error) {
-      await businessNetworkConnection.disconnect();
-      //error: trung id card
-      console.log(error);
-      return 0;
-      // process.exit(1);
-    }
-    //return 1;
-  }
-async function doctorRevokeRequestOfPatient(requestId) {
-  console.log("start accept request of Patient");
+async function doctorAcceptRequestOfDoctor(cardName,requestId) {
+  console.log("start accept request of Doctor");
 
   let businessNetworkConnection = new BusinessNetworkConnection();
 
   try {
     // await businessNetworkConnection.connect('3@identity');
-    await businessNetworkConnection.connect("admin@tutorial-network");
+    // await businessNetworkConnection.connect("admin@tutorial-network");
+    await businessNetworkConnection.connect(cardName);
+    let requestRegistry = await businessNetworkConnection.getAssetRegistry(
+      "org.basic.server.Request"
+    );
+    var req = await requestRegistry.get(requestId);
+    let resourceRegistry = await businessNetworkConnection.getAssetRegistry(
+      "org.basic.server." + req.resourceType
+    );
+    var resource = await resourceRegistry.get(req.resourceId);
+
+    var owner = req.owner;
+    console.log("owner: " + owner);
+
+    resource.authorizedDoctors.push(owner);
+    await resourceRegistry.update(resource);
+
+    req.status = "Accepted";
+    await requestRegistry.update(req);
+
+    //disconect admin card
+    await businessNetworkConnection.disconnect();
+    // console.log(result);
+    return 1;
+  } catch (error) {
+    await businessNetworkConnection.disconnect();
+    //error: trung id card
+    console.log(error);
+    return 0;
+    // process.exit(1);
+  }
+  //return 1;
+}
+async function doctorRevokeRequestOfDoctor(cardName,requestId) {
+  console.log("start accept request of Doctor");
+
+  let businessNetworkConnection = new BusinessNetworkConnection();
+
+  try {
+    
+    // await businessNetworkConnection.connect("admin@tutorial-network");
+    await businessNetworkConnection.connect(cardName);
+    let requestRegistry = await businessNetworkConnection.getAssetRegistry(
+      "org.basic.server.Request"
+    );
+    var req = await requestRegistry.get(requestId);
+    let resourceRegistry = await businessNetworkConnection.getAssetRegistry(
+      "org.basic.server." + req.resourceType
+    );
+    var resource = await resourceRegistry.get(req.resourceId);
+
+    var doctor = req.owner;
+    await resource.authorizedDoctors.splice(
+      resource.authorizedDoctors.indexOf(doctor, "1")
+    );
+    await resourceRegistry.update(resource);
+
+    req.status = "Rejected";
+    await requestRegistry.update(req);
+
+    //disconect admin card
+    await businessNetworkConnection.disconnect();
+    // console.log(result);
+    return 1;
+  } catch (error) {
+    await businessNetworkConnection.disconnect();
+    //error: trung id card
+    console.log(error);
+    return 0;
+    // process.exit(1);
+  }
+  //return 1;
+}
+async function doctorRevokeRequestOfPatient(cardName,requestId) {
+  console.log("start accept request of Patient");
+
+  let businessNetworkConnection = new BusinessNetworkConnection();
+
+  try {
+    
+    // await businessNetworkConnection.connect("admin@tutorial-network");
+    await businessNetworkConnection.connect(cardName);
     let requestRegistry = await businessNetworkConnection.getAssetRegistry(
       "org.basic.server.Request"
     );
@@ -1104,14 +1108,15 @@ async function doctorRevokeRequestOfPatient(requestId) {
   //return 1;
 }
 
-async function patientAcceptRequestOfDoctor(requestId) {
+async function patientAcceptRequestOfDoctor(cardName,requestId) {
   console.log("start accept request of Doctor");
 
   let businessNetworkConnection = new BusinessNetworkConnection();
 
   try {
-    // await businessNetworkConnection.connect('3@identity');
-    await businessNetworkConnection.connect("admin@tutorial-network");
+    
+    // await businessNetworkConnection.connect("admin@tutorial-network");
+    await businessNetworkConnection.connect(cardName);
     let requestRegistry = await businessNetworkConnection.getAssetRegistry(
       "org.basic.server.Request"
     );
@@ -1143,14 +1148,15 @@ async function patientAcceptRequestOfDoctor(requestId) {
   //return 1;
 }
 
-async function patientRevokeRequestOfPatient(requestId) {
+async function patientRevokeRequestOfPatient(cardName,requestId) {
   console.log("start accept request of Patient");
 
   let businessNetworkConnection = new BusinessNetworkConnection();
 
   try {
-    // await businessNetworkConnection.connect('3@identity');
-    await businessNetworkConnection.connect("admin@tutorial-network");
+   
+    // await businessNetworkConnection.connect("admin@tutorial-network");
+    await businessNetworkConnection.connect(cardName);
     let requestRegistry = await businessNetworkConnection.getAssetRegistry(
       "org.basic.server.Request"
     );
@@ -1250,7 +1256,7 @@ async function createHealthRecord(identityCardNumber) {
 }
 
 async function getHealthRecordByDoctor(cardName, identityCardNumber) {
-  console.log("start get Request by Doctor");
+  console.log("start get Health Record by Doctor");
 
   let businessNetworkConnection = new BusinessNetworkConnection();
 
@@ -1263,8 +1269,6 @@ async function getHealthRecordByDoctor(cardName, identityCardNumber) {
 
     //add a new participant to business network
     var result = await participantRegistry.getAll();
-    console.log("result: " + result);
-
     arrayResult = [];
 
     for (var i = 0; i < result.length; i++) {
@@ -1295,6 +1299,32 @@ async function getHealthRecordByDoctor(cardName, identityCardNumber) {
     // process.exit(1);
   }
   //return 1;
+}
+
+async function listAllHealthRecord() {
+  let businessNetworkConnection = new BusinessNetworkConnection();
+
+  try {
+    // await businessNetworkConnection.connect('3@identity');
+    await businessNetworkConnection.connect("admin@tutorial-network");
+    let participantRegistry = await businessNetworkConnection.getAssetRegistry(
+      "org.basic.server.HealthRecord"
+    );
+
+    var result = await participantRegistry.getAll();
+
+    arrayResult = [];
+    for (var i = 0; i < result.length; i++) {
+      var item = {
+        healthRecordId: result[i].healthRecordId,
+        owner: result[i].owner.getIdentifier()
+      };
+      arrayResult.push(item);
+    }
+    return arrayResult;
+  } catch (error) {
+    return 0;
+  }
 }
 
 async function getDetailHealthRecord(healthRecordId) {
@@ -1334,33 +1364,34 @@ async function getDetailHealthRecord(healthRecordId) {
       albumin0: result.albumin0,
       bilirubintp0: result.bilirubintt0,
       bilirubintt0: result.bilirubintt0,
-      owner: result.owner.getIdentifier()
+      owner: result.owner.getIdentifier(),
+      conclusion: result.conclusion
     };
 
     //disconect admin card
     await businessNetworkConnection.disconnect();
     // console.log(result);
-
+    console.log("hight "+item.hight);
     return item;
   } catch (error) {
     await businessNetworkConnection.disconnect();
 
     //error: trung id card
     console.log(error);
-    return 1;
+    return 0;
     // process.exit(1);
   }
   //return 1;
 }
 
-async function doctorUpdateHealthRecord(data) {
+async function doctorUpdateHealthRecord(cardName,data) {
   console.log("doctor start to update Health Record");
   let businessNetworkConnection = new BusinessNetworkConnection();
 
   try {
     //console.log(data.personId);
     var definition = await businessNetworkConnection.connect(
-      "admin@tutorial-network"
+      cardName
     );
 
     let assetRegistry = await businessNetworkConnection.getAssetRegistry(
@@ -1368,9 +1399,6 @@ async function doctorUpdateHealthRecord(data) {
     );
     let factory = definition.getFactory();
     var healthRecordAsset = await assetRegistry.get(data.healthRecordId);
-    console.log("healthRecordAsset" + healthRecordAsset);
-    console.log("healthRecordId" + data.healthRecordId);
-    console.log("healthRecordId by asset: " + healthRecordAsset.healthRecordId);
     //define information of a user
     healthRecordAsset.hight = data.hight;
     healthRecordAsset.tuoithai = data.tuoithai;
@@ -1393,8 +1421,6 @@ async function doctorUpdateHealthRecord(data) {
     healthRecordAsset.bilirubintp0 = data.bilirubintp0;
     healthRecordAsset.bilirubintt0 = data.bilirubintt0;
     healthRecordAsset.conclusion = data.conclusion;
-
-    console.log("healthRecordAsset.conclusion" + healthRecordAsset.conclusion);
 
     //add a new participant to business network
     await assetRegistry.update(healthRecordAsset);
@@ -1442,5 +1468,6 @@ module.exports = {
   getPatientInfos,
   getRequestBeRequest,
   doctorAcceptRequestOfDoctor,
-  doctorRevokeRequestOfDoctor
+  doctorRevokeRequestOfDoctor,
+  listAllHealthRecord
 };

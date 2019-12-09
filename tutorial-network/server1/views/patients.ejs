@@ -33,11 +33,10 @@
     <link href="css/main1.css" rel="stylesheet" media="all">
     <style>
         .requestForm {
-            width: 80%;
-            margin-left: 5%;
-            margin-right: 5%;
-            padding-left: 5%;
-
+            width: 100%;
+            margin-left: 0;
+            margin-right: 0;
+            padding-left: 0;
             display: inline-block;
             border: 1px solid #ccc;
             border-radius: 4px;
@@ -69,13 +68,24 @@
             border: 1px solid #dddddd;
             text-align: left;
             padding: 8px;
+            display: table-cell;
+            width: 33.333333%;
         }
 
-        tr:nth-child(even) {
-            background-color: #dddddd;
+        th {
+            background: #dddddd;
         }
-        .request-button{
+
+        .request-button {
             border: 1px solid black;
+            padding: 0 15px;
+            display: inline-block;
+            vertical-align: top;
+            min-width: 150px;
+        }
+
+        .table-label {
+            font-family: arial, sans-serif;
         }
     </style>
 </head>
@@ -119,7 +129,7 @@
                             <li class="nav-item"><a class="nav-link" href="/index">Home</a></li>
                             <li class="nav-item"><a class="nav-link" href="about-us.html">About</a></li>
                             <li class="nav-item"><a class="nav-link" href="/healthrecord">Health Record</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/doctors">Doctors</a></li>   
+                            <li class="nav-item"><a class="nav-link" href="/doctors">Doctors</a></li>
                             <li class="nav-item"><a class="nav-link" href="/patients">Patients</a></li>
                             <li class="nav-item"><a class="nav-link" href="/request/">Request</a></li>
                             <li class="nav-item"><a class="nav-link" href="/profile/">Profile</a></li>
@@ -130,37 +140,42 @@
             </nav>
         </div>
     </header>
-    <% if(data){ %>
-    <div class="requestForm">
-        <table>
-            
-            <tr>
-                <th>Name</th>
-                <th>Career</th>
-                <th>Identity Card</th>
+    <div class="body">
+        <div class="container">
+            <% if(data){ %>
+            <div class="requestForm">
+                <table>
 
-            </tr>
-            <% for(var i=0;i < data.length;i++){ %>
-            <tr>
-                <td id="name"><%= data[i].name%></td>  
-                <td id="career"><%= data[i].career%></td>
-                <td id="identityCardNumber"><%= data[i].identityCardNumber%></td>
-                <td>
+                    <tr>
+                        <th>Name</th>
+                        <th>Career</th>
+                        <th>Identity Card</th>
+                        <th>Action</th>
 
-                        <form action="/requestpatientinfo" method="POST">
-                            <input type="hidden" name="resourceOwnerRole" value="Patient">
-                            <input type="hidden" name="resourceType" value="PatientInfo">
-                            <input type="hidden" name="resourceId" value="<%=data[i].patientInfoId%>">
-                            <input type="hidden" name="resourceOwner" value="<%=data[i].patientId%>">
-                                <button class="request-button" type="submit">Request Info</button>                               
-                        </form> 
+                    </tr>
+                    <% for(var i=0;i < data.length;i++){ %>
+                    <tr>
+                        <td id="name"><%= data[i].name%></td>
+                        <td id="career"><%= data[i].career%></td>
+                        <td id="identityCardNumber"><%= data[i].identityCardNumber%></td>
+                        <td>
 
-                    </td>
-            </tr>
+                            <form action="/requestpatientinfo" method="POST">
+                                <input type="hidden" name="resourceOwnerRole" value="Patient">
+                                <input type="hidden" name="resourceType" value="PatientInfo">
+                                <input type="hidden" name="resourceId" value="<%=data[i].patientInfoId%>">
+                                <input type="hidden" name="resourceOwner" value="<%=data[i].patientId%>">
+                                <button class="request-button" type="submit">Request Info</button>
+                            </form>
+
+                        </td>
+                    </tr>
+                    <% } %>
+                </table>
+            </div>
             <% } %>
-        </table>
+        </div>
     </div>
-    <% } %>
 
 
     <!-- Jquery JS-->
@@ -175,9 +190,9 @@
 
 
     <!-- start footer Area -->
-    <footer class="footer-area area-padding-top">
+    <footer class="footer-area">
         <div class="container">
-            
+
             <div class="row footer-bottom d-flex justify-content-between">
                 <p class="col-lg-8 col-sm-12 footer-text m-0">
                     <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->

@@ -90,7 +90,7 @@
                 <div class="card-heading"></div>
                 <div class="card-body">
                     <h2 class="title">User Info</h2>
-                    <button id="edit" onclick="editFunction()" class="btn btn--pill btn--green" type="edit" name="edit">Edit</button>
+                    
                     <form method="POST" id="formprofile" name="formprofile">                
                         <div class="input-group">
                             <input id="name" class="input--style-3" type="name" placeholder="Name" name="name" disabled value=<%=data.name%>>
@@ -116,7 +116,8 @@
                         <div class="input-group">
                             <input id="marriageStatus" class="input--style-3" type="marriageStatus" placeholder="marriageStatus" name="marriageStatus" disabled value=<%=data.marriageStatus%>>
                         </div>
-                        <div class="p-t-10">
+                        <div class="p-t-10" style="text-align: center;">
+                            <a href="javascript:void(0);" id="edit" onclick="editFunction()" class="btn btn--pill btn--green">Edit</a>
                             <button id="save" class="btn btn--pill btn--green" type="save" name="save" href="/addpatientinfo">Save</button>
                         </div>
                     </form>

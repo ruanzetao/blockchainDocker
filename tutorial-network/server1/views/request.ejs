@@ -33,13 +33,12 @@
     <link href="css/main1.css" rel="stylesheet" media="all">
     <style>
         .requestForm {
-            width: 80%;
-            margin-left: 5%;
-            margin-right: 5%;
-            padding-left: 5%;
-
+            width: 100%;
+            margin-left: 0;
+            margin-right: 0;
+            padding-left: 0;
             display: inline-block;
-            border: 1px solid #ccc;
+            border: 1px solid transparent;
             border-radius: 4px;
             box-sizing: border-box;
         }
@@ -62,6 +61,7 @@
             padding-right: 5%;
             border-collapse: collapse;
             width: 100%;
+            margin-bottom: 15px;
         }
 
         td,
@@ -69,14 +69,26 @@
             border: 1px solid #dddddd;
             text-align: left;
             padding: 8px;
+            display: table-cell;
+            width: auto;
         }
 
-        tr:nth-child(even) {
-            background-color: #dddddd;
+        th {
+            background: #dddddd;
         }
 
         .request-button {
             border: 1px solid black;
+            padding: 0 15px;
+            display: inline-block;
+            vertical-align: top;
+            min-width: 150px;
+        }
+
+        .table-label {
+            font-family: arial, sans-serif;
+            text-align: center;
+            margin: 0 0 10px;
         }
     </style>
 </head>
@@ -131,126 +143,92 @@
             </nav>
         </div>
     </header>
+    <div class="body">
+        <div class="container">
+            <div class="requestForm">
+                <h3 class="table-label">Be Requested</h3>
+                <% if(data.berequest){ %>
+                <table>
+                    <tr>
+                        <th>Request ID</th>
+                        <th>Requester Role</th>
+                        <th>Resource Owner Role</th>
+                        <th>Resource Type</th>
+                        <th>Resource ID</th>
+                        <th>Requester ID</th>
+                        <th>Resource Owner ID</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
 
-    <div class="requestForm">
-        <form method="POST" id="requestForm" name="requestForm">
-            <div class="input-group">
-                <label for="requesterRole">Requester Role:</label>
-                <input class="input--request" id="requesterRole" type="text" placeholder="requesterRole"
-                    name="requesterRole">
-            </div>
-            <div class="input-group">
+                    <% for(var i=0;i < data.berequest.length;i++){ %>
+                    <tr>
+                        <td id="requestId"><%= data.berequest[i].requestId%></td>
+                        <td id="requesterRole"><%= data.berequest[i].requesterRole%></td>
+                        <td id="resourceOwnerRole"><%= data.berequest[i].resourceOwnerRole%></td>
+                        <td id="resourceType"><%= data.berequest[i].resourceType%></td>
+                        <td id="resourceId"><%= data.berequest[i].resourceId%></td>
+                        <td id="idRequester"><%= data.berequest[i].owner%></td>
+                        <td id="idResourceOwner"><%= data.berequest[i].resourceOwner%></td>
+                        <td id="status"><%= data.berequest[i].status%></td>
+                        <td>
+                            <% if(data.berequest[i].status=='Accepted') {%>
+                            <form action="/request/reject" method="POST">
+                                <input type="hidden" name="requestId" value="<%= data.berequest[i].requestId%>">
 
-                <label for="resourceOwnerRole">Resource Owner Role:</label>
-                <input class="input--request" id="resourceOwnerRole" type="text" placeholder="resourceOwnerRole"
-                    name="resourceOwnerRole">
-            </div>
-            <div class="input-group">
-                <label for="resourceType">Resource Type:</label>
-                <input class="input--request" id="resourceType" type="text" placeholder="resourceType"
-                    name="resourceType">
-            </div>
-            <div class="input-group">
-                <label for="resourceId">Resource ID:</label>
-                <input class="input--request" id="resourceId" type="text" placeholder="resourceId" name="resourceId">
-            </div>
-            <div class="input-group">
-                <label for="idRequester">ID of Requester:</label>
-                <input class="input--request" id="idRequester" type="text" placeholder="idRequester" name="idRequester">
-            </div>
-            <div class="input-group">
-                <label for="idResourceOwner">ID of Resource Owner:</label>
-                <input class="input--request" id="idResourceOwner" type="text" placeholder="idResourceOwner"
-                    name="idResourceOwner">
-            </div>
-            <div class="p-t-10">
-                <button class="btn btn--pill btn--green" type="submit" href="/addrequest"
-                    style="margin-left: 300px;">Submit</button>
-            </div>
-        </form>
-        <% if(data.berequest){ %>
-        <table>
-            <tr>
-                <th>Request ID</th>
-                <th>Requester Role</th>
-                <th>Resource Owner Role</th>
-                <th>Resource Type</th>
-                <th>Resource ID</th>
-                <th>Requester ID</th>
-                <th>Resource Owner ID</th>
-                <th>Status</th>
-                <th>Action</th>
-            </tr>
+                                <button class="request-button" type="submit">Reject</button>
 
-            <% for(var i=0;i < data.berequest.length;i++){ %>
-            <tr>
-                <td id="requestId"><%= data.berequest[i].requestId%></td>
-                <td id="requesterRole"><%= data.berequest[i].requesterRole%></td>
-                <td id="resourceOwnerRole"><%= data.berequest[i].resourceOwnerRole%></td>
-                <td id="resourceType"><%= data.berequest[i].resourceType%></td>
-                <td id="resourceId"><%= data.berequest[i].resourceId%></td>
-                <td id="idRequester"><%= data.berequest[i].owner%></td>
-                <td id="idResourceOwner"><%= data.berequest[i].resourceOwner%></td>
-                <td id="status"><%= data.berequest[i].status%></td>
-                <td>
-                    <% if(data.berequest[i].status=='Accepted') {%>
-                    <form action="/request/reject" method="POST">
-                        <input type="hidden" name="requestId" value="<%= data.berequest[i].requestId%>">
+                            </form>
+                            <% } %>
+                            <% if(data.berequest[i].status=='New') {%>
+                            <form action="/request/accept" method="POST">
+                                <input type="hidden" name="requestId" value="<%= data.berequest[i].requestId%>">
+                                <input type="hidden" name="requesterRole" value="<%= data.berequest[i].requesterRole%>">
+                                <button class="request-button" type="submit">Accept</button>
 
-                        <button class="request-button" type="submit">Reject</button>
+                            </form>
+                            <form action="/request/reject" method="POST">
+                                <input type="hidden" name="requestId" value="<%= data.berequest[i].requestId%>">
+                                <input type="hidden" name="requesterRole" value="<%= data.berequest[i].requesterRole%>">
+                                <button class="request-button" type="submit">Reject</button>
 
-                    </form>
+                            </form>
+                            <% } %>
+                        </td>
+                    </tr>
                     <% } %>
-                    <% if(data.berequest[i].status=='New') {%>
-                    <form action="/request/accept" method="POST">
-                        <input type="hidden" name="requestId" value="<%= data.berequest[i].requestId%>">
-                        <input type="hidden" name="requesterRole" value="<%= data.berequest[i].requesterRole%>">
-                        <button class="request-button" type="submit">Accept</button>
+                </table>
+                <% } %>
+                <h3 class="table-label">Requested</h3>
+                <% if(data.request){ %>
+                <table>
+                    <tr>
+                        <th>Request ID</th>
+                        <th>Requester Role</th>
+                        <th>Resource Owner Role</th>
+                        <th>Resource Type</th>
+                        <th>Resource ID</th>
+                        <th>Requester ID</th>
+                        <th>Resource Owner ID</th>
+                        <th>Status</th>
+                    </tr>
 
-                    </form>
-                    <form action="/request/reject" method="POST">
-                        <input type="hidden" name="requestId" value="<%= data.berequest[i].requestId%>">
-                        <input type="hidden" name="requesterRole" value="<%= data.berequest[i].requesterRole%>">
-                        <button class="request-button" type="submit">Reject</button>
-
-                    </form>
+                    <% for(var i=0;i < data.request.length;i++){ %>
+                    <tr>
+                        <td id="requestId"><%= data.request[i].requestId%></td>
+                        <td id="requesterRole"><%= data.request[i].requesterRole%></td>
+                        <td id="resourceOwnerRole"><%= data.request[i].resourceOwnerRole%></td>
+                        <td id="resourceType"><%= data.request[i].resourceType%></td>
+                        <td id="resourceId"><%= data.request[i].resourceId%></td>
+                        <td id="idRequester"><%= data.request[i].owner%></td>
+                        <td id="idResourceOwner"><%= data.request[i].resourceOwner%></td>
+                        <td id="status"><%= data.request[i].status%></td>
+                    </tr>
                     <% } %>
-                </td>
-            </tr>
-            <% } %>
-        </table>
-
-        <% } %>
-
-        <% if(data.request){ %>
-        <table>
-            <tr>
-                <th>Request ID</th>
-                <th>Requester Role</th>
-                <th>Resource Owner Role</th>
-                <th>Resource Type</th>
-                <th>Resource ID</th>
-                <th>Requester ID</th>
-                <th>Resource Owner ID</th>
-                <th>Status</th>
-               
-
-            </tr>
-
-            <% for(var i=0;i < data.request.length;i++){ %>
-            <tr>
-                <td id="requestId"><%= data.request[i].requestId%></td>
-                <td id="requesterRole"><%= data.request[i].requesterRole%></td>
-                <td id="resourceOwnerRole"><%= data.request[i].resourceOwnerRole%></td>
-                <td id="resourceType"><%= data.request[i].resourceType%></td>
-                <td id="resourceId"><%= data.request[i].resourceId%></td>
-                <td id="idRequester"><%= data.request[i].owner%></td>
-                <td id="idResourceOwner"><%= data.request[i].resourceOwner%></td>
-                <td id="status"><%= data.request[i].status%></td>
-            </tr>
-            <% } %>
-        </table>
-        <% } %>
+                </table>
+                <% } %>
+            </div>
+        </div>
     </div>
 
 

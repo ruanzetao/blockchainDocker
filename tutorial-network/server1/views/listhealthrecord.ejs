@@ -33,13 +33,12 @@
     <link href="css/main1.css" rel="stylesheet" media="all">
     <style>
         .requestForm {
-            width: 80%;
-            margin-left: 5%;
-            margin-right: 5%;
-            padding-left: 5%;
-
+            width: 100%;
+            margin-left: 0;
+            margin-right: 0;
+            padding-left: 0;
             display: inline-block;
-            border: 1px solid #ccc;
+            border: 1px solid transparent;
             border-radius: 4px;
             box-sizing: border-box;
         }
@@ -62,6 +61,7 @@
             padding-right: 5%;
             border-collapse: collapse;
             width: 100%;
+            margin-bottom: 15px;
         }
 
         td,
@@ -69,13 +69,26 @@
             border: 1px solid #dddddd;
             text-align: left;
             padding: 8px;
+            display: table-cell;
+            width: 33.333333%;
         }
 
-        tr:nth-child(even) {
-            background-color: #dddddd;
+        th {
+            background: #dddddd;
         }
-        .request-button{
+
+        .request-button {
             border: 1px solid black;
+            padding: 0 15px;
+            display: inline-block;
+            vertical-align: top;
+            min-width: 150px;
+        }
+
+        .table-label{
+            font-family: arial, sans-serif;
+            text-align: center;
+            margin: 0 0 10px;
         }
     </style>
 </head>
@@ -119,7 +132,7 @@
                             <li class="nav-item"><a class="nav-link" href="/index">Home</a></li>
                             <li class="nav-item"><a class="nav-link" href="about-us.html">About</a></li>
                             <li class="nav-item"><a class="nav-link" href="/healthrecord">Health Record</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/doctors">Doctors</a></li>   
+                            <li class="nav-item"><a class="nav-link" href="/doctors">Doctors</a></li>
                             <li class="nav-item"><a class="nav-link" href="/patients">Patients</a></li>
                             <li class="nav-item"><a class="nav-link" href="/request/">Request</a></li>
                             <li class="nav-item"><a class="nav-link" href="/profile/">Profile</a></li>
@@ -130,33 +143,76 @@
             </nav>
         </div>
     </header>
-    <% if(data){ %>
-    <div class="requestForm">
-        <table>
-            
-            <tr>
-                <th>Health Record ID</th>
-                <th>Owner</th>
+    <div class="body">
+        <div class="container">
+            <% if(data.listAll){ %>
 
-            </tr>
-            <% for(var i=0;i < data.length;i++){ %>
-            <tr>
-                <td id="healthRecordId"><%= data[i].healthRecordId%></td>  
-                <td id="owner"><%= data[i].owner%></td>
+            <div class="requestForm">
+                <h3 class="table-label">Request</h3>
+                <table>
 
-                <td>
+                    <tr>
+                        <th>Health Record ID</th>
+                        <th>Owner</th>
+                        <th>Action</th>
 
-                        <form action="/healthrecord" method="POST">
-                                <input type="hidden" name="healthRecordId" value="<%=data[i].healthRecordId%>">
-                                <button class="request-button" type="submit">Get Info</button>                               
-                        </form> 
+                    </tr>
+                    <% for(var i=0;i < data.listAll.length;i++){ %>
+                    <tr>
+                        <td id="healthRecordId"><%= data.listAll[i].healthRecordId%></td>
+                        <td id="owner"><%= data.listAll[i].owner%></td>
 
-                    </td>
-            </tr>
+                        <td>
+
+                            <form action="/requesthealthrecord" method="POST">
+                                <input type="hidden" name="healthRecordId" value="<%=data.listAll[i].healthRecordId%>">
+                                <input type="hidden" name="owner" value="<%=data.listAll[i].healthRecordId%>">
+                                <button class="request-button" type="submit">Request HR</button>
+                            </form>
+
+                        </td>
+                    </tr>
+                    <% } %>
+                </table>
+            </div>
+
             <% } %>
-        </table>
+
+            <% if(data.beAuthorized){ %>
+
+            <div class="requestForm">
+                <h3 class="table-label">Be Requested</h3>
+                <table>
+
+                    <tr>
+                        <th>Health Record ID</th>
+                        <th>Owner</th>
+                        <th>Action</th>
+
+                    </tr>
+                    <% for(var i=0;i < data.beAuthorized.length;i++){ %>
+                    <tr>
+                        <td id="healthRecordId"><%= data.beAuthorized[i].healthRecordId%></td>
+                        <td id="owner"><%= data.beAuthorized[i].owner%></td>
+
+                        <td>
+
+                            <form action="/healthrecord/" method="POST">
+                                <input type="hidden" name="healthRecordId"
+                                    value="<%=data.beAuthorized[i].healthRecordId%>">
+                                <input type="hidden" name="owner" value="<%=data.beAuthorized[i].healthRecordId%>">
+                                <button class="request-button" type="submit">View Detail</button>
+                            </form>
+
+                        </td>
+                    </tr>
+                    <% } %>
+                </table>
+            </div>
+
+            <% } %>
+        </div>
     </div>
-    <% } %>
 
 
     <!-- Jquery JS-->

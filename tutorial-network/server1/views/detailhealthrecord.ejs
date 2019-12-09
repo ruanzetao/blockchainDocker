@@ -33,11 +33,10 @@
     <link href="css/main1.css" rel="stylesheet" media="all">
     <style>
         .requestForm {
-            width: 80%;
-            margin-left: 5%;
-            margin-right: 5%;
-            padding-left: 5%;
-
+            width: 100%;
+            margin-left: 0;
+            margin-right: 0;
+            padding-left: 0;
             display: inline-block;
             border: 1px solid #ccc;
             border-radius: 4px;
@@ -71,20 +70,75 @@
             padding: 8px;
         }
 
-        tr:nth-child(even) {
-            background-color: #dddddd;
-        }
-
         .request-button {
             border: 1px solid black;
+            padding: 0 15px;
         }
 
-        label {
+        .inputForm form {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -15px;
+            
+        }
 
-            text-align: right;
-            clear: both;
-            float: left;
-            margin-right: 15px;
+        .inputForm .form-field {
+            display: block;
+            font-size: 0;
+            letter-spacing: 0;
+            margin: 0 0 15px 0;
+            flex: 0 0 50%;
+            padding: 0 15px;
+            
+        }
+
+        .inputForm label {
+            display: inline-block;
+            vertical-align: middle;
+            width: 120px;
+            font-size: 15px;
+            margin: 0;
+            text-transform: capitalize;
+            line-height: 58px;
+        }
+
+        .inputForm input {
+            display: inline-block;
+            vertical-align: middle;
+            width: calc(100% - 120px);
+            border: 1px solid #dddddd;
+            height: 48px;
+            line-height: 48px;
+            padding: 0 15px;
+        }
+
+        .inputForm input::placeholder{
+            font-size: 0;
+        }
+
+        .inputForm input::-moz-placeholder{
+            font-size: 0;
+        }
+
+        .inputForm input::-webkit-input-placeholder{
+            font-size: 0;
+        }
+
+        .inputForm .form-actions{
+            width: 100%;
+            flex: 0 0 100%;
+        }
+
+        .inputForm .form-actions button{
+            display: block;
+            min-width: 120px;
+            margin: 0 auto;
+            border: 1px solid #98AFC7;
+            height: 58px;
+            line-height: 58px;
+            padding: 0 15px;
+            background: #98AFC7;
+            color: #ffffff;
         }
     </style>
 </head>
@@ -139,150 +193,202 @@
             </nav>
         </div>
     </header>
-    <% if(data.conclusion != null){ %>
-    <div class="requestForm">
-        <table>
-            <tr>
-                <th>healthRecordId</th>
-                <td><%=data.healthRecordId%></td>
-            </tr>
-            <tr>
-                <th>hight</th>
-                <td><%=data.hight%></td>
-            </tr>
-            <tr>
-                <th>tuoithai</th>
-                <td><%=data.tuoithai%></td>
-            </tr>
-            <tr>
-                <th>hatthu0</th>
-                <td><%=data.hatthu0%></td>
-            </tr>
-            <tr>
-                <th>hattruong0</th>
-                <td><%=data.hattruong0%></td>
-            </tr>
-            <tr>
-                <th>tieucau0</th>
-                <td><%=data.tieucau0%></td>
-            </tr>
-            <tr>
-                <th>tq0</th>
-                <td><%=data.tq0%></td>
-            </tr>
-            <tr>
-                <th>aptt0</th>
-                <td><%=data.aptt0%></td>
-            </tr>
-            <tr>
-                <th>fibrinogen0</th>
-                <td><%=data.fibrinogen0%></td>
-            </tr>
-            <tr>
-                <th>ast0</th>
-                <td><%=data.ast0%></td>
-            </tr>
-            <tr>
-                <th>alt0</th>
-                <td><%=data.alt0%></td>
-            </tr>
-            <tr>
-                <th>creatinin0</th>
-                <td><%=data.creatinin0%></td>
-            </tr>
-            <tr>
-                <th>ure0</th>
-                <td><%=data.ure0%></td>
-            </tr>
-            <tr>
-                <th>auric0</th>
-                <td><%=data.auric0%></td>
-            </tr>
-            <tr>
-                <th>ldh0</th>
-                <td><%=data.ldh0%></td>
-            </tr>
-            <tr>
-                <th>damnieu0</th>
-                <td><%=data.damnieu0%></td>
-            </tr>
-            <tr>
-                <th>damnieu24h0</th>
-                <td><%=data.damnieu24h0%></td>
-            </tr>
-            <tr>
-                <th>protein0</th>
-                <td><%=data.protein0%></td>
-            </tr>
-            <tr>
-                <th>bilirubintp0</th>
-                <td><%=data.bilirubintp0%></td>
-            </tr>
-            <tr>
-                <th>bilirubintt0</th>
-                <td><%=data.bilirubintt0%></td>
-            </tr>
-            <tr>
-                <th>conclusion</th>
-                <td><%=data.conclusion%></td>
-            </tr>
-            <tr>
-                <th>owner</th>
-                <td><%=data.owner%></td>
-            </tr>
-        </table>
+    <div class="body">
+        <div class="container">
+            <% if(data.conclusion != ""){ %>
+            <div class="requestForm">
+                <table>
+                    <tr>
+                        <th>healthRecordId</th>
+                        <td><%=data.healthRecordId%></td>
+                    </tr>
+                    <tr>
+                        <th>hight</th>
+                        <td><%=data.hight%></td>
+                    </tr>
+                    <tr>
+                        <th>tuoithai</th>
+                        <td><%=data.tuoithai%></td>
+                    </tr>
+                    <tr>
+                        <th>hatthu0</th>
+                        <td><%=data.hatthu0%></td>
+                    </tr>
+                    <tr>
+                        <th>hattruong0</th>
+                        <td><%=data.hattruong0%></td>
+                    </tr>
+                    <tr>
+                        <th>tieucau0</th>
+                        <td><%=data.tieucau0%></td>
+                    </tr>
+                    <tr>
+                        <th>tq0</th>
+                        <td><%=data.tq0%></td>
+                    </tr>
+                    <tr>
+                        <th>aptt0</th>
+                        <td><%=data.aptt0%></td>
+                    </tr>
+                    <tr>
+                        <th>fibrinogen0</th>
+                        <td><%=data.fibrinogen0%></td>
+                    </tr>
+                    <tr>
+                        <th>ast0</th>
+                        <td><%=data.ast0%></td>
+                    </tr>
+                    <tr>
+                        <th>alt0</th>
+                        <td><%=data.alt0%></td>
+                    </tr>
+                    <tr>
+                        <th>creatinin0</th>
+                        <td><%=data.creatinin0%></td>
+                    </tr>
+                    <tr>
+                        <th>ure0</th>
+                        <td><%=data.ure0%></td>
+                    </tr>
+                    <tr>
+                        <th>auric0</th>
+                        <td><%=data.auric0%></td>
+                    </tr>
+                    <tr>
+                        <th>ldh0</th>
+                        <td><%=data.ldh0%></td>
+                    </tr>
+                    <tr>
+                        <th>damnieu0</th>
+                        <td><%=data.damnieu0%></td>
+                    </tr>
+                    <tr>
+                        <th>damnieu24h0</th>
+                        <td><%=data.damnieu24h0%></td>
+                    </tr>
+                    <tr>
+                        <th>protein0</th>
+                        <td><%=data.protein0%></td>
+                    </tr>
+                    <tr>
+                        <th>bilirubintp0</th>
+                        <td><%=data.bilirubintp0%></td>
+                    </tr>
+                    <tr>
+                        <th>bilirubintt0</th>
+                        <td><%=data.bilirubintt0%></td>
+                    </tr>
+
+                    <tr>
+                        <th>owner</th>
+                        <td><%=data.owner%></td>
+                    </tr>
+                    <tr>
+                        <th>conclusion</th>
+                        <td><%=data.conclusion%></td>
+                    </tr>
+                </table>
+            </div>
+            <% } %>
+            <% if (data.conclusion == "") { %>
+            <div class="inputForm">
+                <form action="/healthrecord/detail" method="POST">
+                    <input type="hidden" name="healthRecordId" id="healthRecordId" value="<%=data.healthRecordId%>">
+                    <div class="form-field">
+                        <label for="hight" style="float: left">hight</label>
+                        <input type="number" placeholder="Hight" name="hight" id="hight">
+                    </div>
+                    <div class="form-field">
+                        <label for="tuoithai" style="float: left">tuoithai</label>
+                        <input type="number" placeholder="Age of pregnancy" name="tuoithai" id="tuoithai">
+                    </div>
+
+                    <div class="form-field">
+                        <label for="hatthu0" style="float: left">hatthu0</label>
+                        <input type="number" placeholder="hatthu0" name="hatthu0" id="hatthu0">
+                    </div>
+                    <div class="form-field">
+                        <label for="hattruong0" style="float: left">hattruong0</label>
+                        <input type="number" placeholder="hattruong0" name="hattruong0" id="hattruong0">
+                    </div>
+                    <div class="form-field">
+                        <label for="tieucau0" style="float: left">tieucau0</label>
+                        <input type="number" placeholder="tieucau0" name="tieucau0" id="tieucau0">
+                    </div>
+                    <div class="form-field">
+                        <label for="tq0" style="float: left">tq0</label>
+                        <input type="number" placeholder="tq0" name="tq0" id="tq0">
+                    </div>
+                    <div class="form-field">
+                        <label for="aptt0" style="float: left">aptt0</label>
+                        <input type="number" placeholder="aptt0" name="aptt0" id="aptt0">
+                    </div>
+                    <div class="form-field">
+                        <label for="fibrinogen0" style="float: left">fibrinogen0</label>
+                        <input type="number" placeholder="fibrinogen0" name="fibrinogen0" id="fibrinogen0">
+                    </div>
+                    <div class="form-field">
+                        <label for="ast0" style="float: left">ast0</label>
+                        <input type="number" placeholder="ast0" name="ast0" id="ast0">
+                    </div>
+                    <div class="form-field">
+                        <label for="alt0" style="float: left">alt0</label>
+                        <input type="number" placeholder="alt0" name="alt0" id="alt0">
+                    </div>
+                    <div class="form-field">
+                        <label for="creatinin0" style="float: left">creatinin0</label>
+                        <input type="number" placeholder="creatinin0" name="creatinin0" id="creatinin0">
+                    </div>
+                    <div class="form-field">
+                        <label for="ure0" style="float: left">ure0</label>
+                        <input type="number" placeholder="ure0" name="ure0" id="ure0">
+                    </div>
+                    <div class="form-field">
+                        <label for="auric0" style="float: left">auric0</label>
+                        <input type="number" placeholder="auric0" name="auric0" id="auric0">
+                    </div>
+                    <div class="form-field">
+                        <label for="ldh0" style="float: left">ldh0</label>
+                        <input type="number" placeholder="ldh0" name="ldh0" id="ldh0">
+                    </div>
+                    <div class="form-field">
+                        <label for="damnieu0" style="float: left">damnieu0</label>
+                        <input type="number" placeholder="damnieu0" name="damnieu0" id="damnieu0">
+                    </div>
+                    <div class="form-field">
+                        <label for="damnieu24h0" style="float: left">damnieu24h0</label>
+                        <input type="number" placeholder="damnieu24h0" name="damnieu24h0" id="damnieu24h0">
+                    </div>
+                    <div class="form-field">
+                        <label for="protein0" style="float: left">protein0</label>
+                        <input type="number" placeholder="protein0" name="protein0" id="protein0">
+                    </div>
+                    <div class="form-field">
+                        <label for="albumin0" style="float: left">albumin0</label>
+                        <input type="number" placeholder="albumin0" name="albumin0" id="albumin0">
+                    </div>
+                    <div class="form-field">
+                        <label for="bilirubintp0" style="float: left">bilirubintp0</label>
+                        <input type="number" placeholder="bilirubintp0" name="bilirubintp0" id="bilirubintp0">
+                    </div>
+                    <div class="form-field">
+                        <label for="bilirubintt0" style="float: left">bilirubintt0</label>
+                        <input type="number" placeholder="bilirubintt0" name="bilirubintt0" id="bilirubintt0">
+                    </div>
+                    <div class="form-field">
+                        <label for="conclusion" style="float: left">conclusion</label>
+                        <input type="text" placeholder="conclusion" name="conclusion" id="conclusion">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" name="submit" id="submit">Submit</button>
+                    </div>
+                    
+                </form>
+            </div>
+            <% } %>
+        </div>
     </div>
-    <% } %>
-    <% if (data.conclusion == null) { %>
-    <div class="inputForm">
-        <form action="/healthrecord/detail" method="POST">
-            <input type="hidden" name="healthRecordId" id="healthRecordId" value="<%=data.healthRecordId%>">
-            <!-- <label for="hight" style="float: left">hight</label> -->
-            <input type="number" placeholder="Hight" name="hight" id="hight">
-            <!-- <label for="tuoithai" style="float: left">tuoithai</label> -->
-            <input type="number" placeholder="Age of pregnancy" name="tuoithai" id="tuoithai">
-            <!-- <label for="hatthu0" style="float: left">hatthu0</label> -->
-            <input type="number" placeholder="hatthu0" name="hatthu0" id="hatthu0">
-            <!-- <label for="hattruong0" style="float: left">hattruong0</label> -->
-            <input type="number" placeholder="hattruong0" name="hattruong0" id="hattruong0">
-            <!-- <label for="tieucau0" style="float: left">tieucau0</label> -->
-            <input type="number" placeholder="tieucau0" name="tieucau0" id="tieucau0">
-            <!-- <label for="tq0" style="float: left">tq0</label> -->
-            <input type="number" placeholder="tq0" name="tq0" id="tq0">
-            <!-- <label for="aptt0" style="float: left">aptt0</label> -->
-            <input type="number" placeholder="aptt0" name="aptt0" id="aptt0">
-            <!-- <label for="fibrinogen0" style="float: left">fibrinogen0</label> -->
-            <input type="number" placeholder="fibrinogen0" name="fibrinogen0" id="fibrinogen0">
-            <!-- <label for="ast0" style="float: left">ast0</label> -->
-            <input type="number" placeholder="ast0" name="ast0" id="ast0">
-            <!-- <label for="alt0" style="float: left">alt0</label> -->
-            <input type="number" placeholder="alt0" name="alt0" id="alt0">
-            <!-- <label for="creatinin0" style="float: left">creatinin0</label> -->
-            <input type="number" placeholder="creatinin0" name="creatinin0" id="creatinin0">
-            <!-- <label for="ure0" style="float: left">ure0</label> -->
-            <input type="number" placeholder="ure0" name="ure0" id="ure0">
-            <!-- <label for="auric0" style="float: left">auric0</label> -->
-            <input type="number" placeholder="auric0" name="auric0" id="auric0">
-            <!-- <label for="ldh0" style="float: left">ldh0</label> -->
-            <input type="number" placeholder="ldh0" name="ldh0" id="ldh0">
-            <!-- <label for="damnieu0" style="float: left">damnieu0</label> -->
-            <input type="number" placeholder="damnieu0" name="damnieu0" id="damnieu0">
-            <!-- <label for="damnieu24h0" style="float: left">damnieu24h0</label> -->
-            <input type="number" placeholder="damnieu24h0" name="damnieu24h0" id="damnieu24h0">
-            <!-- <label for="protein0" style="float: left">protein0</label> -->
-            <input type="number" placeholder="protein0" name="protein0" id="protein0">
-            <!-- <label for="albumin0" style="float: left">albumin0</label> -->
-            <input type="number" placeholder="albumin0" name="albumin0" id="albumin0">
-            <!-- <label for="bilirubintp0" style="float: left">bilirubintp0</label> -->
-            <input type="number" placeholder="bilirubintp0" name="bilirubintp0" id="bilirubintp0">
-            <!-- <label for="bilirubintt0" style="float: left">bilirubintt0</label> -->
-            <input type="number" placeholder="bilirubintt0" name="bilirubintt0" id="bilirubintt0">
-            <!-- <label for="conclusion" style="float: left">conclusion</label> -->
-            <input type="text" placeholder="conclusion" name="conclusion" id="conclusion">
-            <button type="submit" name="submit" id="submit">Submit</button>
-        </form>
-    </div>
-    <% } %>
+
 
 
     <!-- Jquery JS-->
@@ -299,66 +405,7 @@
     <!-- start footer Area -->
     <footer class="footer-area area-padding-top">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-2 col-sm-6 single-footer-widget">
-                    <h4>Top Products</h4>
-                    <ul>
-                        <li><a href="#">Managed Website</a></li>
-                        <li><a href="#">Manage Reputation</a></li>
-                        <li><a href="#">Power Tools</a></li>
-                        <li><a href="#">Marketing Service</a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-2 col-sm-6 single-footer-widget">
-                    <h4>Quick Links</h4>
-                    <ul>
-                        <li><a href="#">Jobs</a></li>
-                        <li><a href="#">Brand Assets</a></li>
-                        <li><a href="#">Investor Relations</a></li>
-                        <li><a href="#">Terms of Service</a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-2 col-sm-6 single-footer-widget">
-                    <h4>Features</h4>
-                    <ul>
-                        <li><a href="#">Jobs</a></li>
-                        <li><a href="#">Brand Assets</a></li>
-                        <li><a href="#">Investor Relations</a></li>
-                        <li><a href="#">Terms of Service</a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-2 col-sm-6 single-footer-widget">
-                    <h4>Resources</h4>
-                    <ul>
-                        <li><a href="#">Guides</a></li>
-                        <li><a href="#">Research</a></li>
-                        <li><a href="#">Experts</a></li>
-                        <li><a href="#">Agencies</a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-4 col-md-6 single-footer-widget">
-                    <h4>Newsletter</h4>
-                    <p>You can trust us. we only send promo offers,</p>
-                    <div class="form-wrap" id="mc_embed_signup">
-                        <form target="_blank"
-                            action="https://spondonit.us12.list-manage.com/subscribe/post?u=1462626880ade1ac87bd9c93a&amp;id=92a4423d01"
-                            method="get" class="form-inline">
-                            <input class="form-control" name="EMAIL" placeholder="Your Email Address"
-                                onfocus="this.placeholder = ''" onblur="this.placeholder = 'Your Email Address'"
-                                required="" type="email" />
-                            <button class="click-btn btn btn-default">
-                                <i class="ti-arrow-right"></i>
-                            </button>
-                            <div style="position: absolute; left: -5000px;">
-                                <input name="b_36c4fd991d266f23781ded980_aefe40901a" tabindex="-1" value=""
-                                    type="text" />
-                            </div>
 
-                            <div class="info"></div>
-                        </form>
-                    </div>
-                </div>
-            </div>
             <div class="row footer-bottom d-flex justify-content-between">
                 <p class="col-lg-8 col-sm-12 footer-text m-0">
                     <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
