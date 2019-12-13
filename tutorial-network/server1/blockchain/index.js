@@ -472,57 +472,47 @@ async function getDoctor(cardName) {
   }
 }
 
-async function getDoctorInfo(cardName) {
+async function getDoctorInfo(identityCardNumber) {
   let businessNetworkConnection = new BusinessNetworkConnection();
 
   try {
     // await businessNetworkConnection.connect('3@identity');
-    await businessNetworkConnection.connect(cardName);
+    await businessNetworkConnection.connect('admin@tutorial-network');
     let participantRegistry = await businessNetworkConnection.getAssetRegistry(
       "org.basic.server.DoctorInfo"
     );
 
     //add a new participant to business network
-    var result = await participantRegistry.getAll();
-    //console.log("Result:"+result);
+    var result = await participantRegistry.get(identityCardNumber);
+   
 
     //disconect admin card
     await businessNetworkConnection.disconnect();
 
     // console.log(result);
     var user = {
-      name: result[0].name,
-      address: result[0].address,
-      email: result[0].email,
-      phone: result[0].phone,
-      identityCardNumber: result[0].identityCardNumber,
-      sex: result[0].sex,
-      specialist: result[0].specialist,
-      marriageStatus: result[0].marriageStatus,
-      tittle: result[0].tittle
+      name: result.name,
+      address: result.address,
+      email: result.email,
+      phone: result.phone,
+      identityCardNumber: result.identityCardNumber,
+      sex: result.sex,
+      specialist: result.specialist,
+      marriageStatus: result.marriageStatus,
+      tittle: result.tittle
     };
-    //console.log(user);
+    
     return user;
   } catch (error) {
     await businessNetworkConnection.disconnect();
-    var user = {
-      name: "Name",
-      address: "Address",
-      email: "Email",
-      phone: "Phone",
-      identityCardNumber: "Identity Card Number",
-      sex: "Gender",
-      specialist: "Specialist",
-      marriageStatus: "Marriage Status",
-      tittle: "Tittle"
-    };
+    
 
     //error: trung id card
     //console.error(error);
-    return user;
+    return 0;
     // process.exit(1);
   }
-  return 1;
+  
 }
 
 async function getDoctorInfos() {
@@ -609,51 +599,42 @@ async function getPatient(cardName) {
   }
 }
 
-async function getPatientInfo(cardName) {
+async function getPatientInfo(identityCardNumber) {
   console.log("start get Patient Info");
 
   let businessNetworkConnection = new BusinessNetworkConnection();
 
   try {
     // await businessNetworkConnection.connect('3@identity');
-    await businessNetworkConnection.connect(cardName);
+    await businessNetworkConnection.connect('admin@tutorial-network');
     let participantRegistry = await businessNetworkConnection.getAssetRegistry(
       "org.basic.server.PatientInfo"
     );
 
     //add a new participant to business network
-    var result = await participantRegistry.getAll();
+    var result = await participantRegistry.get(identityCardNumber);
 
     //disconect admin card
     await businessNetworkConnection.disconnect();
     // console.log(result);
     var user = {
-      name: result[0].name,
-      address: result[0].address,
-      email: result[0].email,
-      phone: result[0].phone,
-      identityCardNumber: result[0].identityCardNumber,
-      sex: result[0].sex,
-      career: result[0].career,
-      marriageStatus: result[0].marriageStatus
+      name: result.name,
+      address: result.address,
+      email: result.email,
+      phone: result.phone,
+      identityCardNumber: result.identityCardNumber,
+      sex: result.sex,
+      career: result.career,
+      marriageStatus: result.marriageStatus
     };
     console.log(user);
     return user;
   } catch (error) {
     await businessNetworkConnection.disconnect();
-    var user = {
-      name: "Name",
-      address: "Address",
-      email: "Email",
-      phone: "Phone",
-      identityCardNumber: "Identity Card Number",
-      sex: "Gender",
-      Career: "Career",
-      marriageStatus: "Marriage Status"
-    };
+    
     //error: trung id card
     //console.error(error);
-    return user;
+    return 0;
     // process.exit(1);
   }
   //return 1;
@@ -1203,11 +1184,14 @@ async function createHealthRecord(identityCardNumber) {
     );
     let factory = definition.getFactory();
 
+    let results=await businessNetworkConnection.query("selectAllHealthRecord");
+    let count=results.length;
+    let healthRecordId=count+1;
     //define information of a user
     let healthRecordInfo = factory.newResource(
       "org.basic.server",
       "HealthRecord",
-      identityCardNumber
+      healthRecordId.toString()
     );
     healthRecordInfo.hight = "";
     healthRecordInfo.tuoithai = "";
@@ -1327,6 +1311,56 @@ async function listAllHealthRecord() {
   }
 }
 
+async function listAllHealthRecordOfPatient(identityCardNumber) {
+  let businessNetworkConnection = new BusinessNetworkConnection();
+
+  try {
+    
+    await businessNetworkConnection.connect("admin@tutorial-network");
+    let participantRegistry = await businessNetworkConnection.getAssetRegistry(
+      "org.basic.server.HealthRecord"
+    );
+
+    var result = await participantRegistry.getAll();
+
+    arrayResult = [];
+    for (var i = 0; i < result.length; i++) {
+      var item = {
+        healthRecordId: result[i].healthRecordId,
+        hight: result[i].hight,
+        tuoithai: result[i].tuoithai,
+        hatthu0: result[i].hatthu0,
+        hattruong0: result[i].hattruong0,
+        tieucau0: result[i].tieucau0,
+        tq0: result[i].tq0,
+        aptt0: result[i].aptt0,
+        fibrinogen0: result[i].fibrinogen0,
+        ast0: result[i].ast0,
+        alt0: result[i].alt0,
+        creatinin0: result[i].creatinin0,
+        ure0: result[i].ure0,
+        auric0: result[i].auric0,
+        ldh0: result[i].ldh0,
+        damnieu0: result[i].damnieu0,
+        damnieu24h0: result[i].damnieu24h0,
+        protein0: result[i].protein0,
+        albumin0: result[i].albumin0,
+        bilirubintp0: result[i].bilirubintp0,
+        bilirubintt0: result[i].bilirubintt0,
+        conclusion: result[i].conclusion,
+        owner: result[i].owner.getIdentifier()
+      };
+      if(item.owner==identityCardNumber){
+        arrayResult.push(item);
+      }   
+      console.log(arrayResult);  
+    }
+    return arrayResult;
+  } catch (error) {
+    return 0;
+  }
+}
+
 async function getDetailHealthRecord(healthRecordId) {
   console.log("start get detail health record");
 
@@ -1338,7 +1372,7 @@ async function getDetailHealthRecord(healthRecordId) {
     let participantRegistry = await businessNetworkConnection.getAssetRegistry(
       "org.basic.server.HealthRecord"
     );
-
+      console.log("healthRecordId"+healthRecordId);
     //add a new participant to business network
     var result = await participantRegistry.get(healthRecordId);
 
@@ -1399,6 +1433,7 @@ async function doctorUpdateHealthRecord(cardName,data) {
     );
     let factory = definition.getFactory();
     var healthRecordAsset = await assetRegistry.get(data.healthRecordId);
+    
     //define information of a user
     healthRecordAsset.hight = data.hight;
     healthRecordAsset.tuoithai = data.tuoithai;
@@ -1469,5 +1504,6 @@ module.exports = {
   getRequestBeRequest,
   doctorAcceptRequestOfDoctor,
   doctorRevokeRequestOfDoctor,
-  listAllHealthRecord
+  listAllHealthRecord,
+  listAllHealthRecordOfPatient
 };

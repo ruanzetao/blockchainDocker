@@ -175,7 +175,7 @@
                             <% if(data.berequest[i].status=='Accepted') {%>
                             <form action="/request/reject" method="POST">
                                 <input type="hidden" name="requestId" value="<%= data.berequest[i].requestId%>">
-
+                                <input type="hidden" name="requesterRole" value="<%= data.berequest[i].requesterRole%>">
                                 <button class="request-button" type="submit">Reject</button>
 
                             </form>

@@ -85,7 +85,7 @@
             min-width: 150px;
         }
 
-        .table-label{
+        .table-label {
             font-family: arial, sans-serif;
             text-align: center;
             margin: 0 0 10px;
@@ -145,68 +145,101 @@
     </header>
     <div class="body">
         <div class="container">
-            <% if(data.listAll){ %>
-
+            <form action="/createhealthrecord" method="POST">
+                <button class="request-button" type="submit">Create Health Record</button>
+            </form>
+            <% for(var i=0;i < data.length;i++){ %>
             <div class="requestForm">
-                <h3 class="table-label">Request</h3>
                 <table>
+                    <tr>
+                        <th>healthRecordId</th>
+                        <td><%=data[i].healthRecordId%></td>
+                    </tr>
+                    <tr>
+                        <th>hight</th>
+                        <td><%=data[i].hight%></td>
+                    </tr>
+                    <tr>
+                        <th>tuoithai</th>
+                        <td><%=data[i].tuoithai%></td>
+                    </tr>
+                    <tr>
+                        <th>hatthu0</th>
+                        <td><%=data[i].hatthu0%></td>
+                    </tr>
+                    <tr>
+                        <th>hattruong0</th>
+                        <td><%=data[i].hattruong0%></td>
+                    </tr>
+                    <tr>
+                        <th>tieucau0</th>
+                        <td><%=data[i].tieucau0%></td>
+                    </tr>
+                    <tr>
+                        <th>tq0</th>
+                        <td><%=data[i].tq0%></td>
+                    </tr>
+                    <tr>
+                        <th>aptt0</th>
+                        <td><%=data[i].aptt0%></td>
+                    </tr>
+                    <tr>
+                        <th>fibrinogen0</th>
+                        <td><%=data[i].fibrinogen0%></td>
+                    </tr>
+                    <tr>
+                        <th>ast0</th>
+                        <td><%=data[i].ast0%></td>
+                    </tr>
+                    <tr>
+                        <th>alt0</th>
+                        <td><%=data[i].alt0%></td>
+                    </tr>
+                    <tr>
+                        <th>creatinin0</th>
+                        <td><%=data[i].creatinin0%></td>
+                    </tr>
+                    <tr>
+                        <th>ure0</th>
+                        <td><%=data[i].ure0%></td>
+                    </tr>
+                    <tr>
+                        <th>auric0</th>
+                        <td><%=data[i].auric0%></td>
+                    </tr>
+                    <tr>
+                        <th>ldh0</th>
+                        <td><%=data[i].ldh0%></td>
+                    </tr>
+                    <tr>
+                        <th>damnieu0</th>
+                        <td><%=data[i].damnieu0%></td>
+                    </tr>
+                    <tr>
+                        <th>damnieu24h0</th>
+                        <td><%=data[i].damnieu24h0%></td>
+                    </tr>
+                    <tr>
+                        <th>protein0</th>
+                        <td><%=data[i].protein0%></td>
+                    </tr>
+                    <tr>
+                        <th>bilirubintp0</th>
+                        <td><%=data[i].bilirubintp0%></td>
+                    </tr>
+                    <tr>
+                        <th>bilirubintt0</th>
+                        <td><%=data[i].bilirubintt0%></td>
+                    </tr>
 
                     <tr>
-                        <th>Health Record ID</th>
-                        <th>Owner</th>
-                        <th>Action</th>
-
+                        <th>owner</th>
+                        <td><%=data[i].owner%></td>
                     </tr>
-                    <% for(var i=0;i < data.listAll.length;i++){ %>
                     <tr>
-                        <td id="healthRecordId"><%= data.listAll[i].healthRecordId%></td>
-                        <td id="owner"><%= data.listAll[i].owner%></td>
-
-                        <td>
-
-                            <form action="/requesthealthrecord" method="POST">
-                                <input type="hidden" name="healthRecordId" value="<%=data.listAll[i].healthRecordId%>">
-                                <input type="hidden" name="owner" value="<%=data.listAll[i].owner%>">
-                                <button class="request-button" type="submit">Request HR</button>
-                            </form>
-
-                        </td>
+                        <th>conclusion</th>
+                        <td><%=data[i].conclusion%></td>
                     </tr>
-                    <% } %>
-                </table>
-            </div>
-
-            <% } %>
-
-            <% if(data.beAuthorized){ %>
-
-            <div class="requestForm">
-                <h3 class="table-label">Be Requested</h3>
-                <table>
-
-                    <tr>
-                        <th>Health Record ID</th>
-                        <th>Owner</th>
-                        <th>Action</th>
-
-                    </tr>
-                    <% for(var i=0;i < data.beAuthorized.length;i++){ %>
-                    <tr>
-                        <td id="healthRecordId"><%= data.beAuthorized[i].healthRecordId%></td>
-                        <td id="owner"><%= data.beAuthorized[i].owner%></td>
-
-                        <td>
-
-                            <form action="/healthrecord/" method="POST">
-                                <input type="hidden" name="healthRecordId"
-                                    value="<%=data.beAuthorized[i].healthRecordId%>">
-                                <input type="hidden" name="owner" value="<%=data.beAuthorized[i].owner%>">
-                                <button class="request-button" type="submit">View Detail</button>
-                            </form>
-
-                        </td>
-                    </tr>
-                    <% } %>
                 </table>
             </div>
             <% } %>
