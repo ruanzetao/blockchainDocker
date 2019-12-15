@@ -4,16 +4,6 @@ o Male
 o Female
 o Other
 }
-enum Race{
-o White
-o Black
-o Asian
-o Other
-}
-
-enum RequestType{
-  o Read
-}
 
 enum RequestStatus{
   o Accepted
@@ -43,4 +33,9 @@ enum MarriageStatus {
   o Single
   o Mariage
   o Divorced
+}
+
+enum HealthRecordStatus{
+  o New
+  o Done
 }

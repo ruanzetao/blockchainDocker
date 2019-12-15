@@ -130,7 +130,6 @@
                     <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
                         <ul class="nav navbar-nav menu_nav ml-auto">
                             <li class="nav-item"><a class="nav-link" href="/index">Home</a></li>
-                            <li class="nav-item"><a class="nav-link" href="about-us.html">About</a></li>
                             <li class="nav-item"><a class="nav-link" href="/healthrecord">Health Record</a></li>
                             <li class="nav-item"><a class="nav-link" href="/doctors">Doctors</a></li>
                             <li class="nav-item"><a class="nav-link" href="/patients">Patients</a></li>
@@ -179,36 +178,33 @@
             <% } %>
 
             <% if(data.beAuthorized){ %>
-
+            <% for(var j=0;j < data.beAuthorized.length; j++){ %>
             <div class="requestForm">
-                <h3 class="table-label">Be Requested</h3>
+                <h3 class="table-label">Requested</h3>
                 <table>
-
                     <tr>
                         <th>Health Record ID</th>
                         <th>Owner</th>
                         <th>Action</th>
-
                     </tr>
-                    <% for(var i=0;i < data.beAuthorized.length;i++){ %>
+                    
                     <tr>
-                        <td id="healthRecordId"><%= data.beAuthorized[i].healthRecordId%></td>
-                        <td id="owner"><%= data.beAuthorized[i].owner%></td>
+                        <td id="healthRecordId"><%= data.beAuthorized[j].healthRecordId%></td>
+                        <td id="owner"><%= data.beAuthorized[j].owner%></td>
 
                         <td>
 
                             <form action="/healthrecord/" method="POST">
-                                <input type="hidden" name="healthRecordId"
-                                    value="<%=data.beAuthorized[i].healthRecordId%>">
-                                <input type="hidden" name="owner" value="<%=data.beAuthorized[i].owner%>">
+                                <input type="hidden" name="healthRecordId" value="<%=data.beAuthorized[j].healthRecordId%>">                                
                                 <button class="request-button" type="submit">View Detail</button>
                             </form>
 
                         </td>
                     </tr>
-                    <% } %>
+                   
                 </table>
             </div>
+            <% } %>
             <% } %>
         </div>
     </div>

@@ -46,6 +46,7 @@ asset HealthRecord identified by healthRecordId {
   o String bilirubintp0 optional
   o String bilirubintt0 optional
   o String conclusion optional
+  o HealthRecordStatus status
   --> Doctor [] authorizedDoctors
   --> Patient owner
   }
@@ -110,15 +111,15 @@ asset DoctorInfo identified by doctorInfoId {
   --> Doctor owner
 }
 
-asset DoctorProfile identified by doctorProfileId{
-  o String doctorProfileId
-  o String doctorId
-  o Role role
-  o String avatar default="default"
-  o DateTime createAt optional
-  o DateTime updateAt optional
-  --> Doctor owner
-}
+// asset DoctorProfile identified by doctorProfileId{
+//   o String doctorProfileId
+//   o String doctorId
+//   o Role role
+//   o String avatar default="default"
+//   o DateTime createAt optional
+//   o DateTime updateAt optional
+//   --> Doctor owner
+// }
 
 
 /**
@@ -143,12 +144,12 @@ Asset of patient
   --> Patient owner
 }
 
-asset PatientProfile identified by patientProfileId{
-  o String patientProfileId
-  o String patientId
-  o Role role
-  o String avatar default="default"
-  o DateTime createAt optional
-  o DateTime updateAt optional
-  --> Patient owner
-}
+// asset PatientProfile identified by patientProfileId{
+//   o String patientProfileId
+//   o String patientId
+//   o Role role
+//   o String avatar default="default"
+//   o DateTime createAt optional
+//   o DateTime updateAt optional
+//   --> Patient owner
+// }

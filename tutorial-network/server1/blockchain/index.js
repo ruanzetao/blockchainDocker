@@ -436,38 +436,39 @@ async function deleteCard(cardName) {
   }
 }
 
-async function getDoctor(cardName) {
+async function getDoctor(identityCardNumber) {
   console.log("start get Doctor");
 
   let businessNetworkConnection = new BusinessNetworkConnection();
 
   try {
     // await businessNetworkConnection.connect('3@identity');
-    await businessNetworkConnection.connect(cardName);
+    await businessNetworkConnection.connect('admin@tutorial-network');
     let participantRegistry = await businessNetworkConnection.getParticipantRegistry(
       "org.basic.server.Doctor"
     );
 
     //add a new participant to business network
-    var result = await participantRegistry.getAll();
+    var result = await participantRegistry.get(identityCardNumber);
 
     //disconect admin card
     await businessNetworkConnection.disconnect();
     // console.log(result);
     var user = {
-      email: result[0].email,
+      email: result.email,
       role: "Doctor",
-      name: result[0].name,
-      address: result[0].address,
-      phone: result[0].phone,
-      sex: result[0].sex,
-      identityCardNumber: result[0].identityCardNumber
+      name: result.name,
+      address: result.address,
+      phone: result.phone,
+      sex: result.sex,
+      identityCardNumber: result.identityCardNumber
     };
     console.log(user);
     return user;
   } catch (error) {
     //error: trung id card
     console.error(error);
+    return 0;
     // process.exit(1);
   }
 }
@@ -515,7 +516,7 @@ async function getDoctorInfo(identityCardNumber) {
   
 }
 
-async function getDoctorInfos() {
+async function getDoctorInfos(identityCardNumber=null) {
   let businessNetworkConnection = new BusinessNetworkConnection();
 
   try {
@@ -542,10 +543,13 @@ async function getDoctorInfos() {
         sex: result[i].sex,
         specialist: result[i].specialist,
         marriageStatus: result[i].marriageStatus,
-        tittle: result[i].tittle
+        tittle: result[i].tittle,
+        owner: result[i].owner.getIdentifier()
       };
 
-      arrayResult.push(item);
+      if(item.owner!=identityCardNumber){
+        arrayResult.push(item);
+      }
     }
 
     //disconect admin card
@@ -563,38 +567,39 @@ async function getDoctorInfos() {
   //return 1;
 }
 
-async function getPatient(cardName) {
+async function getPatient(identityCardNumber) {
   console.log("start get Patient");
 
   let businessNetworkConnection = new BusinessNetworkConnection();
 
   try {
     // await businessNetworkConnection.connect('3@identity');
-    await businessNetworkConnection.connect(cardName);
+    await businessNetworkConnection.connect('admin@tutorial-network');
     let participantRegistry = await businessNetworkConnection.getParticipantRegistry(
       "org.basic.server.Patient"
     );
 
     //add a new participant to business network
-    var result = await participantRegistry.getAll();
+    var result = await participantRegistry.get(identityCardNumber);
 
     //disconect admin card
     await businessNetworkConnection.disconnect();
     // console.log(result);
     var user = {
-      email: result[0].email,
+      email: result.email,
       role: "Patient",
-      name: result[0].name,
-      address: result[0].address,
-      phone: result[0].phone,
-      sex: result[0].sex,
-      identityCardNumber: result[0].identityCardNumber
+      name: result.name,
+      address: result.address,
+      phone: result.phone,
+      sex: result.sex,
+      identityCardNumber: result.identityCardNumber
     };
     console.log(user);
     return user;
   } catch (error) {
     //error: trung id card
     console.error(error);
+    return 0;
     // process.exit(1);
   }
 }
@@ -1214,6 +1219,7 @@ async function createHealthRecord(identityCardNumber) {
     healthRecordInfo.bilirubintp0 = "";
     healthRecordInfo.bilirubintt0 = "";
     healthRecordInfo.conclusion = "";
+    healthRecordInfo.status="New";
 
     healthRecordInfo.authorizedDoctors = [];
 
@@ -1239,7 +1245,7 @@ async function createHealthRecord(identityCardNumber) {
   }
 }
 
-async function getHealthRecordByDoctor(cardName, identityCardNumber) {
+async function getHealthRecordByDoctor(identityCardNumber) {
   console.log("start get Health Record by Doctor");
 
   let businessNetworkConnection = new BusinessNetworkConnection();
@@ -1259,6 +1265,7 @@ async function getHealthRecordByDoctor(cardName, identityCardNumber) {
       var item = {
         healthRecordId: result[i].healthRecordId,
         owner: result[i].owner.getIdentifier(),
+        status: result[i].status,
         authorizedDoctors: result[i].authorizedDoctors
       };
 
@@ -1272,7 +1279,7 @@ async function getHealthRecordByDoctor(cardName, identityCardNumber) {
     //disconect admin card
     await businessNetworkConnection.disconnect();
     // console.log(result);
-
+    console.log(arrayResult);
     return arrayResult;
   } catch (error) {
     await businessNetworkConnection.disconnect();
@@ -1301,6 +1308,7 @@ async function listAllHealthRecord() {
     for (var i = 0; i < result.length; i++) {
       var item = {
         healthRecordId: result[i].healthRecordId,
+        status: result[i].status,
         owner: result[i].owner.getIdentifier()
       };
       arrayResult.push(item);
@@ -1348,6 +1356,7 @@ async function listAllHealthRecordOfPatient(identityCardNumber) {
         bilirubintp0: result[i].bilirubintp0,
         bilirubintt0: result[i].bilirubintt0,
         conclusion: result[i].conclusion,
+        status: result[i].status,
         owner: result[i].owner.getIdentifier()
       };
       if(item.owner==identityCardNumber){
@@ -1399,13 +1408,14 @@ async function getDetailHealthRecord(healthRecordId) {
       bilirubintp0: result.bilirubintt0,
       bilirubintt0: result.bilirubintt0,
       owner: result.owner.getIdentifier(),
+      status: result.status,
       conclusion: result.conclusion
     };
 
     //disconect admin card
     await businessNetworkConnection.disconnect();
     // console.log(result);
-    console.log("hight "+item.hight);
+    
     return item;
   } catch (error) {
     await businessNetworkConnection.disconnect();
@@ -1456,6 +1466,7 @@ async function doctorUpdateHealthRecord(cardName,data) {
     healthRecordAsset.bilirubintp0 = data.bilirubintp0;
     healthRecordAsset.bilirubintt0 = data.bilirubintt0;
     healthRecordAsset.conclusion = data.conclusion;
+    healthRecordAsset.status="Done";
 
     //add a new participant to business network
     await assetRegistry.update(healthRecordAsset);

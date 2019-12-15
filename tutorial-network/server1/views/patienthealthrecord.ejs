@@ -130,7 +130,6 @@
                     <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
                         <ul class="nav navbar-nav menu_nav ml-auto">
                             <li class="nav-item"><a class="nav-link" href="/index">Home</a></li>
-                            <li class="nav-item"><a class="nav-link" href="about-us.html">About</a></li>
                             <li class="nav-item"><a class="nav-link" href="/healthrecord">Health Record</a></li>
                             <li class="nav-item"><a class="nav-link" href="/doctors">Doctors</a></li>
                             <li class="nav-item"><a class="nav-link" href="/patients">Patients</a></li>
@@ -148,9 +147,11 @@
             <form action="/createhealthrecord" method="POST">
                 <button class="request-button" type="submit">Create Health Record</button>
             </form>
-            <% for(var i=0;i < data.length;i++){ %>
+
             <div class="requestForm">
+                <% for(var i=0;i < data.length;i++){ %>
                 <table>
+                    
                     <tr>
                         <th>healthRecordId</th>
                         <td><%=data[i].healthRecordId%></td>
@@ -239,10 +240,10 @@
                     <tr>
                         <th>conclusion</th>
                         <td><%=data[i].conclusion%></td>
-                    </tr>
+                    </tr>                   
                 </table>
+                <%} %>
             </div>
-            <% } %>
         </div>
     </div>
 

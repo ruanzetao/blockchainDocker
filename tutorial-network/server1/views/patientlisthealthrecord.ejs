@@ -38,7 +38,7 @@
             margin-right: 0;
             padding-left: 0;
             display: inline-block;
-            border: 1px solid #ccc;
+            border: 1px solid transparent;
             border-radius: 4px;
             box-sizing: border-box;
         }
@@ -61,6 +61,7 @@
             padding-right: 5%;
             border-collapse: collapse;
             width: 100%;
+            margin-bottom: 15px;
         }
 
         td,
@@ -84,8 +85,10 @@
             min-width: 150px;
         }
 
-        .table-label {
+        .table-label{
             font-family: arial, sans-serif;
+            text-align: center;
+            margin: 0 0 10px;
         }
     </style>
 </head>
@@ -139,38 +142,30 @@
             </nav>
         </div>
     </header>
-
     <div class="body">
         <div class="container">
-            <% if(data==0){ %>
-            <h2>No data found!</h2>
-            <% } %>
-
             <% if(data){ %>
+
             <div class="requestForm">
+                <h3 class="table-label">Request</h3>
                 <table>
 
                     <tr>
-                        <th>Name</th>
-                        <th>Specialist</th>
-                        <th>Tittle</th>
+                        <th>Health Record ID</th>
+                        <th>Status</th>
                         <th>Action</th>
 
                     </tr>
                     <% for(var i=0;i < data.length;i++){ %>
                     <tr>
-                        <td id="name"><%= data[i].name%></td>
-                        <td id="specialist"><%= data[i].specialist%></td>
-                        <td id="tittle"><%= data[i].tittle%></td>
+                        <td id="healthRecordId"><%= data[i].healthRecordId%></td>
+                        <td id="status"><%= data[i].status%></td>
 
                         <td>
 
-                            <form action="/requestdoctorinfo" method="POST">
-                                <input type="hidden" name="resourceOwnerRole" value="Doctor">
-                                <input type="hidden" name="resourceType" value="DoctorInfo">
-                                <input type="hidden" name="resourceId" value="<%=data[i].doctorInfoId%>">
-                                <input type="hidden" name="resourceOwner" value="<%=data[i].doctorId%>">
-                                <button class="request-button" type="submit">Request Info</button>
+                            <form action="/healthrecord/detail" method="POST">
+                                <input type="hidden" name="healthRecordId" value="<%=data[i].healthRecordId%>">                                
+                                <button class="request-button" type="submit">Request HR</button>
                             </form>
 
                         </td>
@@ -178,6 +173,7 @@
                     <% } %>
                 </table>
             </div>
+
             <% } %>
         </div>
     </div>
@@ -195,9 +191,8 @@
 
 
     <!-- start footer Area -->
-    <footer class="footer-area">
+    <footer class="footer-area area-padding-top">
         <div class="container">
-
             <div class="row footer-bottom d-flex justify-content-between">
                 <p class="col-lg-8 col-sm-12 footer-text m-0">
                     <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->

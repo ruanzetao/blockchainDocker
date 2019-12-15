@@ -70,7 +70,6 @@
                     <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
                         <ul class="nav navbar-nav menu_nav ml-auto">
                             <li class="nav-item"><a class="nav-link" href="/index">Home</a></li>
-                            <li class="nav-item"><a class="nav-link" href="about-us.html">About</a></li>
                             <li class="nav-item"><a class="nav-link" href="/healthrecord">Health Record</a></li>
                             <li class="nav-item"><a class="nav-link" href="/doctors">Doctors</a></li>     
                             <li class="nav-item"><a class="nav-link" href="/patients">Patients</a></li>
@@ -92,29 +91,29 @@
                     <h2 class="title">User Info</h2>
                     
                     <form method="POST" id="formprofile" name="formprofile">                
+                        
+                            <input id="name" type="hidden" placeholder="Name" name="name" disabled value=<%=data.participant.name%>>
+                        
                         <div class="input-group">
-                            <input id="name" class="input--style-3" type="name" placeholder="Name" name="name" disabled value=<%=data.name%>>
+                            <input id="address" class="input--style-3" type="address" placeholder="Address" name="address" disabled value=<%=data.patient.address%>>
+                        </div>
+                        
+                                <input id="email" type="hidden" placeholder="Email" name="email" disabled value=<%=data.participant.email%>>
+                            
+                        <div class="input-group">
+                            <input id="phone" class="input--style-3" type="phone" placeholder="Phone" name="phone" disabled value=<%=data.patient.phone%>>
+                        </div>
+                        
+                                <input id="identityCardNumber" type="hidden" placeholder="Identity Card Number" name="identityCardNumber" disabled value=<%=data.participant.identityCardNumber%>>
+                            
+                        <div class="input-group">
+                            <input id="sex" class="input--style-3" type="sex" placeholder="Male/Female/Other" name="sex" disabled value=<%=data.patient.sex%>>
                         </div>
                         <div class="input-group">
-                            <input id="address" class="input--style-3" type="address" placeholder="Address" name="address" disabled value=<%=data.address%>>
+                            <input id="career" class="input--style-3" type="career" placeholder="Career" name="career" disabled value=<%=data.patient.career%>>
                         </div>
                         <div class="input-group">
-                                <input id="email" class="input--style-3" type="email" placeholder="Email" name="email" disabled value=<%=data.email%>>
-                            </div> 
-                        <div class="input-group">
-                            <input id="phone" class="input--style-3" type="phone" placeholder="Phone" name="phone" disabled value=<%=data.phone%>>
-                        </div>
-                        <div class="input-group">
-                                <input id="identityCardNumber" class="input--style-3" type="identityCardNumber" placeholder="Identity Card Number" name="identityCardNumber" disabled value=<%=data.identityCardNumber%>>
-                            </div> 
-                        <div class="input-group">
-                            <input id="sex" class="input--style-3" type="sex" placeholder="Male/Female/Other" name="sex" disabled value=<%=data.sex%>>
-                        </div>
-                        <div class="input-group">
-                            <input id="career" class="input--style-3" type="career" placeholder="Career" name="career" disabled value=<%=data.career%>>
-                        </div>
-                        <div class="input-group">
-                            <input id="marriageStatus" class="input--style-3" type="marriageStatus" placeholder="marriageStatus" name="marriageStatus" disabled value=<%=data.marriageStatus%>>
+                            <input id="marriageStatus" class="input--style-3" type="marriageStatus" placeholder="marriageStatus" name="marriageStatus" disabled value=<%=data.patient.marriageStatus%>>
                         </div>
                         <div class="p-t-10" style="text-align: center;">
                             <a href="javascript:void(0);" id="edit" onclick="editFunction()" class="btn btn--pill btn--green">Edit</a>

@@ -70,8 +70,7 @@
                     <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
                         <ul class="nav navbar-nav menu_nav ml-auto">
                             <li class="nav-item"><a class="nav-link" href="/index">Home</a></li>
-                            <li class="nav-item"><a class="nav-link" href="about-us.html">About</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/healthrecord">Department</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/healthrecord">Health Record</a></li>
                             <li class="nav-item"><a class="nav-link" href="/doctors">Doctors</a></li>       
                             <li class="nav-item"><a class="nav-link" href="/patients">Patients</a></li>
                             <li class="nav-item"><a class="nav-link" href="/request/">Request</a></li>
@@ -90,40 +89,68 @@
                 <div class="card-heading"></div>
                 <div class="card-body">
                     <h2 class="title">User Info</h2>
+
+                    <% if(data.doctor==0){ %>
                     
-                    <form method="POST" id="formprofile" name="formprofile">                
+                    <form method="POST" id="formprofile" name="formprofile">                 
+                        <input id="name" type="hidden" placeholder="Name" name="name" disabled value=<%=data.participant.name%>>   
                         <div class="input-group">
-                            <input id="name" class="input--style-3" type="name" placeholder="Name" name="name" disabled value=<%=data.name%>>
+                            <input id="address" class="input--style-3" type="address" placeholder="Address" name="address" disabled value=<%=data.participant.address%>>
+                        </div>                        
+                                <input id="email" type="hidden" placeholder="Email" name="email" disabled value=<%=data.participant.email%>>                          
+                        <div class="input-group">
+                            <input id="phone" class="input--style-3" type="phone" placeholder="Phone" name="phone" disabled value=<%=data.doctor.phone%>>
+                        </div>                      
+                                <input id="identityCardNumber" type="hidden" placeholder="Identity Card Number" name="identityCardNumber" disabled value=<%=data.participant.identityCardNumber%>>      
+                        <div class="input-group">
+                            <input id="sex" class="input--style-3" type="sex" placeholder="Male/Female/Other" name="sex" disabled value=<%=data.doctor.sex%>>
                         </div>
                         <div class="input-group">
-                            <input id="address" class="input--style-3" type="address" placeholder="Address" name="address" disabled value=<%=data.address%>>
+                            <input id="specialist" class="input--style-3" type="specialist" placeholder="Specialist" name="specialist" disabled value=<%=data.doctor.specialist%>>
                         </div>
                         <div class="input-group">
-                                <input id="email" class="input--style-3" type="email" placeholder="Email" name="email" disabled value=<%=data.email%>>
-                            </div> 
-                        <div class="input-group">
-                            <input id="phone" class="input--style-3" type="phone" placeholder="Phone" name="phone" disabled value=<%=data.phone%>>
+                            <input id="marriageStatus" class="input--style-3" type="marriageStatus" placeholder="marriageStatus" name="marriageStatus" disabled value=<%=data.doctor.marriageStatus%>>
                         </div>
                         <div class="input-group">
-                                <input id="identityCardNumber" class="input--style-3" type="identityCardNumber" placeholder="Identity Card Number" name="identityCardNumber" disabled value=<%=data.identityCardNumber%>>
-                            </div> 
-                        <div class="input-group">
-                            <input id="sex" class="input--style-3" type="sex" placeholder="Male/Female/Other" name="sex" disabled value=<%=data.sex%>>
-                        </div>
-                        <div class="input-group">
-                            <input id="specialist" class="input--style-3" type="specialist" placeholder="Specialist" name="specialist" disabled value=<%=data.specialist%>>
-                        </div>
-                        <div class="input-group">
-                            <input id="marriageStatus" class="input--style-3" type="marriageStatus" placeholder="marriageStatus" name="marriageStatus" disabled value=<%=data.marriageStatus%>>
-                        </div>
-                        <div class="input-group">
-                            <input id="tittle" class="input--style-3" type="tittle" placeholder="Tittle" name="tittle" disabled value=<%=data.tittle%>>
+                            <input id="tittle" class="input--style-3" type="tittle" placeholder="Tittle" name="tittle" disabled value=<%=data.doctor.tittle%>>
                         </div>
                         <div class="p-t-10" style="text-align: center;">
                             <a href="javascript:void(0);" id="edit" onclick="editFunction()" class="btn btn--pill btn--green">Edit</a>
                             <button id="save" class="btn btn--pill btn--green" type="save" name="save" href="/adddoctorinfo">Save</button>
                         </div>
                     </form>
+                    <% } %>
+
+                    <% if(data.doctor!=0){ %>
+                    
+                        <form method="POST" id="formprofile" name="formprofile">                 
+                            <input id="name" type="hidden" placeholder="Name" name="name" disabled value=<%=data.doctor.name%>>   
+                            <div class="input-group">
+                                <input id="address" class="input--style-3" type="address" placeholder="Address" name="address" disabled value=<%=data.doctor.address%>>
+                            </div>                        
+                                    <input id="email" type="hidden" placeholder="Email" name="email" disabled value=<%=data.doctor.email%>>                          
+                            <div class="input-group">
+                                <input id="phone" class="input--style-3" type="phone" placeholder="Phone" name="phone" disabled value=<%=data.doctor.phone%>>
+                            </div>                      
+                                    <input id="identityCardNumber" type="hidden" placeholder="Identity Card Number" name="identityCardNumber" disabled value=<%=data.doctor.identityCardNumber%>>      
+                            <div class="input-group">
+                                <input id="sex" class="input--style-3" type="sex" placeholder="Male/Female/Other" name="sex" disabled value=<%=data.doctor.sex%>>
+                            </div>
+                            <div class="input-group">
+                                <input id="specialist" class="input--style-3" type="specialist" placeholder="Specialist" name="specialist" disabled value=<%=data.doctor.specialist%>>
+                            </div>
+                            <div class="input-group">
+                                <input id="marriageStatus" class="input--style-3" type="marriageStatus" placeholder="marriageStatus" name="marriageStatus" disabled value=<%=data.doctor.marriageStatus%>>
+                            </div>
+                            <div class="input-group">
+                                <input id="tittle" class="input--style-3" type="tittle" placeholder="Tittle" name="tittle" disabled value=<%=data.doctor.tittle%>>
+                            </div>
+                            <div class="p-t-10" style="text-align: center;">
+                                <a href="javascript:void(0);" id="edit" onclick="editFunction()" class="btn btn--pill btn--green">Edit</a>
+                                <button id="save" class="btn btn--pill btn--green" type="save" name="save" href="/adddoctorinfo">Save</button>
+                            </div>
+                        </form>
+                        <% } %>
                 </div>
             </div>
         </div>
