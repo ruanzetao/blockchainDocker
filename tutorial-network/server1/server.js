@@ -315,15 +315,18 @@ app.post(
         var cardName = identityCardNumber + "@tutorial-network";
         if (user.role == "Doctor") {
           await blockchain.createDoctorInfo(req.body);
-          var doctorinfo = await blockchain.getDoctorInfo(identityCardNumber);
-          res.render("profile", { data: doctorinfo });
+          var participant = await blockchain.getDoctor(identityCardNumber);    
+          var doctor = await blockchain.getDoctorInfo(identityCardNumber);
+          var result = { participant, doctor };
+          res.render("profile", { data: result });
         }
         if (user.role == "Patient") {
           await blockchain.createPatientInfo(req.body);
           await blockchain.createHealthRecord(req.body.identityCardNumber);
-
-          var patientinfo = await blockchain.getPatientInfo(identityCardNumber);
-          res.render("patientprofile", { data: patientinfo });
+          var participant = await blockchain.getPatient(identityCardNumber);
+          var patient = await blockchain.getPatientInfo(identityCardNumber);
+          var result = { participant, patient };
+          res.render("patientprofile", { data: result });
         }
       } else {
         console.log("User not found!" + err);

@@ -467,7 +467,7 @@ async function getDoctor(identityCardNumber) {
     return user;
   } catch (error) {
     //error: trung id card
-    console.error(error);
+    //console.error(error);
     return 0;
     // process.exit(1);
   }
@@ -598,7 +598,7 @@ async function getPatient(identityCardNumber) {
     return user;
   } catch (error) {
     //error: trung id card
-    console.error(error);
+    //console.error(error);
     return 0;
     // process.exit(1);
   }
