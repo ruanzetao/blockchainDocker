@@ -3,7 +3,7 @@ const dotenv = require("dotenv");
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const User = require("./models/UserModels");
-//const bcrypt=require('bcrypt');
+const bcrypt=require('bcrypt');
 const mongoose = require("mongoose");
 const session = require("express-session");
 const MongoStore = require("connect-mongo")(session);
@@ -128,20 +128,22 @@ app.get(
 );
 app.post("/register", async function(req, res, next) {
   User.findOne({ email: req.body.email }, async (err, user) => {
-    if (user == null) {
-      const user = new User(req.body);
-      user.email = req.body.email;
-      user.password = req.body.password;
-      user.role = req.body.role;
-      user.name = req.body.name;
-      user.address = req.body.address;
-      user.phone = req.body.phone;
-      user.sex = req.body.sex;
-      user.identityCardNumber = req.body.identityCardNumber;
-      user.save();
-
+    if (user == null) {      
+      password = req.body.password;
+      bcrypt.hash(password,10,function(err,hash){
+        if (err) {return next(err);}
+        const user = new User(req.body);
+        user.email = req.body.email;       
+        user.password = hash;
+        user.role = req.body.role;
+        user.name = req.body.name;
+        user.address = req.body.address;
+        user.phone = req.body.phone;
+        user.sex = req.body.sex;
+        user.identityCardNumber = req.body.identityCardNumber;
+        user.save();
+      })   
       var done = 0;
-
       if (req.body.role == "Doctor") {
         var idCardNumber = req.body.identityCardNumber;
         var result = await blockchain.createDoctor(req.body);
@@ -151,7 +153,6 @@ app.post("/register", async function(req, res, next) {
         const cardData = await blockchain.exportCard(cardName);
         await blockchain.deleteCard(cardName);
         await blockchain.importCard(cardName, cardData);
-
         console.log("Done add doctor!");
         done = 1;
       }
@@ -213,15 +214,11 @@ function parseJwt(token) {
 app.post("/login", async function(req, res, next) {
   console.log("login start");
   database.Authentication(req, res, result => {
-    if (result.success) {
-      User.findOne({ email: req.body.email }, async (err, user) => {
-        res.cookie("access_token", result.token, {
-          expires: new Date(Date.now() + 3600000)
-        });
-        res.render("index");
-      });
-    } else {
-      res.redirect("/login");
+    if(result.success===true){
+      res.cookie('access_token', result.token, { expires: new Date(Date.now() + 3600000) });
+      res.render("index");
+    }else{
+      res.render("login");
     }
   });
 });
@@ -251,6 +248,7 @@ app.get(
   passport.authenticate("jwt", { failureRedirect: "/login" }),
   async function(req, res) {
     var token = req.cookies.access_token;
+    console.log("token"+token);
     var email = parseJwt(token);
     User.findOne({ email: email }, async (err, user) => {
       if (user) {
@@ -260,19 +258,6 @@ app.get(
           var participant = await blockchain.getDoctor(identityCardNumber);
           console.log("participant")
           var doctor = await blockchain.getDoctorInfo(identityCardNumber);
-          // if (doctor == 1) {
-          //   var doctor = {
-          //     name: "Name",
-          //     address: "Address",
-          //     email: "Email",
-          //     phone: "Phone",
-          //     identityCardNumber: "Identity Card Number",
-          //     sex: "Male/Female/Other",
-          //     specialist: "Specialist",
-          //     marriageStatus: "Marriage Status",
-          //     tittle: "Tittle"
-          //   };
-          // }
           var result = { participant, doctor };
           res.render("profile", { data: result });
         }
@@ -280,18 +265,6 @@ app.get(
         if (user.role == "Patient") {
           var participant = await blockchain.getPatient(identityCardNumber);
           var patient = await blockchain.getPatientInfo(identityCardNumber);
-          // if (patient == 1) {
-          //   var patient = {
-          //     name: "Name",
-          //     address: "Address",
-          //     email: "Email",
-          //     phone: "Phone",
-          //     identityCardNumber: "Identity Card Number",
-          //     sex: "Male/Female/Other",
-          //     career: "Career",
-          //     marriageStatus: "Marriage Status"
-          //   };
-          // }
           var result = { participant, patient };
           res.render("patientprofile", { data: result });
         }
