@@ -427,12 +427,14 @@ app.get(
       if (user) {
         var identityCardNumber = user.identityCardNumber;
         if (user.role == "Doctor") {
-          var result = await blockchain.getDoctorInfos(identityCardNumber);
-          res.render("doctors", { data: result });
+          var result = await blockchain.getDoctorInfos(identityCardNumber,user.role);
+          var doctoracceptthisdoctor=await blockchain.getDoctorInfoByDoctor(identityCardNumber);
+          res.render("doctors", { data: {result,doctoracceptthisdoctor }});
         }
         if (user.role == "Patient") {
-          var result = await blockchain.getDoctorInfos();
-          res.render("doctors", { data: result });
+          var result = await blockchain.getDoctorInfos(identityCardNumber,user.role);
+          var doctoracceptthispatient = await blockchain.getDoctorInfoByPatient(identityCardNumber);
+          res.render("doctors", { data: {result,doctoracceptthispatient }});
         }
       } else {
         res.render("login");
@@ -581,8 +583,9 @@ app.get(
         var identityCardNumber = user.identityCardNumber;
         var cardName = identityCardNumber + "@tutorial-network";
         if (user.role == "Doctor") {
-          var result = await blockchain.getPatientInfos();
-          res.render("patients", { data: result });
+          var result = await blockchain.getPatientInfos(identityCardNumber,user.role);
+          var patientacceptthisdoctor= await blockchain.getPatientInfoByDoctor(identityCardNumber);
+          res.render("patients", { data: {result,patientacceptthisdoctor}});
         }
         if (user.role == "Patient") {
           res.render("patientserror");

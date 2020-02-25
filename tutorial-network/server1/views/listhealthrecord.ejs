@@ -178,7 +178,7 @@
             <% } %>
 
             <% if(data.beAuthorized){ %>
-            <% for(var j=0;j < data.beAuthorized.length; j++){ %>
+            
             <div class="requestForm">
                 <h3 class="table-label">Requested</h3>
                 <table>
@@ -187,7 +187,7 @@
                         <th>Owner</th>
                         <th>Action</th>
                     </tr>
-                    
+                    <% for(var j=0;j < data.beAuthorized.length; j++){ %>
                     <tr>
                         <td id="healthRecordId"><%= data.beAuthorized[j].healthRecordId%></td>
                         <td id="owner"><%= data.beAuthorized[j].owner%></td>
@@ -201,10 +201,9 @@
 
                         </td>
                     </tr>
-                   
+                    <% } %>
                 </table>
-            </div>
-            <% } %>
+            </div>          
             <% } %>
         </div>
     </div>

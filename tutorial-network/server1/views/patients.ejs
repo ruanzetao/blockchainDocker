@@ -141,7 +141,7 @@
     </header>
     <div class="body">
         <div class="container">
-            <% if(data){ %>
+            <% if(data.result){ %>
             <div class="requestForm">
                 <table>
 
@@ -152,18 +152,18 @@
                         <th>Action</th>
 
                     </tr>
-                    <% for(var i=0;i < data.length;i++){ %>
+                    <% for(var i=0;i < data.result.length;i++){ %>
                     <tr>
-                        <td id="name"><%= data[i].name%></td>
-                        <td id="career"><%= data[i].career%></td>
-                        <td id="identityCardNumber"><%= data[i].identityCardNumber%></td>
+                        <td id="name"><%= data.result[i].name%></td>
+                        <td id="career"><%= data.result[i].career%></td>
+                        <td id="identityCardNumber"><%= data.result[i].identityCardNumber%></td>
                         <td>
 
                             <form action="/requestpatientinfo" method="POST">
                                 <input type="hidden" name="resourceOwnerRole" value="Patient">
                                 <input type="hidden" name="resourceType" value="PatientInfo">
-                                <input type="hidden" name="resourceId" value="<%=data[i].patientInfoId%>">
-                                <input type="hidden" name="resourceOwner" value="<%=data[i].patientId%>">
+                                <input type="hidden" name="resourceId" value="<%=data.result[i].patientInfoId%>">
+                                <input type="hidden" name="resourceOwner" value="<%=data.result[i].patientId%>">
                                 <button class="request-button" type="submit">Request Info</button>
                             </form>
 
@@ -173,6 +173,31 @@
                 </table>
             </div>
             <% } %>
+
+            <% if(data.patientacceptthisdoctor){ %>
+                <div class="requestForm">
+                    <table>
+    
+                        <tr>
+                            <th>Patient Info ID</th>
+                            <th>Name</th>
+                            <th>Address</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+    
+                        </tr>
+                        <% for(var i=0;i < data.patientacceptthisdoctor.length;i++){ %>
+                        <tr>
+                            <td id="patientInfoId"><%= data.patientacceptthisdoctor[i].patientInfoId%></td>
+                            <td id="name"><%= data.patientacceptthisdoctor[i].name%></td>
+                            <td id="address"><%= data.patientacceptthisdoctor[i].address%></td>
+                            <td id="email"><%= data.patientacceptthisdoctor[i].address%></td>
+                            <td id="phone"><%= data.patientacceptthisdoctor[i].phone%></td>                           
+                        </tr>
+                        <% } %>
+                    </table>
+                </div>
+                <% } %>
         </div>
     </div>
 

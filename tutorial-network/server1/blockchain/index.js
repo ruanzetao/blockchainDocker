@@ -516,11 +516,10 @@ async function getDoctorInfo(identityCardNumber) {
   
 }
 
-async function getDoctorInfos(identityCardNumber=null) {
+async function getDoctorInfos(identityCardNumber,role) {
   let businessNetworkConnection = new BusinessNetworkConnection();
-
+  
   try {
-    // await businessNetworkConnection.connect('3@identity');
     await businessNetworkConnection.connect("admin@tutorial-network");
     let participantRegistry = await businessNetworkConnection.getAssetRegistry(
       "org.basic.server.DoctorInfo"
@@ -531,7 +530,7 @@ async function getDoctorInfos(identityCardNumber=null) {
 
     arrayResult = [];
 
-    for (var i = 0; i < result.length; i++) {
+    for (var i = 0; i < result.length; i++) { 
       var item = {
         doctorInfoId: result[i].doctorInfoId,
         doctorId: result[i].doctorId,
@@ -539,19 +538,30 @@ async function getDoctorInfos(identityCardNumber=null) {
         address: result[i].address,
         email: result[i].email,
         phone: result[i].phone,
-        identityCardNumber: result[i].identityCardNumber,
         sex: result[i].sex,
         specialist: result[i].specialist,
         marriageStatus: result[i].marriageStatus,
-        tittle: result[i].tittle,
-        owner: result[i].owner.getIdentifier()
+        owner: result[i].owner.getIdentifier(),
+        authorizedPatients: result[i].authorizedPatients
       };
-
-      if(item.owner!=identityCardNumber){
-        arrayResult.push(item);
+      if(role=="Doctor"){
+        if(item.owner!=identityCardNumber){
+          arrayResult.push(item);
+        }
       }
-    }
 
+      if(role=="Patient"){      
+        var flag=true;
+        for(var j=0;j<item.authorizedPatients.length;j++){
+          if(item.authorizedPatients[j].getIdentifier()==identityCardNumber){        
+            flag=false;
+          }
+        }
+        if(flag==true){
+          arrayResult.push(item);
+        }
+      }  
+    }
     //disconect admin card
     await businessNetworkConnection.disconnect();
     // console.log(result);
@@ -645,11 +655,11 @@ async function getPatientInfo(identityCardNumber) {
   //return 1;
 }
 
-async function getPatientInfos() {
+async function getPatientInfos(identityCardNumber,role) {
   let businessNetworkConnection = new BusinessNetworkConnection();
-
+  console.log("Start to get patients info");
   try {
-    // await businessNetworkConnection.connect('3@identity');
+    
     await businessNetworkConnection.connect("admin@tutorial-network");
     let participantRegistry = await businessNetworkConnection.getAssetRegistry(
       "org.basic.server.PatientInfo"
@@ -661,6 +671,7 @@ async function getPatientInfos() {
     arrayResult = [];
 
     for (var i = 0; i < result.length; i++) {
+      console.log("item start");
       var item = {
         patientInfoId: result[i].patientInfoId,
         patientId: result[i].patientId,
@@ -671,10 +682,22 @@ async function getPatientInfos() {
         identityCardNumber: result[i].identityCardNumber,
         sex: result[i].sex,
         career: result[i].career,
-        marriageStatus: result[i].marriageStatus
-      };
-
-      arrayResult.push(item);
+        marriageStatus: result[i].marriageStatus,
+        owner: result[i].owner.getIdentifier(),
+        authorizedDoctors:result[i].authorizedDoctors
+      };     
+      if(role=="Doctor"){    
+          var flag=true;
+          for(var j=0;j<item.authorizedDoctors.length;j++){
+            if(item.authorizedDoctors[j].getIdentifier()==identityCardNumber){
+              
+              flag=false;
+            }
+          }
+          if(flag==true){
+            arrayResult.push(item);
+          }
+        }
     }
 
     //disconect admin card
@@ -1293,6 +1316,156 @@ async function getHealthRecordByDoctor(identityCardNumber) {
   //return 1;
 }
 
+async function getDoctorInfoByPatient(identityCardNumber) {
+  console.log("start get Doctor Info by Patient");
+
+  let businessNetworkConnection = new BusinessNetworkConnection();
+
+  try {
+    
+    await businessNetworkConnection.connect("admin@tutorial-network");
+    let participantRegistry = await businessNetworkConnection.getAssetRegistry(
+      "org.basic.server.DoctorInfo"
+    );
+
+    //add a new participant to business network
+    var result = await participantRegistry.getAll();
+    arrayResult = [];
+
+    for (var i = 0; i < result.length; i++) {
+      var item = {
+        doctorInfoId: result[i].doctorInfoId,
+        name: result[i].name,
+        address: result[i].address,
+        email: result[i].email,
+        phone: result[i].phone,
+        owner: result[i].owner.getIdentifier(), 
+        authorizedPatients: result[i].authorizedPatients        
+      };
+      
+      for (var j = 0; j < item.authorizedPatients.length; j++) {
+        if (item.authorizedPatients[j].getIdentifier() == identityCardNumber) {
+          arrayResult.push(item);
+        }
+      }
+    }
+
+    //disconect admin card
+    await businessNetworkConnection.disconnect();
+    // console.log(result);
+    console.log(arrayResult);
+    return arrayResult;
+  } catch (error) {
+    await businessNetworkConnection.disconnect();
+
+    //error: trung id card
+    //console.error(error);
+    return 0;
+    // process.exit(1);
+  }
+  //return 1;
+}
+
+async function getDoctorInfoByDoctor(identityCardNumber) {
+  console.log("start get Doctor Info by Doctor");
+
+  let businessNetworkConnection = new BusinessNetworkConnection();
+
+  try {
+    
+    await businessNetworkConnection.connect("admin@tutorial-network");
+    let participantRegistry = await businessNetworkConnection.getAssetRegistry(
+      "org.basic.server.DoctorInfo"
+    );
+
+    //add a new participant to business network
+    var result = await participantRegistry.getAll();
+    arrayResult = [];
+
+    for (var i = 0; i < result.length; i++) {
+      var item = {
+        doctorInfoId: result[i].doctorInfoId,
+        name: result[i].name,
+        address: result[i].address,
+        email: result[i].email,
+        phone: result[i].phone,
+        owner: result[i].owner.getIdentifier(), 
+        authorizedDoctors: result[i].authorizedDoctors        
+      };
+      console.log("doctorInfoId"+item.doctorInfoId);
+      for (var j = 0; j < item.authorizedDoctors.length; j++) {
+        if (item.authorizedDoctors[j].getIdentifier() == identityCardNumber) {
+          arrayResult.push(item);
+        }
+      }
+    }
+
+    //disconect admin card
+    await businessNetworkConnection.disconnect();
+    // console.log(result);
+    console.log(arrayResult);
+    return arrayResult;
+  } catch (error) {
+    await businessNetworkConnection.disconnect();
+
+    //error: trung id card
+    //console.error(error);
+    return 0;
+    // process.exit(1);
+  }
+  //return 1;
+}
+
+async function getPatientInfoByDoctor(identityCardNumber) {
+  console.log("start get Patient Info by Doctor");
+
+  let businessNetworkConnection = new BusinessNetworkConnection();
+
+  try {
+    
+    await businessNetworkConnection.connect("admin@tutorial-network");
+    let participantRegistry = await businessNetworkConnection.getAssetRegistry(
+      "org.basic.server.PatientInfo"
+    );
+
+    //add a new participant to business network
+    var result = await participantRegistry.getAll();
+    arrayResult = [];
+
+    for (var i = 0; i < result.length; i++) {
+      var item = {
+        patientInfoId: result[i].patientInfoId,
+        name: result[i].name,
+        address: result[i].address,
+        email: result[i].email,
+        phone: result[i].phone,
+        owner: result[i].owner.getIdentifier(), 
+        authorizedDoctors: result[i].authorizedDoctors        
+      };
+      
+      for (var j = 0; j < item.authorizedDoctors.length; j++) {
+        if (item.authorizedDoctors[j].getIdentifier() == identityCardNumber) {
+          arrayResult.push(item);
+        }
+      }
+    }
+
+    //disconect admin card
+    await businessNetworkConnection.disconnect();
+    // console.log(result);
+    console.log(arrayResult);
+    return arrayResult;
+  } catch (error) {
+    await businessNetworkConnection.disconnect();
+
+    //error: trung id card
+    //console.error(error);
+    return 0;
+    // process.exit(1);
+  }
+  //return 1;
+}
+
 async function listAllHealthRecord() {
   let businessNetworkConnection = new BusinessNetworkConnection();
 
@@ -1517,5 +1690,8 @@ module.exports = {
   doctorAcceptRequestOfDoctor,
   doctorRevokeRequestOfDoctor,
   listAllHealthRecord,
-  listAllHealthRecordOfPatient
+  listAllHealthRecordOfPatient,
+  getDoctorInfoByPatient,
+  getPatientInfoByDoctor,
+  getDoctorInfoByDoctor
 };
