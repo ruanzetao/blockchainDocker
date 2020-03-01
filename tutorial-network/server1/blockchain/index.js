@@ -541,6 +541,7 @@ async function getDoctorInfos(identityCardNumber,role) {
         sex: result[i].sex,
         specialist: result[i].specialist,
         marriageStatus: result[i].marriageStatus,
+        tittle: result[i].tittle,
         owner: result[i].owner.getIdentifier(),
         authorizedPatients: result[i].authorizedPatients
       };
